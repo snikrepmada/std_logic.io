@@ -1,9 +1,0 @@
-
--------------------------------------------------------------------------------
---  Basic Computer Package
---  This package contains types and functions for the Basic Computer
--------------------------------------------------------------------------------
-
-PACKAGE basic_pkg IS
-  TYPE mem_array IS array (integer range <>) of bit_vector(15 DOWNTO 0);
-END basic_pkg;

@@ -1,1 +1,0 @@
-ncvhdl: v3.00.(s14): (c) Copyright 1995 - 2000 Cadence Design Systems, Inc.

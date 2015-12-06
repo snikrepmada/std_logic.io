@@ -1,9 +1,0 @@
---
--- This cds.lib file was made manually
--- 
-
--- temp IEEE stuff
-DEFINE ssdlx_lib   /home/faculty4/squire/vhdl/ssdlx/ssdlx_lib
-DEFINE std        /cds/ldv/tools.sun4v/inca/files/STD
-DEFINE ncvhdl_lib /home/faculty4/squire/vhdl/ncvhdl/vhdl_lib
-DEFINE bv_utilities /home/faculty4/squire/vhdl/ncvhdl/bv_util_lib
