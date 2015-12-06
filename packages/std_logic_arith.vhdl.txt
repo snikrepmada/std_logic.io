@@ -1,0 +1,217 @@
+-- --------------------------------------------------------------------
+--
+--   Title     : STD_LOGIC_ARITH arithmetic support for STD_ULOGIC/
+--             : STD_LOGIC_VECTOR data type
+--   Library   : This package shall be compiled into a logical library
+--             : named IEEE.
+--   Purpose   : To support unsigned arithmetic operations such as
+--             : addition, subtraction, multiplication etc. for std_ulogic
+--             : and std_logic_vector data types. Besides it supports
+--             : functions and operators for Conditional operations, 
+--             : shift operations, relational operation between integer 
+--             : and std_logic_vector types, aligning size between operands
+--             : of different sizes, type conversion.
+--             : It also supports a set of arithemtic, conversion, and 
+--             : comparison functions for SIGNED, UNSIGNED, SMALL_INT, 
+--             : INTEGER, STD_ULOGIC, STD_LOGIC, and STD_LOGIC_VECTOR. 
+--             :
+--  Note       : No declarations or definitions shall be included in, 
+--             : or excluded from this package.
+--             :
+--             : Modification History: TH, 24th Jan., 1994
+--             : Following functions are overloaded for STD_ULOGIC_VECTOR
+--             : type: "+", "-", "*", "cond_op", "<", ">", "<=", ">=", "=",
+--             : "/=", sh_left, sh_right, align_size and "to_integer" 
+--             : New functions added are:
+--             : To_StdUlogicVector (oper: INTEGER; length: NATURAL) 
+--             :                              return  STD_ULOGIC_VECTOR
+--             : "+"(op1: STD_ULOGIC; op2: STD_ULOGIC) return STD_ULOGIC;
+--             : "-"(op1: STD_ULOGIC; op2: STD_ULOGIC) return STD_ULOGIC;
+--
+--             : Name changes from STD_LOGIC_ARITH to STD_LOGIC_ARITH
+--             : operator "/" added.
+--             :  Vinaya: 13/9/94.
+--------------------------------------------------------------------------
+
+library IEEE;
+use IEEE.std_logic_1164.all;
+
+
+package STD_LOGIC_ARITH is
+
+-- ADD/SUBTRACT OPERATORS
+
+    function "+"(op1, op2: STD_LOGIC_VECTOR)           return STD_LOGIC_VECTOR;
+    function "+"(op1: STD_LOGIC_VECTOR; op2: STD_ULOGIC)
+                                                       return STD_LOGIC_VECTOR;
+    function "+"(op1: STD_ULOGIC; op2: STD_LOGIC_VECTOR)
+                                                       return STD_LOGIC_VECTOR;
+    function "+"(op1: INTEGER; op2: STD_LOGIC_VECTOR)  return STD_LOGIC_VECTOR;
+    function "+"(op1: STD_LOGIC_VECTOR; op2: INTEGER)  return STD_LOGIC_VECTOR;
+
+    function "+"(op1, op2: STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR;
+    function "+"(op1: STD_ULOGIC_VECTOR; op2: STD_ULOGIC)
+                                                      return STD_ULOGIC_VECTOR;
+    function "+"(op1: STD_ULOGIC; op2: STD_ULOGIC_VECTOR)
+                                                      return STD_ULOGIC_VECTOR;
+    function "+"(op1: INTEGER; op2: STD_ULOGIC_VECTOR)
+                                                      return STD_ULOGIC_VECTOR;
+    function "+"(op1: STD_ULOGIC_VECTOR; op2: INTEGER)
+                                                      return STD_ULOGIC_VECTOR;
+    function "+"(op1, op2 : STD_ULOGIC)               return STD_ULOGIC;
+
+
+    function "-"(op1, op2: STD_LOGIC_VECTOR)          return STD_LOGIC_VECTOR;
+    function "-"(op1: STD_LOGIC_VECTOR; op2: STD_ULOGIC)
+                                                      return STD_LOGIC_VECTOR;
+    function "-"(op1: STD_ULOGIC; op2: STD_LOGIC_VECTOR)
+                                                      return STD_LOGIC_VECTOR;
+    function "-"(op1: INTEGER; op2: STD_LOGIC_VECTOR) return STD_LOGIC_VECTOR;
+    function "-"(op1: STD_LOGIC_VECTOR; op2: INTEGER) return STD_LOGIC_VECTOR;
+
+    function "-"(op1, op2: STD_ULOGIC_VECTOR)         return STD_ULOGIC_VECTOR;
+    function "-"(op1: STD_ULOGIC_VECTOR; op2: STD_ULOGIC)
+                                                      return STD_ULOGIC_VECTOR;
+    function "-"(op1: STD_ULOGIC; op2: STD_ULOGIC_VECTOR)
+                                                      return STD_ULOGIC_VECTOR;
+    function "-"(op1: INTEGER; op2: STD_ULOGIC_VECTOR)return STD_ULOGIC_VECTOR;
+    function "-"(op1: STD_ULOGIC_VECTOR; op2: INTEGER)return STD_ULOGIC_VECTOR;
+    function "-"(op1, op2 : STD_ULOGIC)               return STD_ULOGIC;
+
+  -- UNARY OPERATORS
+ 
+      function "+" (op1: STD_LOGIC_VECTOR)            return STD_LOGIC_VECTOR;
+      function "+" (op1: STD_ULOGIC_VECTOR)           return STD_ULOGIC_VECTOR;
+
+-- MULTIPLYING OPERATORS 
+ 
+    function "*" (op1, op2 : STD_LOGIC_VECTOR)        return STD_LOGIC_VECTOR;
+    function "*" (op1: STD_ULOGIC; op2 : STD_LOGIC_VECTOR)
+                                                      return STD_LOGIC_VECTOR;
+    function "*" (op1: STD_LOGIC_VECTOR; op2 : STD_ULOGIC)
+                                                      return STD_LOGIC_VECTOR;
+    function "*" (op1, op2 : STD_ULOGIC)              return STD_ULOGIC;
+
+    function "*" (op1, op2 : STD_ULOGIC_VECTOR)       return STD_ULOGIC_VECTOR;
+    function "*" (op1: STD_ULOGIC; op2 : STD_ULOGIC_VECTOR)
+                                                      return STD_ULOGIC_VECTOR;
+    function "*" (op1: STD_ULOGIC_VECTOR; op2 : STD_ULOGIC)
+                                                      return STD_ULOGIC_VECTOR;
+
+-- DIVISION OPERATORS 
+-- The division operators are only for internal use
+-- It is not advisible to use them in design.
+
+    function "/" (op1, op2 : STD_LOGIC_VECTOR)        return STD_LOGIC_VECTOR;
+    function "/" (op1: STD_LOGIC_VECTOR; op2 : STD_ULOGIC)
+                                                      return STD_LOGIC_VECTOR;
+    function "/" (op1: STD_ULOGIC; op2 : STD_LOGIC_VECTOR)
+                                                      return STD_ULOGIC;
+    function "/" (op1, op2 : STD_ULOGIC)              return STD_ULOGIC;
+
+
+-- CONDITIONAL FUNCTIONS 
+
+   function cond_op (cond : boolean; left_val, right_val: STD_LOGIC_VECTOR) 
+                                                      return STD_LOGIC_VECTOR;
+   function cond_op (cond : boolean; left_val, right_val: STD_ULOGIC) 
+                                                      return STD_ULOGIC;
+   function cond_op (cond : boolean; left_val, right_val: STD_ULOGIC_VECTOR)
+                                                      return STD_ULOGIC_VECTOR;
+
+-- RELATIONAL OPERATORS
+
+    function "<"(op1: INTEGER; op2: STD_LOGIC_VECTOR) return BOOLEAN;
+    function "<"(op1: STD_LOGIC_VECTOR; op2: INTEGER) return BOOLEAN;
+
+    function "<="(op1: INTEGER; op2: STD_LOGIC_VECTOR) return BOOLEAN;
+    function "<="(op1: STD_LOGIC_VECTOR; op2: INTEGER) return BOOLEAN;
+
+    function ">"(op1: INTEGER; op2: STD_LOGIC_VECTOR) return BOOLEAN;
+    function ">"(op1: STD_LOGIC_VECTOR; op2: INTEGER) return BOOLEAN;
+
+    function ">="(op1: INTEGER; op2: STD_LOGIC_VECTOR) return BOOLEAN;
+    function ">="(op1: STD_LOGIC_VECTOR; op2: INTEGER) return BOOLEAN;
+
+    function "="(op1: INTEGER; op2: STD_LOGIC_VECTOR) return BOOLEAN;
+    function "="(op1: STD_LOGIC_VECTOR; op2: INTEGER) return BOOLEAN;
+
+    function "/="(op1: INTEGER; op2: STD_LOGIC_VECTOR) return BOOLEAN;
+    function "/="(op1: STD_LOGIC_VECTOR; op2: INTEGER) return BOOLEAN;
+
+
+    function "<"(op1: INTEGER; op2: STD_ULOGIC_VECTOR) return BOOLEAN;
+    function "<"(op1: STD_ULOGIC_VECTOR; op2: INTEGER) return BOOLEAN;
+ 
+    function "<="(op1: INTEGER; op2: STD_ULOGIC_VECTOR) return BOOLEAN;
+    function "<="(op1: STD_ULOGIC_VECTOR; op2: INTEGER) return BOOLEAN;
+ 
+    function ">"(op1: INTEGER; op2: STD_ULOGIC_VECTOR) return BOOLEAN;
+    function ">"(op1: STD_ULOGIC_VECTOR; op2: INTEGER) return BOOLEAN;
+ 
+    function ">="(op1: INTEGER; op2: STD_ULOGIC_VECTOR) return BOOLEAN;
+    function ">="(op1: STD_ULOGIC_VECTOR; op2: INTEGER) return BOOLEAN;
+ 
+    function "="(op1: INTEGER; op2: STD_ULOGIC_VECTOR) return BOOLEAN;
+    function "="(op1: STD_ULOGIC_VECTOR; op2: INTEGER) return BOOLEAN;
+ 
+    function "/="(op1: INTEGER; op2: STD_ULOGIC_VECTOR) return BOOLEAN;
+    function "/="(op1: STD_ULOGIC_VECTOR; op2: INTEGER) return BOOLEAN;
+
+-- SHIFT OPERATORS
+
+    function sh_left(op1: STD_LOGIC_VECTOR; op2: NATURAL)
+                                                      return STD_LOGIC_VECTOR;
+    function sh_right(op1: STD_LOGIC_VECTOR; op2: NATURAL)
+                                                      return STD_LOGIC_VECTOR;
+    function sh_left(op1: STD_ULOGIC_VECTOR; op2: NATURAL)
+                                                      return STD_ULOGIC_VECTOR;
+    function sh_right(op1: STD_ULOGIC_VECTOR; op2: NATURAL)
+                                                      return STD_ULOGIC_VECTOR;
+
+
+-- FUNCTIONS TO ALLOW ASSIGNMENTS OF STD_LOGIC_VECTOR OF UNEQUAL SIZES 
+
+
+    function align_size (oper : STD_LOGIC_VECTOR; size : NATURAL)
+                                                      return STD_LOGIC_VECTOR;
+    function align_size (oper : STD_ULOGIC;        size : NATURAL)
+                                                      return STD_LOGIC_VECTOR;
+    function align_size (oper : STD_ULOGIC_VECTOR; size : NATURAL)
+                                                      return STD_ULOGIC_VECTOR;
+    function align_size (oper : STD_ULOGIC;        size : NATURAL)
+                                                      return STD_ULOGIC_VECTOR;
+
+-- CONVERSION TO INTEGER FROM STD_LOGIC AND STD_LOGIC_VECTOR
+
+    function to_integer (oper : STD_LOGIC_VECTOR) return INTEGER;
+    function to_integer (oper: STD_ULOGIC)         return INTEGER;
+    function to_integer (oper : STD_ULOGIC_VECTOR) return INTEGER;
+
+
+-- CONVERSION TO STD_LOGIC_VECTOR FROM INTEGER
+
+    function To_StdLogicVector (oper: INTEGER; length: NATURAL)
+                                                      return STD_LOGIC_VECTOR;
+    function To_StdUlogicVector (oper: INTEGER; length: NATURAL)
+                                                      return STD_ULOGIC_VECTOR;
+
+-- UTILITY FUNCTIONS
+
+    function drive (V: STD_LOGIC_VECTOR)  return STD_ULOGIC_VECTOR;
+    function drive (V: STD_ULOGIC_VECTOR) return STD_LOGIC_VECTOR;
+
+    function Sense (V: STD_ULOGIC; vZ, vU, vDC: STD_ULOGIC) return STD_ULOGIC;
+    function Sense (V: STD_ULOGIC_VECTOR; vZ, vU, vDC: STD_ULOGIC)
+                                                     return STD_ULOGIC_VECTOR;
+    function Sense (V: STD_LOGIC_VECTOR; vZ, vU, vDC: STD_ULOGIC)
+                                                     return STD_ULOGIC_VECTOR;
+
+-- CONVERSION TABLE FOR TO_INTEGER
+
+   type tbl_type is array (STD_ULOGIC) of STD_ULOGIC;
+   constant tbl_BINARY : tbl_type :=
+   ('X', 'X', '0', '1', 'X', 'X', '0', '1', 'X');
+
+end STD_LOGIC_ARITH;
+
