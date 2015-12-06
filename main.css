@@ -1,8 +1,17 @@
 body {
   padding: 0; /* Gets rid of the automatic padding */
   margin: 0; /* on HTML documents */
+  /*margin-left: 1em;*/
   font-family: Lucida Grande, Helvetica, Arial, sans-serif;
   font-size: 12px;
+}
+
+h1 {
+  margin-top: 3em;
+}
+
+#field {
+  margin-left: 1em;
 }
 
 #navigation {
