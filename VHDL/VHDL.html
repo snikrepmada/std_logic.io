@@ -1,0 +1,66 @@
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+<title>std_logic</title>
+</head>
+<body>
+  
+<h1>VHDL</h1>
+<h2>VHSIC (Very High Speed Integrated Circuit) Hardware Description Language</h2>
+
+<!--Standard VHDL Packages List-->
+<h3>Standard VHDL Packages</h3>
+<h4>Library IEEE</h4>
+<ul style="font-family:courier">
+<li><a href="/VHDL/packages/std_logic_1164.vhdl.txt">std_logic_1164</a></li>
+<li><a href="/VHDL/packages/std_logic_textio.vhdl.txt">std_logic_textio</a></li>
+<li><a href="/VHDL/packages/std_logic_arith.vhdl.txt">std_logic_arith</a></li>
+<li><a href="/VHDL/packages/numeric_bit.vhdl.txt">numeric_bit</a></li>
+<li><a href="/VHDL/packages/numeric_std.vhdl.txt">numeric_std</a></li>
+<li><a href="/VHDL/packages/std_logic_signed.vhdl.txt">std_logic_signed</a></li>
+<li><a href="/VHDL/packages/std_logic_unsigned.vhdl.txt">std_logic_unsigned</a></li>
+<li><a href="/VHDL/packages/math_real.vhdl.txt">math_real</a></li>
+<li><a href="/VHDL/packages/math_complex.vhdl.txt">math_complex</a></li>
+</ul>
+<h4>Library Standard (STD)</h4>
+<ul style="font-family:courier">
+<li><a href="/VHDL/packages/textio.vhdl.txt">textio</a></li>
+</ul>
+
+<!--Library Declaration Code Insert-->
+<h3>Library Declaration</h3>
+<div style="background: #ffffff; overflow:auto;width:40em;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">1
+2
+3</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #008800; font-weight: bold">library</span> <span style="color: #0e84b5; font-weight: bold">IEEE</span>;
+<span style="color: #008800; font-weight: bold">use</span> <span style="color: #0e84b5; font-weight: bold">IEEE.std_logic_1164.all</span>;
+<span style="color: #008800; font-weight: bold">use</span> <span style="color: #0e84b5; font-weight: bold">IEEE.numeric_std.all</span>
+</pre></td></tr></table></div>
+
+    <!--Entity Declaration Code Insert-->
+    <h3>Entity Declaration</h3>
+      <div style="background: #ffffff; overflow:auto;width:40em;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #008800; font-weight: bold">entity</span> <span style="color: #BB0066; font-weight: bold">name_of_entity</span> <span style="color: #008800; font-weight: bold">is</span>
+  <span style="color: #008800; font-weight: bold">generic</span> (
+    CONSTANT_NAME<span style="color: #333333">:</span> <span style="color: #008800; font-weight: bold">type</span> <span style="color: #333333">:=</span> value;
+      <span style="color: #333333">:</span>
+    CONSTANT_NAME<span style="color: #333333">:</span> <span style="color: #008800; font-weight: bold">type</span> <span style="color: #333333">:=</span> value
+  );
+  <span style="color: #008800; font-weight: bold">port</span> (
+    signal_name<span style="color: #333333">:</span> mode <span style="color: #008800; font-weight: bold">type</span> [<span style="color: #333333">:=</span> value];
+      <span style="color: #333333">:</span>
+    signal_name<span style="color: #333333">:</span> mode <span style="color: #008800; font-weight: bold">type</span> [<span style="color: #333333">:=</span> value]
+  );
+<span style="color: #008800; font-weight: bold">end</span> <span style="color: #008800; font-weight: bold">entity</span> <span style="color: #BB0066; font-weight: bold">name_of_entity</span>;
+</pre></td></tr></table></div>
+
+</body>
+</html>
