@@ -1,0 +1,86 @@
+
+-------------------------------------------------------------------------------
+--  EE 126 Project # 2, Serial Binary Multimplier
+--  VHDL implementation by: Frank Bruno
+--  Part of a project for Professor Chang
+-------------------------------------------------------------------------------
+LIBRARY work;
+USE work.am2900_pkg.all;
+USE work.bv_arithmetic.ALL;
+
+ENTITY mult IS
+  PORT(multiplier      : IN     bit_vector(3 DOWNTO 0);
+       multiplicand    : IN     bit_vector(3 DOWNTO 0);
+       clock           : IN     bit;
+       init            : IN     bit;
+       ac              : BUFFER bit_vector(3 DOWNTO 0);
+       qout            : BUFFER bit_vector(3 DOWNTO 0);
+       sc              : BUFFER integer range 0 to 4;
+       qr              : BUFFER bit_vector(4 DOWNTO 0);
+       br              : BUFFER bit_vector(3 DOWNTO 0);
+       done            : OUT    bit);
+END mult;
+
+ARCHITECTURE behave_mult OF mult IS
+  
+BEGIN  --  behave
+
+  multiply:
+  PROCESS
+    VARIABLE state : integer range 0 to 3;
+    VARIABLE status : bit_vector(3 DOWNTO 0);
+    VARIABLE result : bit_vector(3 DOWNTO 0);
+    VARIABLE as : bit;
+    VARIABLE temp : bit_vector(3 DOWNTO 0);
+    
+    BEGIN
+      WAIT UNTIL clock'EVENT and clock='1';
+      IF (init = '0') THEN
+        ac <= "0000";
+        br <= multiplicand;
+        qr(4 DOWNTO 1) <= multiplier;
+        ac <= "0000";
+        sc <= 4;
+        qr(0) <= '0';
+        done <= '0';
+        state := 0;
+      ELSE
+        CASE state IS
+          WHEN 0 =>
+            CASE qr(1 DOWNTO 0) IS
+              WHEN "01" =>
+                ac <= ac + br;
+              WHEN "10" =>
+                ac <= ac - br;
+              WHEN OTHERS =>
+            END CASE;                    --  qr(1 DOWNTO 0)
+            state := 1;
+          WHEN 1 =>
+            qr(0) <= qr(1);
+            qr(1) <= qr(2);
+            qr(2) <= qr(3);
+            qr(3) <= qr(4);
+            qr(4) <= ac(0);
+            ac(0) <= ac(1);
+            ac(1) <= ac(2);
+            ac(2) <= ac(3);
+            sc <= sc - 1;
+            state := 2;
+          WHEN 2 =>
+            IF (sc = 0) THEN
+              state := 3;
+            ELSE
+              state := 0;
+            END IF;
+          WHEN 3 =>
+            done <= '1';
+            qout <= qr(4 DOWNTO 1);
+            state := 0;
+          WHEN others =>
+            
+        END CASE;                        --  state
+      END IF;
+
+      
+  END PROCESS;
+END behave_mult;

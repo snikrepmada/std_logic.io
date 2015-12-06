@@ -1,0 +1,2 @@
+DEFINE WORK ncvhdl_lib
+DEFINE ieee_lib ssdlx_lib

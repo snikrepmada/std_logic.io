@@ -1,0 +1,223 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<TITLE>VHDL Resolution and Signatures</TITLE>
+</HEAD>
+<BODY>
+</HEAD>
+<BODY>
+<P>
+|<a href="summary.html">Summary</a>
+|<a href="design.html">Design Units</a>
+|<a href="sequential.html">Sequential Statements</a>
+|<a href="concurrent.html">Concurrent Statements</a>
+|<a href="types.html">Predefined Types</a>
+|<a href="declare.html">Declarations</a>
+|
+</P>
+<P>
+|<a href="misc.html">Resolution and Signatures</a>
+|<a href="reserved.html">Reserved Words</a>
+|<a href="operator.html">Operators</a>
+|<a href="attribute.html">Predefined Attributes</a>
+|<a href="stdpkg.html">Standard Packages</a>
+|
+</P>
+
+
+<a name="Top"></a>
+
+<H2> VHDL Resolution and Signatures </H2>
+
+<H3> Contents</H3>
+<dir>
+  <LI><a href="misc.html#resf"> Resolution Functions </a>
+  <LI><a href="misc.html#sign"> Signatures </a>
+  <LI><a href="misc.html#attr"> 'left 'right vs 'high 'low </a>
+</dir>
+
+<H3><a name="resf"> Resolution Functions </a></H3>
+<PRE>
+A resolution function defines how values from multiple sources,
+multiple drivers, are resolved into a single value.
+
+A type may be defined to have a resolution function. Every signal
+object of this type uses the resolution function when there are
+multiple drivers.
+
+A signal may be defined to use a specific resolution function.
+This signal uses the resolution function when there are multiple
+drivers.
+
+A resolution function must be a pure function that has a single
+input parameter of class <B>constant</B> that is a one dimensional
+unconstrained array of the type of the resolved signal.
+
+An example is from the package  std_logic_1164 :
+
+
+    <B>type</B> std_ulogic <B>is</B> ( 'U',  -- Uninitialized
+                         'X',  -- Forcing  Unknown
+                         '0',  -- Forcing  0
+                         '1',  -- Forcing  1
+                         'Z',  -- High Impedance   
+                         'W',  -- Weak     Unknown
+                         'L',  -- Weak     0       
+                         'H',  -- Weak     1       
+                         '-'   -- Don't care
+                       );
+
+    <B>type</B> std_ulogic_vector <B>is</B> <B>array</B> ( natural <B>range</B> &lt;&gt; ) <B>of</B> std_ulogic;
+                                    
+
+    -- resolution function
+
+    <B>function</B> resolved ( s : std_ulogic_vector ) <B>return</B> std_ulogic;
+        <B>variable</B> result : std_ulogic := 'Z';  -- weakest state default
+    <B>begin</B>
+        -- the test for a single driver is essential otherwise the
+        -- loop would return 'X' for a single driver of '-' and that
+        -- would conflict with the value of a single driver unresolved
+        -- signal.
+        <B>if</B>  s'length = 1 <B>then</B>
+            <B>return</B> s(s'low);
+        <B>else</B>
+            <B>for</B> i <B>in</B> s'range <B>loop</B>
+                result := resolution_table(result, s(i));
+            <B>end</B> <B>loop</B>;
+        <B>end</B> <B>if</B>;
+        <B>return</B> result;
+    <B>end</B> resolved;
+
+
+    <B>constant</B> resolution_table : stdlogic_table := (
+    --      ---------------------------------------------------------
+    --      |  U    X    0    1    Z    W    L    H    -        |   |  
+    --      ---------------------------------------------------------
+            ( 'U', 'U', 'U', 'U', 'U', 'U', 'U', 'U', 'U' ), -- | U |
+            ( 'U', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X' ), -- | X |
+            ( 'U', 'X', '0', 'X', '0', '0', '0', '0', 'X' ), -- | 0 |
+            ( 'U', 'X', 'X', '1', '1', '1', '1', '1', 'X' ), -- | 1 |
+            ( 'U', 'X', '0', '1', 'Z', 'W', 'L', 'H', 'X' ), -- | Z |
+            ( 'U', 'X', '0', '1', 'W', 'W', 'W', 'W', 'X' ), -- | W |
+            ( 'U', 'X', '0', '1', 'L', 'W', 'L', 'W', 'X' ), -- | L |
+            ( 'U', 'X', '0', '1', 'H', 'W', 'W', 'H', 'X' ), -- | H |
+            ( 'U', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X' )  -- | - |
+        );
+
+    
+    <B>subtype</B> std_logic <B>is</B> resolved std_ulogic;
+
+
+    <B>type</B> std_logic_vector <B>is</B> <B>array</B> ( natural <B>range</B> &lt;&gt;) <B>of</B> std_logic;
+
+    <B>signal</B> xyz : std_logic_vector(0 <B>to</B> 3);
+
+    xyz <= -- some expression ;
+
+    xyz <= -- some other expression ; -- a second driver
+                           -- each bit of  xyz  comes from function "resolved"
+
+</PRE>
+
+<H3><a name="sign"> Signatures </a></H3>
+<PRE>
+A signature distinguishes between overloaded subprograms and enumeration
+literals based on their parameter and result type profiles.
+A signature may be used in an attribute name, entity designator,
+or alias declaration.
+
+The syntax of the signature is
+
+  [ type_mark, type_mark, ... , type_mark <B>return</B> type_mark ]
+
+A signature used in an alias statement to give a shorthand to
+a textio procedure is:
+
+    <B>alias</B> swrite <B>is</B> write [line, string, side, width] ;
+
+allowing   swrite(output, "some text");  in place of
+           write(output, string'("some text"));
+
+The "[line, string, side, width]" is the signature to choose which
+of the overloaded  'write'  procedures to alias to 'swrite'.
+
+No <B>return</B> is used for procedures.
+The type marks are the parameter types in their defined order.
+The square brackets at beginning and end are part of the signature.
+The signature is used immediately after the subprogram or
+enumeration literal name.
+
+</PRE>
+
+<H3><a name="attr">  'left 'right vs 'high 'low  </a></H3>
+<PRE>
+This is just a specific example to help understand '<B>to</B>' vs '<B>downto</B>'
+and how the values of attributes such as 'left 'right and 'high 'low
+are determined.
+
+A : std_logic_vector(31 <B>downto</B> 0) := x"FEDCBA98"; -- '<B>downto</B>'
+B : std_logic_vector( 4 <B>to</B>    27) := x"654321";   -- '<B>to</B>'
+C       a literal constant                  x"321"
+
+Name  bitstring (attributes on following lines)
+
+ A    11111110110111001011101010011000
+      A'left=31     A'right=0      A'low=0      A'high=31
+      A(A'left)=1   A(A'right)=0   A(A'low)=0   A(A'high)=1
+      A'range=(31 downto 0)        A'reverse_range=(0 to 31) 
+      A'length=32                  A'ascending=false
+
+ B    011001010100001100100001                  B'ascending=true
+      B'left=4      B'right=27     B'low=4      B'high=27
+      B(B'left)=0   B(B'right)=1   B(B'low)=0   B(B'high)=1
+      B'range=(4 to 27)            B'reverse_range=(27 downto 4) 
+      B'length=24                  B'ascending=true
+
+ C    001100100001
+      C'left=0      C'right=11     C'low=0      C'high=11
+      C(C'left)=0   C(C'right)=1   C(C'low)=0   C(C'high)=1
+      C'range=(0 to 11)            C'reverse_range=(11 downto 0) 
+      C'length=12                  C'ascending=true
+
+      Notice the default values of attributes on literal constants.
+      Always a range of (0 to 'length-1)  'left  = 'low  = 0
+                                          'right = 'high = 'length-1
+</PRE>
+
+
+
+
+
+
+<H3><a name="Other"> Other Links </a></H3>
+<UL>
+  <LI> <a href="index.shtml">
+       VHDL help page
+       </a>
+  <LI> <a href="samples/samples.shtml">
+       Lots of sample VHDL code, from very simple, through I/O, to complex
+       </a>
+  <LI> <a href="http://tech-www.informatik.uni-hamburg.de/vhdl">
+       Hamburg VHDL Archive (the best set of links I have seen!)
+       </a>
+  <LI> <a href="http://rassp.scra.org/vhdl/tools/tools.html">
+       RASSP Project VHDL Tools
+       </a>
+  <LI> <a href="http://www.vhdl.org">
+       VHDL Organization Home Page
+       </a>
+  <LI> <a href="http://www.freehdl.seul.org">
+       gnu GPL VHDL for Linux, under development
+       </a>
+  <LI> <a href="http://www.ftlsys.com">
+       More information on Exploration/VHDL from FTL Systems.
+       </a>
+</UL>
+
+<H4><a href="misc.html#Top"> Go to top </a></H4>
+<H4><a href="index.shtml"> Go to VHDL index </a></H4>
+</BODY>
+</HTML>
+
+

@@ -1,0 +1,22 @@
+We wish to implement a limit checker, that checks whether a signed
+integer is out of specified bounds.  The integer and bounds are
+represented as standard logic vectors of the subtype word, declared
+in the package project_util as:
+
+	subtype word is std_logic_vector(31 downto 0);
+
+We can use a comparison function that compares integers represented as
+bit vectors.  The function is declared as:
+
+	function "<" ( bv1, bv2 : bit_vector ) return boolean;
+
+The entity declaration and architecure body for the limit checker are
+shown in Figure 21-2.  The process performs the comparisons by
+converting the word values to bit vectors, using the conversion
+function word_to_bitvector.  Note that we cannot use the function
+To_bitvector itself in the actual part of the association list, as it
+has two parameters, not one.  Note also that the result type of the
+conversion function in this example must be a constrained array type,
+in order to specify the array bounds for the actual value passed to
+the comparison function.
+

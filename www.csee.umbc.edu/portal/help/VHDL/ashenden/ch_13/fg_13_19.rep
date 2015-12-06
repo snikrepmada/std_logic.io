@@ -1,0 +1,28 @@
+
+SIMULATION REPORT          Generated on Tue Dec 20 13:44:25 1994
+
+
+Design simulated: logic_block
+Number of signals in design: 5
+Number of processes in design: 3
+
+Simulator Parameters:
+
+    Current directory: /a/eeyore/chamlang/users/cs/petera/vhdl-book/source/ch_13
+    VHDL Library: work
+    Project file: vsystem.ini
+    Simulation time resolution: ns
+
+List of Design units used:
+
+    Package: standard
+    Source File: /users/cs/petera/modeltech/sun4/../standard.vhd
+
+    Entity: logic_block
+    Architecture: ideal
+    Source File: fg_13_19.vhd
+
+    Entity: nand3
+    Architecture: behavioral
+    Source File: fg_13_19.vhd
+

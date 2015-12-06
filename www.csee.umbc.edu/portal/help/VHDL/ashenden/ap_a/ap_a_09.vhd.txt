@@ -1,0 +1,45 @@
+entity ap_a_09 is
+
+end entity ap_a_09;
+
+
+library ieee;  use ieee.std_logic_1164.all;
+
+architecture test of ap_a_09 is
+
+  signal a, b, c, d : integer := 0;
+
+begin
+
+  b1 : block is
+    signal y : integer;
+  begin
+    -- code from book
+
+    y <= a + b + c + d;
+
+    -- end code from book
+  end block b1;
+
+  b2 : block is
+    signal y : integer;
+  begin
+    -- code from book
+
+    y <= ( a + b ) + ( c + d );
+
+    -- end code from book
+  end block b2;
+
+  stimulus : process is
+  begin
+    a <= 1; wait for 10 ns;
+    b <= 2; wait for 10 ns;
+    c <= 3; wait for 10 ns;
+    d <= 4; wait for 10 ns;
+
+    wait;
+  end process stimulus;
+
+end architecture test;
+

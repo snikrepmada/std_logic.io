@@ -1,0 +1,2 @@
+DEFINE CDS_TEXT_EDITOR /usr/local/bin/emacs
+DEFINE WORK IEEE

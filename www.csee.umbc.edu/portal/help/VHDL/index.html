@@ -1,0 +1,290 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<TITLE> VHDL reference material</TITLE>
+</HEAD>
+
+<BODY>
+<H2> VHDL reference material </H2>
+
+
+
+<H3><a name="Top"> Contents </a></H3>
+<dir>
+  <LI><a href="index.html#cadence"> Using Cadence VHDL on CSEE machine </a>
+  <LI><a href="summary.html"> Compact Summary of VHDL </a>
+  <LI><a href="summary_one.html"> Printable Compact Summary of VHDL </a>
+  <LI><a href="samples/samples.shtml"> Sample VHDL code </a>
+  <LI><a href="VHDL-Handbook.pdf"> VHDL-handbook.pdf </a>
+  <LI><a href="http://www.doulos.com/knowhow/vhdl_designers_guide/"> VHDL designers guide </a>
+  <LI><a href="index.html#cook"> VHDL Cookbook in PostScript </a>
+  <LI><a href="index.html#ghdl"> GHDL Download free VHDL compiler and simulator </a>
+  <LI><a href="index.html#free"> Download free VHDL compiler and simulator </a>
+  <LI><a href="index.html#mast"> VHDL intro by Francis Bruno in PostScript </a>
+  <LI><a href="index.html#proj"> VHDL project by Francis Bruno in PostScript </a>
+  <LI><a href="index.html#vsim"> VCOMP/VSIM from University of Pittsburgh </a>
+  <LI><a href="index.html#ftl"> Using FTL Systems Exploration VHDL </a>
+  <LI><a href="stdpkg.html"> VHDL standard packages and types </a>
+  <LI><a href="index.html#fpga"> FPGA and other CAD information </a>
+  <LI><a href="index.html#draft"> Draft of IEEE Standard VHDL Language </a>
+  <LI><a href="index.html#Other"> Other Links </a>
+</dir>
+
+
+<H3><a name="cadence">Using Cadence VHDL on CSEE machine</a></H3>
+<PRE>
+  First: You must have an account on a GL machine. Every student
+         and faculty should have this.
+         Either log in directly to cadence1.cs.umbc.edu or
+         Use   ssh  cadence1.cs.umbc.edu
+
+         Be in your login directory, else some files need changing.
+         You can copy many sample files to your working directory using:
+         cp /afs/umbc.edu/users/s/q/squire/pub/download/cs411.tar  .
+         There are many files available.
+
+  Next:  Follow instructions exactly or you figure out a variation.
+  1)     Get this tar file into your home directory (on /afs  i.e.
+         available on all GL machines.)
+         <a href="cs411.tar">cs411.tar</a>   and then type commands:
+         cp /afs/umbc.edu/users/s/q/squire/pub/download/cs411.tar  .
+         tar -xvf cs411.tar
+         cd vhdl
+         mv Makefile.cadence Makefile
+         tcsh
+         source vhdl_cshrc
+         make
+         more add32_test.out
+         make clean              # saves a lot of disk quota
+
+         Then do your own thing with Makefile for other VHDL files
+
+  2)     The manual, step by step method (same results as above)
+         Be in your home directory.
+         mkdir vhdl                 # for your source code  .vhdl  .vhd
+         cd vhdl
+         mkdir vhdl_lib             # your WORK library, keep hands off
+         
+         You now need to get the following 6 files into you  vhdl  directory:
+         <a href="vhdl_cshrc.txt">vhdl_cshrc</a>
+         <a href="cds.lib.txt">cds.lib</a>      change $HOME to your path if needed
+         <a href="hdl.var.txt">hdl.var</a>
+         <a href="Makefile.cadence.txt">Makefile.cadence</a>    for first test
+         <a href="add32_test.vhdl.txt">add32_test.vhdl</a>     for first test
+         <a href="add32_test.run.txt">add32_test.run</a>       for first test
+
+
+         Make the following modification to  cds.lib :
+         Edit and replace $HOME  with the specific path to your home if needed
+         directory.  e.g.  /home/grad4/auser12
+
+         mv Makefile.cadence  Makefile
+         # Run the test run:
+         source  vhdl_cshrc
+         make                        # should be no error messages
+         more  add32_test.out        # it should have VHDL simulation output
+         make clean
+
+         You are on your own to write VHDL and modify the Makefile.
+         Remember each time you log on:
+         cd vhdl
+         tcsh
+         source vhdl_cshrc
+         make                        # or do your own thing.
+
+  The above is the latest generation Cadence "ncvhdl, nceval, ncsim"
+
+</PRE>
+
+<H3><a name="ghdl">GHDL</a></H3>
+<PRE>
+  You can download a free VHDL system form <a href="http://ghdl.free.fr">ghdl.free.fr</a>
+  Follow the instructions for Windows, Linux or MAC OSX
+
+  We have tried to get the Linux version onto linux.gl.umbc but
+  have been unsucessful, it has been installed on personal Linux
+  machines using root password and installing into /usr/local tree.
+
+  The Windows version is a little different, yet it works.
+
+  For CMSC 411, you need to do a little extra because GHDL does
+  not default with some IEEE packages we use.
+
+
+Using GHDL on your home PC in windows:
+
+Download GHDL from <a href="http://ghdl.free.fr/download.html">ghdl.free.fr/download.html</a>
+   click on "installer"
+After installing, control panel -> system -> advanced -> 
+      environment variables -> user variables, path, edit
+      Add to your user path  ;C:\"program files"\Ghdl\bin
+
+From a Command prompt window type or use <a href="download/add32_test.bat.html">add32_test.bat</a>
+
+rem use GHDL to analyze, elaborate and run add32_test.vhdl
+ghdl -a --ieee=synopsys add32.vhdl
+ghdl -a --ieee=synopsys add32_test.vhdl
+ghdl -e --ieee=synopsys add32_test
+ghdl -r --ieee=synopsys add32_test --stop-time=160ns > add32_test.out
+
+Look at file add32_test.out with your favorite editor.
+
+The 160ns is found in the file <a href="download/add32_test.run.html">add32_test.run</a>
+
+On Ubuntu, sudo apt-get install ghdl
+to install ghdl.
+A <a href="Makefile_ghdl.txt">Makefile_ghdl</a> compiles first test
+and HW4 add32 and part1_start. You can do project with this ghdl.
+
+The "diff" command on Windows is "fc", ignore the few lines at
+beginning and end of comparison of .chk files.
+
+</PRE>
+
+<H3><a name="ftl">Using FTL Systems Exploration VHDL</a></H3>
+<PRE>
+  First: Read Appendix H of Ashenden's book, p723
+         The steps are: load the CD, make a registration file,
+         EMail the file, get back a license file, download the
+         VHDL analyzer/compiler and simulator.
+
+  Then:  Follow the Quick Start Guide on page 728.
+
+</PRE>
+
+
+<H3><a name="cook"> VHDL Cookbook (PostScript files)</a></H3>
+<PRE>
+  The following eight PostScript files provide an introduction to VHDL
+</PRE>
+<UL>
+  <LI> <a href="VHDL-Cookbook-contents.ps"> Contents </a> 
+  <LI> <a href="VHDL-Cookbook-1.ps"> Chapter 1 </a> 
+  <LI> <a href="VHDL-Cookbook-2.ps"> Chapter 2 </a> 
+  <LI> <a href="VHDL-Cookbook-3.ps"> Chapter 3 </a> 
+  <LI> <a href="VHDL-Cookbook-4.ps"> Chapter 4 </a> 
+  <LI> <a href="VHDL-Cookbook-5.ps"> Chapter 5 </a> 
+  <LI> <a href="VHDL-Cookbook-6.ps"> Chapter 6 </a> 
+  <LI> <a href="VHDL-Cookbook-7.ps"> Chapter 7 </a> 
+  <LI> <a href="vhdl93.bnf.txt"> BNF for VHDL 93, plain text </a>
+</UL>
+<PRE>
+  The above is by Peter Ashenden who now has an updated version out
+  as books: "The Student's Guide to VHDL" ISBN 1-55860-520-7  and
+  "The Designer's Guide to VHDL" second edition ISBN 1-55860-674-2
+
+  Examples of VHDL from Ashenden's Designer's Guide are <a href="ashenden/index.html">here</a>
+
+</PRE>
+
+
+<H3><a name="free"> Download free VHDL compiler and simulator </a></H3>
+<PRE>
+  This is how I downloaded and installed a free VHDL compiler
+  and simulator on Windows and Linux systems. It is not 100%
+  compatible with Cadence, Cadence allows a few non standard constructs,
+  but it works on many circuits and features.
+
+  Using browser: <a href="http://www.symphonyeda.com/proddownloads.htm">www.symphonyeda.com/proddownloads.htm</a>
+
+  Choose  Windows ~9.3MB  or
+          Linux   ~9.3MB
+
+  Execute the Windows file, choose 'setup' and follow instructions
+
+  untar the Linux version and follow instructions
+
+  For CMSC 411 the project check files are  .chks  for this VHDL.
+
+</PRE>
+
+<H3><a name="mast"> VHDL intro by Francis Bruno (PostScript files)</a></H3>
+<PRE>
+  The following four PostScript files provide
+  Francis Bruno's  introduction to VHDL
+</PRE>
+<UL>
+  <LI> <a href="mast_tit.ps"> Title Page </a> 
+  <LI> <a href="mast_tab.ps"> Table of Contents </a> 
+  <LI> <a href="mast_doc.ps"> Body </a> 
+  <LI> <a href="mast_app.ps"> Appendix </a> 
+</UL>
+
+<H3><a name="proj"> VHDL project by Francis Bruno (PostScript files)</a></H3>
+<PRE>
+  The following four PostScript files plus index and .tar.gz
+  files provide Francis Bruno's VHDL project.
+</PRE>
+<UL>
+  <LI> <a href="proj_tit.ps"> Title Page </a> 
+  <LI> <a href="proj_tab.ps"> Table of contents </a> 
+  <LI> <a href="proj_doc.ps"> Body </a> 
+  <LI> <a href="proj_app.ps"> Appendix </a> 
+  <LI> <a href="proj.html"> Bruno index to models  </a> 
+  <LI> <a href="francis-bruno-thesis.tar.gz"> VHDL source code as .tar.gz </a> 
+</UL>
+
+
+<H3><a name="vsim"> VCOMP/VSIM from PITT (PostScript file)</a></H3>
+<PRE>
+  The following PostScript file provides an introduction to VHDL
+  and instructions for compiling and simulating using vcomp/vsim.
+</PRE>
+<UL>
+  <LI> <a href="vhdl_compiler_sim.ps"> VSIM manual </a> 
+</UL>
+
+
+<H3><a name="fpga"> FPGA and other CAD information </a></H3>
+<PRE>
+You can get working chips from VHDL using synthesis tools.
+
+One of the quickest ways to get chips is to use FPGA's,
+Field Programmable Gate Arrays.
+The two companies listed below provide the software and the
+foundry for you to design your own integrated circuit chips:
+
+<a href="http://www.altera.com"> www.altera.com </a>
+
+<a href="http://www.xilinx.com"> www.xilinx.com </a>
+
+Complete Computer Aided Design, CAD, packages are available from
+companies such as Cadence, Mentor Graphics and Synopsis.
+
+</PRE>
+
+<H3><a name="draft">Draft of IEEE Standard VHDL Language </a></H3>
+<PRE>
+ <a href="p1076.shtml">Draft 2000/D3 HERE </a>
+</PRE>
+
+<H3><a name="Other"> Other Links </a></H3>
+<UL>
+  <LI> <a href="http://tech-www.informatik.uni-hamburg.de/vhdl">
+       Hamburg VHDL Archive (the best set of links I have seen!)
+       </a>
+  <LI> <a href="http://rassp.scra.org/vhdl/tools/tools.html">
+       RASSP Project VHDL Tools
+       </a>
+  <LI> <a href="http://www.vhdl.org">
+       VHDL Organization Home Page
+       </a>
+  <LI> <a href="http://www.symphonyeda.com/proddownloads.htm">
+       A slightly restrictive free version of a commercial
+       VHDL compiler and simulator. Windows and Linux versions.
+       </a>
+  <LI> <a href="http://www.freehdl.seul.org">
+       gnu GPL VHDL for Linux, under development
+       (no progress since Jan 29, 2002)
+       </a>
+  <LI> <a href="http://www.ftlsys.com/products/exploration.shtml">
+       More information on Exploration/VHDL from FTL Systems
+       (seems dead in mid 2003)
+       </a>
+</UL>
+
+<H4><a href="index.html#Top"> Go to top </a></H4>
+
+<P> Last updated 2/5/09 </P>
+</BODY>
+</HTML>

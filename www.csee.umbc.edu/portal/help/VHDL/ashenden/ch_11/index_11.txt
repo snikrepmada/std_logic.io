@@ -1,0 +1,69 @@
+fg_11_01.vhd	entity fg_11_01
+		architecture test of fg_11_01
+		-- analyzed, tested ok, formatted
+
+fg_11_02.vhd	package MVL4
+		package body MVL4
+		-- analyzed, tested ok, formatted
+
+fg_11_03.vhd	entity tri_state_buffer
+		architecture behavioral of tri_state_buffer
+		-- analyzed, tested ok, formatted
+
+fg_11_04.vhd	entity misc_logic
+		architecture gate_level of misc_logic
+		-- analyzed, tested ok, formatted
+
+fg_11_05.vhd	package words
+		package body words
+		-- analyzed, tested ok, formatted
+
+fg_11_06.vhdentity cpu
+		architecture behavioral of cpu
+		entity memory
+		architecture behavioral of memory
+		entity ROM
+		architecture behavioral of ROM
+		entity computer_system
+		architecture top_level of computer_system
+		-- analyzed, tested ok, formatted
+
+fg_11_07.vhd	entity ROM
+		architecture behavioral of ROM
+		entity SIMM
+		architecture behavioral of SIMM
+		entity memory_subsystem
+		architecture detailed of memory_subsystem
+		-- analyzed, tested ok, formatted
+
+fg_11_08.vhd	package fg_11_08
+		package body fg_11_08
+		-- syntax test only, analyzed, tested ok, formatted
+
+fg_11_09.vhd	entity bus_module
+		entity bus_based_system
+		architecture top_level of bus_based_system
+		-- analyzed, tested ok, formatted
+
+fg_11_10.vhd	architecture behavioral of bus_module
+		-- analyzed, tested ok, formatted
+
+fg_11_12.vhd	package fg_11_12
+		package body fg_11_12
+		-- analyzed, tested ok, formatted
+
+fg_11_13.vhd	entity fg_11_13
+		architecture test of fg_11_13
+		-- analyzed, tested ok, formatted
+
+ch_11_01.vhd	entity ch_11_01
+		architecture test of ch_11_01
+		-- analyzed, tested (should fail), formatted
+
+ch_11_02.vhd	package ch_11_02
+		package body ch_11_02
+		-- syntax test only, alanyzed, tested ok, formatted
+
+ch_11_03.vhd	entity IO_section
+		-- syntax test only, alanyzed, tested ok, formatted
+

@@ -1,0 +1,80 @@
+pk_04_01.vhd	package pk_04_01
+		-- analyzed, tested ok
+
+fg_04_01.vhd	entity coeff_ram
+		architecture abstract of coeff_ram
+		-- analyzed, tested ok
+
+tb_04_01.vhd	entity test_bench_04_01
+		architecture test_coeff_ram_abstract of test_bench_04_01
+		-- analyzed, tested ok
+
+fg_04_03.vhd	entity fg_04_03
+		architecture test of fg_04_03
+		-- analyzed, tested ok
+
+fg_04_04.vhd	entity and_multiple
+		architecture behavioral of and_multiple
+		-- analyzed, tested ok
+
+tb_04_02.vhd	test_bench_04_02
+		architecture test_and_multiple_behavioral of test_bench_04_02
+		-- analyzed, tested ok
+
+pk_04_02.vhd	package pk_04_02
+		-- analyzed, tested ok
+
+fg_04_05.vhd	entity byte_swap
+		architecture behavior of byte_swap
+		-- analyzed, tested ok
+
+tb_04_03.vhd	entity test_bench_04_03
+		architecture test_byte_swap_behavior of test_bench_04_03
+		-- analyzed, tested ok
+
+tb_04_04.vhd	entity computer
+		-- analyzed, tested ok
+
+fg_04_06.vhd	architecture system_level of computer
+		-- analyzed, tested ok
+
+ch_04_01.vhd	entity ch_04_01
+		architecture test of ch_04_01  -- §4.1_a
+		-- analyzed, tested ok
+
+ch_04_02.vhd	entity ch_04_02
+		architecture test of ch_04_02  -- §4.1_b
+		-- analyzed, tested ok
+
+ch_04_03.vhd	entity ch_04_03
+		architecture test of ch_04_03  -- §4.1_c to §4.1_h
+		-- analyzed, tested ok
+
+ch_04_04.vhd	entity ch_04_04
+		architecture test of ch_04_04  -- §4.1_i
+		-- analyzed, tested ok
+
+ch_04_05.vhd	entity ch_04_05
+		architecture test of ch_04_05  -- §4.2_a
+		-- analyzed, tested ok
+
+ch_04_06.vhd	entity ch_04_06
+		architecture test of ch_04_06  -- §4.2_b
+		-- analyzed, tested ok
+
+ch_04_07.vhd	entity ch_04_07
+		architecture test of ch_04_07  -- §4.3_a
+		-- analyzed, tested ok
+
+ch_04_08.vhd	entity ch_04_08
+		architecture test of ch_04_08  -- §4.3_b
+		-- analyzed, tested ok
+
+ch_04_09.vhd	entity ch_04_09
+		architecture test of ch_04_09  -- §4.3_c
+		-- analyzed, tested ok
+
+ch_04_10.vhd	entity ch_04_10
+		architecture test of ch_04_10  -- §4.4_a, §4.4_b
+		-- analyzed, tested ok
+

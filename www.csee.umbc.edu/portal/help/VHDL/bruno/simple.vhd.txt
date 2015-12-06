@@ -1,0 +1,225 @@
+
+-------------------------------------------------------------------------------
+--  Simple processor from EE126
+--  By: Frank Bruno
+--  for Professor Chang
+-------------------------------------------------------------------------------
+
+USE work.alu_pkg.ALL;
+USE work.bv_arithmetic.ALL;
+  
+ENTITY processor IS
+  PORT(carry           : BUFFER bit;
+       out_reg         : BUFFER bit_vector(3 DOWNTO 0);
+       pc_out          : BUFFER bit_vector(3 DOWNTO 0);
+       input           : IN bit_vector(3 DOWNTO 0);
+       clock           : IN bit;
+       reset           : IN bit;
+       inc_pc          : IN bit;
+       instr           : IN bit_vector(7 DOWNTO 0);
+       load            : IN bit;
+       start           : IN bit
+       );
+END processor;
+
+ARCHITECTURE process_behave OF processor IS
+  COMPONENT simple_memory
+    PORT(instr         : IN bit_vector(7 DOWNTO 0);
+         pc            : IN integer range 0 to 15;
+         load          : IN bit;
+         clock         : IN bit;
+         current_mem   : OUT bit_vector( 7 DOWNTO 0)
+         );
+  END COMPONENT;
+  SIGNAL pc : integer range 0 to 15;
+  SIGNAL rs : bit_vector(3 DOWNTO 0);
+  SIGNAL rd : bit_vector(3 DOWNTO 0);
+  SIGNAL r : bit_4_array(3 DOWNTO 0);
+  SIGNAL halt : bit := '1';
+  SIGNAL current_mem : bit_vector(7 DOWNTO 0);
+  
+BEGIN  --  process_behave
+
+  u1: simple_memory
+  PORT MAP(instr => instr,
+           pc => pc,
+           load => load,
+           clock => clock,
+           current_mem => current_mem);
+           
+  output_pc:
+  PROCESS(pc)
+    BEGIN
+    pc_out <= itobv(pc, 4);
+  END PROCESS;
+
+  main:
+  PROCESS
+    VARIABLE state : integer range 0 to 6 := 0;
+    VARIABLE reg_num : integer range 0 to 3;
+    VARIABLE ci : bit;
+    VARIABLE reg1 : integer range 0 to 3;
+    VARIABLE reg2 : integer range 0 to 3;
+    VARIABLE temp_ci : integer range 0 to 1;
+    VARIABLE temp_i1 : integer;
+    VARIABLE temp_i2 : integer;
+    VARIABLE temp_out : integer;
+    VARIABLE status : bit_vector(3 DOWNTO 0);
+    VARIABLE output : bit_vector(3 DOWNTO 0);
+    VARIABLE final : bit_vector(3 DOWNTO 0);
+    VARIABLE v : bit;
+    VARIABLE v2 : bit;
+    VARIABLE inter : integer;
+    
+    BEGIN
+      WAIT UNTIL clock'EVENT and clock = '1';
+      IF (inc_pc = '1') THEN
+        pc <= pc + 1;
+      END IF;
+
+      IF (start = '1') THEN
+        halt <= '0';
+      END IF;
+      
+      IF (reset = '1') THEN
+        pc <= 0;
+        halt <= '1';
+      END IF;
+
+      out_reg <= rd;
+      IF (halt = '0') THEN
+      CASE state IS
+        WHEN 0 =>                        --  decode instruction
+          IF (current_mem(7 DOWNTO 4) = "1100") THEN
+            state := 1;
+          ELSIF (current_mem(7 DOWNTO 6) = "11") THEN
+            state := 3;
+            CASE current_mem(5 DOWNTO 4) IS
+            WHEN "00" =>
+              ci := '0';
+            WHEN "01" =>
+              ci := '1';
+            WHEN "10" =>
+              ci := carry;
+            WHEN "11" =>
+              ci := NOT(carry);
+          END CASE;                      --  current_mem(5 DOWNTO 4)
+          ELSE
+            state := 4;
+            CASE current_mem(5 DOWNTO 4) IS
+            WHEN "00" =>
+              ci := '0';
+            WHEN "01" =>
+              ci := '1';
+            WHEN "10" =>
+              ci := carry;
+            WHEN "11" =>
+              ci := NOT(carry);
+          END CASE;                      --  current_mem(5 DOWNTO 4)
+          END IF;
+        WHEN 1 =>                        --  halt & i/o
+          IF (current_mem(3) = '1') THEN
+            rd <= input;
+          END IF;
+          state := 2;
+        WHEN 2 =>
+          IF (current_mem(3) = '1') THEN
+            reg_num := bvtoi(current_mem(1 DOWNTO 0));
+            r(reg_num) <= rd;
+          END IF;
+          IF (current_mem(2) = '1') THEN
+            rd <= r(bvtoi(current_mem(1 DOWNTO 0)));
+            halt <= '1';
+          END IF;
+          IF (pc = 15) THEN
+            pc  <= 0;
+          ELSE
+            pc <= pc + 1;
+          END IF;
+          state := 0;
+        WHEN 3 =>
+          IF (ci = '1') THEN
+            pc <= bvtoi(current_mem(3 DOWNTO 0));
+          ELSE
+            IF (pc = 15) THEN
+              pc <= 0;
+            ELSE
+              pc <= pc + 1;
+            END IF;
+          END IF;
+          state := 6;
+        WHEN 4 =>
+          reg1 := bvtoi(current_mem(3 DOWNTO 2));--  (s)
+          reg2 := bvtoi(current_mem(1 DOWNTO 0));--  (d)
+          rs <= r(reg1);
+          rd <= r(reg2);
+          state := 5;
+        WHEN 5 =>
+          IF (ci = '0') THEN
+            temp_ci := 0;
+          ELSE
+            temp_ci := 1;
+          END IF;
+          temp_i1 := sbvtoi(rs);
+          CASE current_mem(7 DOWNTO 6) IS
+            WHEN "00" =>
+              temp_out := temp_i1 + temp_ci;
+              IF (temp_out < -16 OR temp_out > 15) THEN
+                carry <= '1';
+              ELSIF ((temp_out >= 0) AND (temp_i1 < temp_ci)) THEN
+                carry <= '1';
+              ELSE
+                carry <= '0';
+              END IF;
+            WHEN "01" =>
+              temp_i2 := sbvtoi(rd);
+              temp_out := (temp_i1 + temp_i2) + temp_ci;
+              IF (temp_out < -16 OR temp_out > 15) THEN
+                carry <= '1';
+              ELSIF ((temp_out >= 0) AND ((temp_i1 < temp_i2) OR
+                (temp_i1 < temp_ci) OR temp_i2 < temp_ci)) THEN
+                carry <= '1';
+              ELSE
+                carry <= '0';
+              END IF;
+            WHEN "10" =>
+              IF (temp_ci = 0) THEN
+                temp_ci := 1;
+              ELSE
+                temp_ci := 0;
+              END IF;
+              temp_i2 := sbvtoi(rd);
+              inter := temp_i2 - temp_i1;
+              temp_out := inter - temp_ci;
+              IF ((temp_i2 < temp_i1) OR (inter < temp_ci)) THEN
+                carry <= '1';
+              ELSE
+                carry <= '0';
+              END IF;
+            WHEN OTHERS => 
+          END CASE;                      --  current_mem(7 DOWNTO 6)
+          r(reg2) <= itobv(temp_out, 4);
+          IF (pc = 15) THEN
+            pc  <= 0;
+          ELSE
+            pc <= pc + 1;
+          END IF;
+          state := 0;
+        WHEN 6 =>
+          state := 0;
+      END CASE;                          --  state
+      END IF;
+  END PROCESS;
+END process_behave;
+
+CONFIGURATION config_processor OF processor IS
+  FOR process_behave
+    FOR u1: simple_memory
+      USE ENTITY work.simple_memory;
+    END FOR;
+  END FOR;
+END config_processor;
+
+
+
+

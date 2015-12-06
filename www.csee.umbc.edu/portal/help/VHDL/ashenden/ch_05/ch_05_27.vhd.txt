@@ -1,0 +1,29 @@
+entity ch_05_27 is
+
+end entity ch_05_27;
+
+
+----------------------------------------------------------------
+
+
+library wasp_lib;
+
+-- code from book:
+
+use wasp_lib.all;
+
+-- end of code from book
+
+
+architecture test of ch_05_27 is
+
+  signal clk, filter_clk : bit;
+
+begin
+
+
+  clk_pad : entity in_pad
+    port map ( i => clk, z => filter_clk );
+
+
+end architecture test;

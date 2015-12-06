@@ -1,0 +1,112 @@
+
+
+entity alu_1 is
+
+   port( opcode_2_port, opcode_1_port, opcode_0_port, a, b, cin, clock : in BIT
+         ;  s, cout : out BIT);
+
+end alu_1;
+
+architecture STRUCTURAL_VIEW of alu_1 is
+
+   component OR2
+      port( A, B : in BIT;  Z : out BIT);
+   end component;
+   
+   component OR3
+      port( A, B, C : in BIT;  Z : out BIT);
+   end component;
+   
+   component MUX21L
+      port( A, B, S : in BIT;  Z : out BIT);
+   end component;
+   
+   component ND2
+      port( A, B : in BIT;  Z : out BIT);
+   end component;
+   
+   component AN3
+      port( A, B, C : in BIT;  Z : out BIT);
+   end component;
+   
+   component NR2
+      port( A, B : in BIT;  Z : out BIT);
+   end component;
+   
+   component AO2
+      port( A, B, C, D : in BIT;  Z : out BIT);
+   end component;
+   
+   component AO3
+      port( A, B, C, D : in BIT;  Z : out BIT);
+   end component;
+   
+   component AO4
+      port( A, B, C, D : in BIT;  Z : out BIT);
+   end component;
+   
+   component AO7
+      port( A, B, C : in BIT;  Z : out BIT);
+   end component;
+   
+   component MUX31L
+      port( D0, D1, D2, A, B : in BIT;  Z : out BIT);
+   end component;
+   
+   component IVA
+      port( A : in BIT;  Z : out BIT);
+   end component;
+   
+   component FD1
+      port( D, CP : in BIT;  Q, QN : out BIT);
+   end component;
+   
+   component IVP
+      port( A : in BIT;  Z : out BIT);
+   end component;
+   
+   signal net66, n99, n120, n121, n122, n123, n110, n124, n111, n125, n112, 
+      n113, n100, n114, n101, n115, n102, n116, n103, n117, n104, n118, n105, 
+      n119, n106, n107, n108, n109 : BIT;
+
+begin
+   
+   U70 : AN3  port map( A => opcode_1_port, B => n117, C => opcode_2_port, Z
+                           => n102);
+   U71 : NR2  port map( A => n108, B => n110, Z => n106);
+   U72 : OR2  port map( A => n101, B => n116, Z => n114);
+   U60 : IVA  port map( A => cin, Z => n112);
+   U73 : AO3  port map( A => n112, B => n113, C => n114, D => n115, Z => 
+                           n125);
+   U61 : AO2  port map( A => n107, B => a, C => n111, D => n100, Z => n113);
+   U74 : ND2  port map( A => opcode_2_port, B => n110, Z => n123);
+   U62 : IVA  port map( A => a, Z => n100);
+   U75 : AO4  port map( A => n112, B => n100, C => cin, D => a, Z => n116);
+   U63 : IVA  port map( A => b, Z => n110);
+   U76 : AO2  port map( A => n102, B => b, C => n103, D => n110, Z => n101);
+   U64 : ND2  port map( A => n101, B => n119, Z => n118);
+   U77 : AO7  port map( A => opcode_1_port, B => n104, C => n105, Z => n124
+                           );
+   U52 : MUX21L  port map( A => n120, B => n118, S => n116, Z => n105);
+   U65 : IVP  port map( A => opcode_0_port, Z => n117);
+   U78 : OR3  port map( A => n103, B => n109, C => n102, Z => n107);
+   U53 : MUX31L  port map( D0 => n123, D1 => n99, D2 => n106, A => a, B => 
+                           n117, Z => n104);
+   U66 : ND2  port map( A => n121, B => n122, Z => n120);
+   U54 : IVA  port map( A => n123, Z => n99);
+   U67 : IVA  port map( A => opcode_2_port, Z => n108);
+   U55 : IVP  port map( A => n111, Z => n119);
+   U68 : AN3  port map( A => n108, B => n117, C => opcode_1_port, Z => n109
+                           );
+   U56 : IVP  port map( A => n109, Z => n122);
+   U69 : AN3  port map( A => opcode_2_port, B => opcode_1_port, C => 
+                           opcode_0_port, Z => n103);
+   U57 : OR3  port map( A => n111, B => n107, C => net66, Z => n115);
+   U58 : AO2  port map( A => n103, B => b, C => n102, D => n110, Z => n121);
+   U59 : AN3  port map( A => opcode_1_port, B => n108, C => opcode_0_port, Z
+                           => n111);
+   cout_reg : FD1  port map( D => n125, CP => clock, Q => cout, QN => net66
+                           );
+   s_reg : FD1  port map( D => n124, CP => clock, Q => s, QN => open);
+
+end STRUCTURAL_VIEW;

@@ -1,0 +1,2112 @@
+-- --------------------------------------------------------------------
+--
+--   Title     : STD_LOGIC_ARITH arithmetic support for STD_ULOGIC/
+--             : STD_LOGIC_VECTOR data type
+--   Library   : This package shall be compiled into a logical library
+--             : named IEEE.
+--   Purpose   : To support unsigned arithmetic operations such as
+--             : addition, subtraction, multiplication etc. for std_ulogic
+--             : and std_logic_vector data types. Besides it supports
+--             : functions and operators for Conditional operations, 
+--             : shift operations, relational operation between integer 
+--             : and std_logic_vector types, aligning size between operands
+--             : of different sizes, type conversion.
+--             : It also supports a set of arithemtic, conversion, and 
+--             : comparison functions for SIGNED, UNSIGNED, SMALL_INT, 
+--             : INTEGER, STD_ULOGIC, STD_LOGIC, and STD_LOGIC_VECTOR. 
+--             :
+--  Note       : No declarations or definitions shall be included in, 
+--             : or excluded from this package.
+--             :
+--             : Modification History: TH, 24th Jan., 1994
+--             : Following functions are overloaded for STD_ULOGIC_VECTOR
+--             : type: "+", "-", "*", "cond_op", "<", ">", "<=", ">=", "=",
+--             : "/=", sh_left, sh_right, align_size and "to_integer" 
+--             : New functions added are:
+--             : To_StdUlogicVector (oper: INTEGER; length: NATURAL) 
+--             :                              return  STD_ULOGIC_VECTOR
+--             : "+"(op1: STD_ULOGIC; op2: STD_ULOGIC) return STD_ULOGIC;
+--             : "-"(op1: STD_ULOGIC; op2: STD_ULOGIC) return STD_ULOGIC;
+--
+--             : Name changes from STD_LOGIC_ARITH to STD_LOGIC_ARITH
+--             : operator "/" added.
+--             :  Vinaya: 13/9/94.
+--------------------------------------------------------------------------
+
+library IEEE;
+use IEEE.std_logic_1164.all;
+
+
+package STD_LOGIC_ARITH is
+
+-- ADD/SUBTRACT OPERATORS
+
+    function "+"(op1, op2: STD_LOGIC_VECTOR) return STD_LOGIC_VECTOR;
+    function "+"(op1: STD_LOGIC_VECTOR; op2: STD_ULOGIC) return STD_LOGIC_VECTOR;
+    function "+"(op1: STD_ULOGIC; op2: STD_LOGIC_VECTOR) return STD_LOGIC_VECTOR;
+    function "+"(op1: INTEGER; op2: STD_LOGIC_VECTOR) return STD_LOGIC_VECTOR;
+    function "+"(op1: STD_LOGIC_VECTOR; op2: INTEGER) return STD_LOGIC_VECTOR;
+
+    function "+"(op1, op2: STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR;
+    function "+"(op1: STD_ULOGIC_VECTOR; op2: STD_ULOGIC) return STD_ULOGIC_VECTOR;
+    function "+"(op1: STD_ULOGIC; op2: STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR;
+    function "+"(op1: INTEGER; op2: STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR;
+    function "+"(op1: STD_ULOGIC_VECTOR; op2: INTEGER) return STD_ULOGIC_VECTOR;
+    function "+"(op1, op2 : STD_ULOGIC)             return STD_ULOGIC;
+
+
+    function "-"(op1, op2: STD_LOGIC_VECTOR) return STD_LOGIC_VECTOR;
+    function "-"(op1: STD_LOGIC_VECTOR; op2: STD_ULOGIC) return STD_LOGIC_VECTOR;
+    function "-"(op1: STD_ULOGIC; op2: STD_LOGIC_VECTOR) return STD_LOGIC_VECTOR;
+    function "-"(op1: INTEGER; op2: STD_LOGIC_VECTOR) return STD_LOGIC_VECTOR;
+    function "-"(op1: STD_LOGIC_VECTOR; op2: INTEGER) return STD_LOGIC_VECTOR;
+
+    function "-"(op1, op2: STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR;
+    function "-"(op1: STD_ULOGIC_VECTOR; op2: STD_ULOGIC) return STD_ULOGIC_VECTOR;
+    function "-"(op1: STD_ULOGIC; op2: STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR;
+    function "-"(op1: INTEGER; op2: STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR;
+    function "-"(op1: STD_ULOGIC_VECTOR; op2: INTEGER) return STD_ULOGIC_VECTOR;
+    function "-"(op1, op2 : STD_ULOGIC)             return STD_ULOGIC;
+
+  -- UNARY OPERATORS
+ 
+      function "+" (op1: STD_LOGIC_VECTOR)   return STD_LOGIC_VECTOR;
+      function "+" (op1: STD_ULOGIC_VECTOR)   return STD_ULOGIC_VECTOR;
+
+-- MULTIPLYING OPERATORS 
+ 
+    function "*" (op1, op2 : STD_LOGIC_VECTOR)      return STD_LOGIC_VECTOR;
+    function "*" (op1: STD_ULOGIC; op2 : STD_LOGIC_VECTOR) return STD_LOGIC_VECTOR;
+    function "*" (op1: STD_LOGIC_VECTOR; op2 : STD_ULOGIC) return STD_LOGIC_VECTOR;
+    function "*" (op1, op2 : STD_ULOGIC)             return STD_ULOGIC;
+
+    function "*" (op1, op2 : STD_ULOGIC_VECTOR)      return STD_ULOGIC_VECTOR;
+    function "*" (op1: STD_ULOGIC; op2 : STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR;
+    function "*" (op1: STD_ULOGIC_VECTOR; op2 : STD_ULOGIC) return STD_ULOGIC_VECTOR;
+
+-- DIVISION OPERATORS 
+-- The division operators are only for internal use
+-- It is not advisible to use them in design.
+
+    function "/" (op1, op2 : STD_LOGIC_VECTOR)      return STD_LOGIC_VECTOR;
+    function "/" (op1: STD_LOGIC_VECTOR; op2 : STD_ULOGIC) return STD_LOGIC_VECTOR;
+    function "/" (op1: STD_ULOGIC; op2 : STD_LOGIC_VECTOR) return STD_ULOGIC;
+    function "/" (op1, op2 : STD_ULOGIC)             return STD_ULOGIC;
+
+
+-- CONDITIONAL FUNCTIONS 
+
+   function cond_op (cond : boolean; left_val, right_val: STD_LOGIC_VECTOR) 
+                                           return STD_LOGIC_VECTOR;
+  
+   function cond_op (cond : boolean; left_val, right_val: STD_ULOGIC) 
+                                          return STD_ULOGIC;
+
+   function cond_op (cond : boolean; left_val, right_val: STD_ULOGIC_VECTOR)
+                                           return STD_ULOGIC_VECTOR;
+
+-- RELATIONAL OPERATORS
+
+    function "<"(op1: INTEGER; op2: STD_LOGIC_VECTOR) return BOOLEAN;
+    function "<"(op1: STD_LOGIC_VECTOR; op2: INTEGER) return BOOLEAN;
+
+    function "<="(op1: INTEGER; op2: STD_LOGIC_VECTOR) return BOOLEAN;
+    function "<="(op1: STD_LOGIC_VECTOR; op2: INTEGER) return BOOLEAN;
+
+    function ">"(op1: INTEGER; op2: STD_LOGIC_VECTOR) return BOOLEAN;
+    function ">"(op1: STD_LOGIC_VECTOR; op2: INTEGER) return BOOLEAN;
+
+    function ">="(op1: INTEGER; op2: STD_LOGIC_VECTOR) return BOOLEAN;
+    function ">="(op1: STD_LOGIC_VECTOR; op2: INTEGER) return BOOLEAN;
+
+    function "="(op1: INTEGER; op2: STD_LOGIC_VECTOR) return BOOLEAN;
+    function "="(op1: STD_LOGIC_VECTOR; op2: INTEGER) return BOOLEAN;
+
+    function "/="(op1: INTEGER; op2: STD_LOGIC_VECTOR) return BOOLEAN;
+    function "/="(op1: STD_LOGIC_VECTOR; op2: INTEGER) return BOOLEAN;
+
+
+    function "<"(op1: INTEGER; op2: STD_ULOGIC_VECTOR) return BOOLEAN;
+    function "<"(op1: STD_ULOGIC_VECTOR; op2: INTEGER) return BOOLEAN;
+ 
+    function "<="(op1: INTEGER; op2: STD_ULOGIC_VECTOR) return BOOLEAN;
+    function "<="(op1: STD_ULOGIC_VECTOR; op2: INTEGER) return BOOLEAN;
+ 
+    function ">"(op1: INTEGER; op2: STD_ULOGIC_VECTOR) return BOOLEAN;
+    function ">"(op1: STD_ULOGIC_VECTOR; op2: INTEGER) return BOOLEAN;
+ 
+    function ">="(op1: INTEGER; op2: STD_ULOGIC_VECTOR) return BOOLEAN;
+    function ">="(op1: STD_ULOGIC_VECTOR; op2: INTEGER) return BOOLEAN;
+ 
+    function "="(op1: INTEGER; op2: STD_ULOGIC_VECTOR) return BOOLEAN;
+    function "="(op1: STD_ULOGIC_VECTOR; op2: INTEGER) return BOOLEAN;
+ 
+    function "/="(op1: INTEGER; op2: STD_ULOGIC_VECTOR) return BOOLEAN;
+    function "/="(op1: STD_ULOGIC_VECTOR; op2: INTEGER) return BOOLEAN;
+
+-- SHIFT OPERATORS
+
+    function sh_left(op1: STD_LOGIC_VECTOR; op2: NATURAL) return STD_LOGIC_VECTOR;
+
+    function sh_right(op1: STD_LOGIC_VECTOR; op2: NATURAL) return STD_LOGIC_VECTOR;
+
+    function sh_left(op1: STD_ULOGIC_VECTOR; op2: NATURAL) return STD_ULOGIC_VECTOR;
+ 
+    function sh_right(op1: STD_ULOGIC_VECTOR; op2: NATURAL) return STD_ULOGIC_VECTOR;
+
+
+-- FUNCTIONS TO ALLOW ASSIGNMENTS OF STD_LOGIC_VECTOR OF UNEQUAL SIZES 
+
+
+    function align_size (oper : STD_LOGIC_VECTOR; size : NATURAL) return STD_LOGIC_VECTOR;
+    function align_size (oper : STD_ULOGIC;        size : NATURAL) return STD_LOGIC_VECTOR;
+
+    function align_size (oper : STD_ULOGIC_VECTOR; size : NATURAL) return STD_ULOGIC_VECTOR;
+    function align_size (oper : STD_ULOGIC;        size : NATURAL) return STD_ULOGIC_VECTOR;
+
+-- CONVERSION TO INTEGER FROM STD_LOGIC AND STD_LOGIC_VECTOR
+
+    function to_integer (oper : STD_LOGIC_VECTOR) return INTEGER;
+    function to_integer (oper: STD_ULOGIC)         return INTEGER;
+    function to_integer (oper : STD_ULOGIC_VECTOR) return INTEGER;
+
+
+-- CONVERSION TO STD_LOGIC_VECTOR FROM INTEGER
+
+    function To_StdLogicVector (oper: INTEGER; length: NATURAL) return STD_LOGIC_VECTOR;
+    function To_StdUlogicVector (oper: INTEGER; length: NATURAL) return STD_ULOGIC_VECTOR;
+
+-- UTILITY FUNCTIONS
+
+    function drive (V: STD_LOGIC_VECTOR)  return STD_ULOGIC_VECTOR;
+    function drive (V: STD_ULOGIC_VECTOR) return STD_LOGIC_VECTOR;
+
+    function Sense (V: STD_ULOGIC; vZ, vU, vDC: STD_ULOGIC) return STD_ULOGIC;
+    function Sense (V: STD_ULOGIC_VECTOR; vZ, vU, vDC: STD_ULOGIC)
+                                               return STD_ULOGIC_VECTOR;
+    function Sense (V: STD_LOGIC_VECTOR; vZ, vU, vDC: STD_ULOGIC)
+                                               return STD_ULOGIC_VECTOR;
+
+-- CONVERSION TABLE FOR TO_INTEGER
+
+   type tbl_type is array (STD_ULOGIC) of STD_ULOGIC;
+   constant tbl_BINARY : tbl_type :=
+   ('X', 'X', '0', '1', 'X', 'X', '0', '1', 'X');
+
+end STD_LOGIC_ARITH;
+
+
+package body STD_LOGIC_ARITH is
+
+---- IMPLEMENTATTION
+
+-- Functions for max size
+
+    function max         (op1,op2 : INTEGER) return INTEGER;
+
+--------------------------------------------------------------------------------
+-- FUNCTION : 
+--   ALIGN_SIZE (oper : STD_ULOGIC; size : NATURAL) return STD_LOGIC_VECTOR 
+--      INPUT : a std_logic value to be place in a vector and the designated 
+--              size of the result
+--      OUTPUT: a vector of the specified size with the input value
+--              truncated or aligned and padded as needed.
+
+   function align_size (oper : STD_ULOGIC; size : NATURAL) return STD_LOGIC_VECTOR is
+
+       variable outv  : STD_LOGIC_VECTOR(size-1 downto 0) 
+                                            := (others => '0');
+    begin
+       outv(outv'RIGHT) := oper;
+       return (outv);
+    end align_size;
+
+
+-------------------------------------------------------------------------------
+--- FUNCTION :
+--  ALIGN_SIZE (oper : STD_LOGIC_VECTOR; size : NATURAL) return STD_LOGIC_VECTOR
+--      INPUT : a vector to be aligned and the designated size of the result
+--      OUTPUT: a vector of the specified size with the input value
+--              truncated or aligned and padded as needed.
+    function align_size (oper : STD_LOGIC_VECTOR; size : NATURAL) 
+                                           return STD_LOGIC_VECTOR is
+       variable out_mvlv  : STD_LOGIC_VECTOR(size -1 downto 0);
+       variable temp_oper : STD_LOGIC_VECTOR(oper'LENGTH  -1 downto 0) := oper;
+
+    begin
+
+    -- Truncate left, right justify, pad with zeros
+
+       if oper'length > size then  -- Truncate left
+           out_mvlv := temp_oper(size -1 downto 0);
+       else
+           out_mvlv := (others => '0');
+           out_mvlv(oper'LENGTH - 1 downto 0) := oper ;
+       end if;
+       return (out_mvlv);
+    end align_size;
+
+-------------------------------------------------------------------------------
+--- FUNCTION :
+--  ALIGN_SIZE (oper : STD_ULOGIC_VECTOR; size : NATURAL) return STD_ULOGIC_VECTOR
+--      INPUT : a vector to be aligned and the designated size of the result
+--      OUTPUT: a vector of the specified size with the input value
+--              truncated or aligned and padded as needed.
+    function align_size (oper : STD_ULOGIC_VECTOR; size : NATURAL)
+                                           return STD_ULOGIC_VECTOR is
+       variable out_mvlv  : STD_ULOGIC_VECTOR(size -1 downto 0);
+       variable temp_oper : STD_ULOGIC_VECTOR(oper'LENGTH  -1 downto 0) := oper;
+ 
+    begin
+ 
+    -- Truncate left, right justify, pad with zeros
+ 
+       if oper'length > size then  -- Truncate left
+           out_mvlv := temp_oper(size -1 downto 0);
+       else
+           out_mvlv := (others => '0');
+           out_mvlv(oper'LENGTH - 1 downto 0) := oper ;
+       end if;
+       return (out_mvlv);
+    end align_size;
+
+--------------------------------------------------------------------------------
+-- FUNCTION :
+--   ALIGN_SIZE (oper : STD_ULOGIC; size : NATURAL) return STD_ULOGIC_VECTOR
+--      INPUT : a std_logic value to be place in a vector and the designated
+--              size of the result
+--      OUTPUT: a vector of the specified size with the input value
+--              truncated or aligned and padded as needed.
+ 
+   function align_size (oper : STD_ULOGIC; size : NATURAL) return STD_ULOGIC_VECTOR is
+ 
+       variable outv  : STD_ULOGIC_VECTOR(size-1 downto 0)
+                                            := (others => '0');
+    begin
+       outv(outv'RIGHT) := oper;
+       return (outv);
+    end align_size;
+ 
+
+--------------------------------------------------------------------------------
+--	the input arrays to a given function are of different sizes.
+
+    function max (op1, op2 : INTEGER) return INTEGER is
+    begin
+        if op1 > op2 then
+           return op1;
+        else
+           return op2;
+        end if;
+    end max;
+
+--------------------------------------------------------------------------------
+-- FUNCTION :
+--   TO_STDLOGICVECTOR (oper : INTEGER; length : NATURAL) return STD_LOGIC_VECTOR
+--     INPUT : An integer value
+--     OUTPUT: An STD_LOGIC_VECTOR of size LENGTH representing that integer
+--             value. If the length is not large enough, the value will
+--             be truncated.
+-------------------------------------------------------------------------------- 
+    function To_StdLogicVector (oper: INTEGER; length: NATURAL) return STD_LOGIC_VECTOR is
+        variable temp : INTEGER := oper;
+        variable temp_result : STD_LOGIC_VECTOR (LENGTH -1 downto 0) := (others => '0');
+    begin
+
+-- TH, 23rd May,94: PCR#521, put max neg integer check within translate on_off
+
+-- synergy translate_off
+
+        if (oper = INTEGER'LEFT) then  --  Max negative integer
+           temp_result(0) := '1';
+           if (length > 31) then
+               temp_result(LENGTH -1 downto 31) := (others => '1');
+           end if;
+           return temp_result;
+        end if;
+
+-- synergy translate_on
+
+        for i in 0 to LENGTH - 1 loop
+            if (temp mod 2) = 1 then
+                temp_result(i) := '1';
+            else
+                temp_result(i) := '0';
+            end if;
+            exit when temp = 0;
+            if temp < 0 then
+               temp := (temp - 1) / 2;
+            else
+                temp := temp / 2;
+            end if;
+        end loop;
+        return temp_result;
+    end To_StdLogicVector;
+ 
+--------------------------------------------------------------------------------
+-- FUNCTION :
+--   TO_STDULOGICVECTOR (oper : INTEGER; length : NATURAL) return STD_ULOGIC_VECTOR
+--     INPUT : An integer value
+--     OUTPUT: An STD_ULOGIC_VECTOR of size LENGTH representing that integer
+--             value. If the length is not large enough, the value will
+--             be truncated.
+--------------------------------------------------------------------------------
+    function To_StdULogicVector (oper: INTEGER; length: NATURAL) return STD_ULOGIC_VECTOR is
+        variable temp : INTEGER := oper;
+        variable temp_result : STD_ULOGIC_VECTOR (LENGTH -1 downto 0) := (others => '0');
+    begin
+
+    -- TH, 23rd May,94: PCR#521, put max neg integer check within translate on_off
+
+    -- synergy translate_off
+
+        if (oper = INTEGER'LEFT) then  --  Max negative integer
+           temp_result(0) := '1';
+           if (length > 31) then
+               temp_result(LENGTH -1 downto 31) := (others => '1');
+           end if;
+           return temp_result;
+        end if;
+
+    -- synergy translate_on
+ 
+        for i in 0 to LENGTH - 1 loop
+            if (temp mod 2) = 1 then
+                temp_result(i) := '1';
+            else
+                temp_result(i) := '0';
+            end if;
+            exit when temp = 0;
+            if temp < 0 then
+                temp := (temp - 1) / 2;
+            else
+                temp := temp / 2;
+            end if;
+        end loop;
+        return temp_result;
+    end To_StdULogicVector;
+
+--------------------------------------------------------------------------------
+-- FUNCTION :      
+--   "+" (op1, op2 : STD_LOGIC_VECTOR) return STD_LOGIC_VECTOR 
+--      INPUT  : op1 and op2 of type STD_LOGIC_VECTOR
+--      OUTPUT : The sum of the two parameters. 
+--
+--    This function adds the two parameters and returns a STD_LOGIC vector  
+--    It uses table lookup to get sum and carry.
+--    Note: return size is max of the operands size
+
+    function "+" (op1, op2 : STD_LOGIC_VECTOR) return STD_LOGIC_VECTOR is
+
+        constant size1: INTEGER := op1'LENGTH;
+        constant size2: INTEGER := op2'LENGTH;
+        constant size_op: INTEGER := max(size1, size2);
+                       -- size_op is the width of the larger operand
+        variable loop_cnt : INTEGER := size_op - 1;
+        variable oper1, oper2 : STD_LOGIC_VECTOR(loop_cnt downto 0);
+        variable result : STD_LOGIC_VECTOR (loop_cnt downto 0)
+                                     := (others => 'X');
+                       -- size of result is size_op 
+        variable lt, rt : std_ulogic;
+        variable carry : std_ulogic := '0';
+ 
+    begin
+        if not (Is_X(op1) or Is_X(op2)) then
+           if (size1 < size_op) then
+              oper1 := align_size(op1, size_op); -- Make both the
+           else
+              oper1 := op1;
+           end if;
+           if (size2 < size_op) then
+               oper2 := align_size(op2, size_op); -- operands of
+           else                                                 -- same size
+               oper2 := op2;
+           end if;
+
+           for I in 0 to loop_cnt loop 
+               lt := oper1(I);
+               rt := oper2(I);
+               result(I) := lt xor rt xor carry;  -- sum
+               carry := (lt and rt) or (lt and carry) or (rt and carry); -- carry
+           end loop;
+        end if;
+        return (result);
+    end "+";
+
+--------------------------------------------------------------------------------
+
+-- FUNCTION :      
+--   "+" (op1: STD_ULOGIC; op2 : STD_LOGIC_VECTOR) return STD_LOGIC_VECTOR 
+--      INPUT  : op1 and op2 of type STD_ULOGIC/STD_LOGIC_VECTOR
+--      OUTPUT : The sum of the two parameters. 
+--
+--    This function adds the two parameters and returns a STD_LOGIC vector  
+--
+--    Note: return size is max of the operands size
+
+    function "+" (op1: STD_ULOGIC; op2 : STD_LOGIC_VECTOR) return STD_LOGIC_VECTOR is
+ 
+        constant size_op: INTEGER := op2'length;
+                       -- size_op is the width of the larger operand
+        variable oper1 : STD_LOGIC_VECTOR (size_op - 1 downto 0);
+                       -- alligned operand to be kept in oper1
+ 
+    begin
+        oper1 := align_size(op1, size_op);
+        return (oper1 + op2);
+    end "+";
+
+--------------------------------------------------------------------------------
+
+-- FUNCTION :      
+--   "+" (op1: STD_LOGIC_VECTOR; op2 : STD_ULOGIC) return STD_LOGIC_VECTOR 
+--      INPUT  : op1 and op2 of type STD_LOGIC_VECTOR/STD_ULOGIC
+--      OUTPUT : The sum of the two parameters. 
+--
+--    This function adds the two parameters and returns a STD_ULOGIC vector  
+--
+--    Note: return size is max of the operands size
+
+    function "+" (op1: STD_LOGIC_VECTOR; op2 : STD_ULOGIC) return STD_LOGIC_VECTOR is
+ 
+        constant size_op: INTEGER := op1'length;
+                       -- size_op is the width of the larger operand
+        variable oper2 : STD_LOGIC_VECTOR (size_op - 1 downto 0);
+                       -- alligned operand to be kept in oper1
+ 
+    begin
+        oper2 := align_size(op2, size_op);
+        return (op1 + oper2);
+    end "+";
+
+--------------------------------------------------------------------------------
+
+-- FUNCTION :      
+--   "+" (op1: INTEGER; op2 : STD_LOGIC_VECTOR) return STD_LOGIC_VECTOR 
+--      INPUT  : op1 and op2 of type INTEGER/STD_LOGIC_VECTOR
+--      OUTPUT : The sum of the two parameters. 
+--
+--    This function adds the two parameters and returns a STD_LOGIC vector  
+--
+--    Note : Return size is SIZE of op2
+
+    function "+"(op1: INTEGER; op2: STD_LOGIC_VECTOR) return STD_LOGIC_VECTOR is
+
+        constant size_op: INTEGER := op2'length;
+        variable result : STD_LOGIC_VECTOR(size_op - 1 downto 0);
+                          -- retuen size is size of op2
+    begin
+        result := To_StdLogicVector(op1, size_op) + op2;
+        return(result);
+    end "+";
+
+--------------------------------------------------------------------------------
+
+-- FUNCTION :      
+--   "+" (op1: STD_LOGIC_VECTOR; op2 : INTEGER) return STD_LOGIC_VECTOR 
+--      INPUT  : op1 and op2 of type STD_LOGIC_VECTOR/INTEGER
+--      OUTPUT : The sum of the two parameters. 
+--
+--    This function adds the two parameters and returns a STD_LOGIC vector  
+--
+--    Note : Return size is SIZE of op1
+
+    function "+"(op1: STD_LOGIC_VECTOR; op2: INTEGER) return STD_LOGIC_VECTOR is
+
+        constant size_op: INTEGER := op1'length;
+        variable result: STD_LOGIC_VECTOR(size_op - 1 downto 0);
+
+    begin
+        result := op1 + To_StdLogicVector(op2, size_op);
+        return(result);
+    end "+";
+
+--------------------------------------------------------------------------------
+-- FUNCTION :
+--   "+" (op1, op2 : STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR
+--      INPUT  : op1 and op2 of type STD_ULOGIC_VECTOR
+--      OUTPUT : The sum of the two parameters.
+--
+--    This function adds the two parameters and returns a STD_LOGIC vector
+--    It uses table lookup to get sum and carry.
+--    Note: return size is max of the operands size
+ 
+    function "+" (op1, op2 : STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR is
+ 
+        constant size1: INTEGER := op1'LENGTH;
+        constant size2: INTEGER := op2'LENGTH;
+        constant size_op: INTEGER := max(size1, size2);
+                       -- size_op is the width of the larger operand
+        variable loop_cnt : INTEGER := size_op - 1;
+        variable oper1, oper2 : STD_ULOGIC_VECTOR(loop_cnt downto 0);
+        variable result : STD_ULOGIC_VECTOR (loop_cnt downto 0)
+                                     := (others => 'X');
+                       -- size of result is size_op
+        variable lt, rt : std_ulogic;
+        variable carry : std_ulogic := '0';
+ 
+    begin
+        if not (Is_X(op1) or Is_X(op2)) then
+           if (size1 < size_op) then
+              oper1 := align_size(op1, size_op); -- Make both the
+           else
+              oper1 := op1;
+           end if;
+           if (size2 < size_op) then
+               oper2 := align_size(op2, size_op); -- operands of
+           else                                   -- same size
+               oper2 := op2;
+           end if;
+ 
+           for I in 0 to loop_cnt loop
+               lt := oper1(I);
+               rt := oper2(I);
+               result(I) := lt xor rt xor carry;  -- sum
+               carry := (lt and rt) or (lt and carry) or (rt and carry); -- carry
+           end loop;
+        end if;
+        return (result);
+    end "+";
+ 
+--------------------------------------------------------------------------------
+ 
+-- FUNCTION :
+--   "+" (op1: STD_ULOGIC; op2 : STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR
+--      INPUT  : op1 and op2 of type STD_ULOGIC/STD_ULOGIC_VECTOR
+--      OUTPUT : The sum of the two parameters.
+--
+--    This function adds the two parameters and returns a STD_LOGIC vector
+--
+--    Note: return size is max of the operands size
+ 
+    function "+" (op1: STD_ULOGIC; op2 : STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR is
+ 
+        constant size_op: INTEGER := op2'length;
+                       -- size_op is the width of the larger operand
+        variable oper1 : STD_ULOGIC_VECTOR (size_op - 1 downto 0);
+                       -- alligned operand to be kept in oper1
+ 
+    begin
+        oper1 := align_size(op1, size_op);
+        return (oper1 + op2);
+    end "+";
+ 
+--------------------------------------------------------------------------------
+ 
+-- FUNCTION :
+--   "+" (op1: STD_ULOGIC_VECTOR; op2 : STD_ULOGIC) return STD_ULOGIC_VECTOR
+--      INPUT  : op1 and op2 of type STD_ULOGIC_VECTOR/STD_ULOGIC
+--      OUTPUT : The sum of the two parameters.
+--
+--    This function adds the two parameters and returns a STD_ULOGIC vector
+--
+--    Note: return size is max of the operands size
+ 
+    function "+" (op1: STD_ULOGIC_VECTOR; op2 : STD_ULOGIC) return STD_ULOGIC_VECTOR is
+ 
+        constant size_op: INTEGER := op1'length;
+                       -- size_op is the width of the larger operand
+        variable oper2 : STD_ULOGIC_VECTOR (size_op - 1 downto 0);
+                       -- alligned operand to be kept in oper1
+ 
+    begin
+        oper2 := align_size(op2, size_op);
+        return (op1 + oper2);
+    end "+";
+ 
+--------------------------------------------------------------------------------
+ 
+-- FUNCTION :
+--   "+" (op1: INTEGER; op2 : STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR
+--      INPUT  : op1 and op2 of type INTEGER/STD_ULOGIC_VECTOR
+--      OUTPUT : The sum of the two parameters.
+--
+--    This function adds the two parameters and returns a STD_LOGIC vector
+--
+--    Note : Return size is SIZE of op2
+ 
+    function "+"(op1: INTEGER; op2: STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR is
+ 
+        constant size_op: INTEGER := op2'length;
+        variable result : STD_ULOGIC_VECTOR(size_op - 1 downto 0);
+                          -- retuen size is size of op2
+    begin
+        result := To_StdULogicVector(op1, size_op) + op2;
+        return(result);
+    end "+";
+ 
+--------------------------------------------------------------------------------
+ 
+-- FUNCTION :
+--   "+" (op1: STD_ULOGIC_VECTOR; op2 : INTEGER) return STD_ULOGIC_VECTOR
+--      INPUT  : op1 and op2 of type STD_ULOGIC_VECTOR/INTEGER
+--      OUTPUT : The sum of the two parameters.
+--
+--    This function adds the two parameters and returns a STD_LOGIC vector
+--
+--    Note : Return size is SIZE of op1
+ 
+    function "+"(op1: STD_ULOGIC_VECTOR; op2: INTEGER) return STD_ULOGIC_VECTOR is
+ 
+        constant size_op: INTEGER := op1'length;
+        variable result: STD_ULOGIC_VECTOR(size_op - 1 downto 0);
+ 
+    begin
+        result := op1 + To_StdULogicVector(op2, size_op);
+        return(result);
+    end "+";
+ 
+--------------------------------------------------------------------------------
+ 
+-- FUNCTION :
+--   "+" (op1, op2: STD_ULOGIC) return STD_ULOGIC
+--      INPUT  : op1 and op2 of type STD_ULOGIC
+--      OUTPUT : The sum of the two parameters.
+--
+--    This function adds the two parameters and returns a STD_ULOGIC
+--
+--    Note : Return size is SIZE of op1
+ 
+    function "+"(op1, op2: STD_ULOGIC) return STD_ULOGIC is
+ 
+    begin
+        return(op1 xor op2);
+    end "+";
+
+--------------------------------------------------------------------------------
+-- FUNCTION :
+--   "-" (op1, op2 : STD_LOGIC_VECTOR) return STD_LOGIC_VECTOR
+--      INPUT  : op1 and op2 of type STD_LOGIC_VECTOR
+--      OUTPUT : The difference of the two operands.
+--
+--    This function subtracts op2 from op1 and returns a STD_LOGIC_VECTOR
+--    It uses TWO's COMPLEMENT addition for subtraction and uses table lookup
+--    to get sum and carry.
+
+    function "-"(op1, op2: STD_LOGIC_VECTOR) return STD_LOGIC_VECTOR is
+
+        constant size1: NATURAL := op1'LENGTH;
+        constant size2: NATURAL := op2'LENGTH;
+        constant size_op: NATURAL := max(size1, size2);
+                       -- size_op is the width of the larger operand
+        variable loop_cnt : NATURAL := size_op - 1;
+        variable oper1, oper2 : STD_LOGIC_VECTOR(loop_cnt downto 0);
+        variable result : STD_LOGIC_VECTOR (loop_cnt downto 0)
+                                     := (others => 'X');
+                       -- size of result is size_op
+        variable lt, rt: STD_ULOGIC;
+        variable carry: STD_ULOGIC := '1';  -- initialized to '1' 
+                              --   for 2's complement of op2
+    begin
+        if not (Is_X(op1) or Is_X(op2)) then  -- operands do not have 'X'
+            if (size1 < size_op) then
+               oper1 := align_size(op1, size_op); -- Make both the same size
+            else
+               oper1 := op1;
+            end if;
+            if (size2 < size_op) then
+               oper2 := align_size(op2, size_op); -- operands of
+            else                                                -- same size
+               oper2 := op2;
+            end if;
+            oper2 := not oper2;    -- 1's complement of op2, extra variable 
+
+            for I in 0 to loop_cnt loop  
+               lt := oper1(I);
+               rt := oper2(I);
+               result(I) := lt xor rt xor carry;
+               carry := (lt and rt) or (lt and carry) or (rt and carry);
+            end loop;
+        end if;
+        return (result);
+    end "-";
+
+--------------------------------------------------------------------------------
+-- FUNCTION :
+--   "-" (op1: STD_ULOGIC; op2 : STD_LOGIC_VECTOR) return STD_LOGIC_VECTOR
+--      INPUT  : op1 of type STD_ULOGIC and op2 of type STD_LOGIC_VECTOR
+--      OUTPUT : The difference of the two operands.
+--
+--    This function subtracts op2 from op1 and returns a STD_LOGIC_VECTOR
+--    It uses TWO's COMPLEMENT addition for subtraction and uses table lookup
+--    to get sum and carry.
+
+    function "-"(op1: STD_ULOGIC; op2: STD_LOGIC_VECTOR) return STD_LOGIC_VECTOR is
+
+        constant size_op: NATURAL := op2'length;
+                       -- size_op is the width of the larger operand
+        variable oper1: STD_LOGIC_VECTOR(size_op -1 downto 0);
+    begin
+        oper1 := align_size(op1, size_op);
+        return (oper1 - op2);
+    end "-";
+
+--------------------------------------------------------------------------------
+-- FUNCTION :
+--   "-" (op1: STD_LOGIC_VECTOR; op2 : STD_ULOGIC) return STD_LOGIC_VECTOR
+--      INPUT  : op1 of type STD_LOGIC_VECTOR and op2 of type STD_ULOGIC
+--      OUTPUT : The difference of the two operands.
+--
+--    This function subtracts op2 from op1 and returns a STD_LOGIC_VECTOR
+--    It uses TWO's COMPLEMENT addition for subtraction and uses table lookup
+--    to get sum and carry.
+
+    function "-"(op1: STD_LOGIC_VECTOR; op2: STD_ULOGIC) return STD_LOGIC_VECTOR
+ is
+
+        constant size_op: NATURAL := op1'length;
+                       -- size_op is the width of the larger operand
+        variable oper2: STD_LOGIC_VECTOR(size_op -1 downto 0);
+    begin
+        oper2 := align_size(op2, size_op);
+        return (op1 - oper2);
+    end "-";
+
+--------------------------------------------------------------------------------
+-- FUNCTION :
+--   "-" (op1: INTEGER; op2 : STD_LOGIC_VECTOR) return STD_LOGIC_VECTOR
+--      INPUT  : op1 of type INTEGER and op2 of type STD_LOGIC_VECTOR
+--      OUTPUT : The difference of the two operands.
+--
+--    This function subtracts op2 from op1 and returns a STD_LOGIC_VECTOR
+--
+--    Note: Return size is SIZE of op2
+
+function "-"(op1: INTEGER; op2: STD_LOGIC_VECTOR) return STD_LOGIC_VECTOR is
+
+        constant size_op: NATURAL := op2'length;
+        variable result: STD_LOGIC_VECTOR(size_op - 1 downto 0);
+    begin
+        result := To_StdLogicVector(op1, size_op) - op2;
+        return (result);
+    end "-";
+
+--------------------------------------------------------------------------------
+-- FUNCTION :
+--   "-" (op1: STD_LOGIC_VECTOR; op2 : INTEGER) return STD_LOGIC_VECTOR
+--      INPUT  : op1 of type STD_LOGIC_VECTOR and op2 of type INTEGER
+--      OUTPUT : The difference of the two operands.
+--
+--    This function subtracts op2 from op1 and returns a STD_LOGIC_VECTOR
+--
+--    Note: Return size is SIZE of op1
+
+function "-"(op1: STD_LOGIC_VECTOR; op2: INTEGER) return STD_LOGIC_VECTOR is
+
+        constant size_op: NATURAL := op1'length;
+        variable result: STD_LOGIC_VECTOR(size_op - 1 downto 0);
+    begin
+        result := op1 - To_StdLogicVector(op2, size_op);
+        return (result);
+    end "-";
+
+--------------------------------------------------------------------------------
+-- FUNCTION :
+--   "-" (op1, op2 : STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR
+--      INPUT  : op1 and op2 of type STD_ULOGIC_VECTOR
+--      OUTPUT : The difference of the two operands.
+--
+--    This function subtracts op2 from op1 and returns a STD_ULOGIC_VECTOR
+--    It uses TWO's COMPLEMENT addition for subtraction and uses table lookup
+--    to get sum and carry.
+ 
+    function "-"(op1, op2: STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR is
+ 
+        constant size1: NATURAL := op1'LENGTH;
+        constant size2: NATURAL := op2'LENGTH;
+        constant size_op: NATURAL := max(size1, size2);
+                       -- size_op is the width of the larger operand
+        variable loop_cnt : NATURAL := size_op - 1;
+        variable oper1, oper2 : STD_ULOGIC_VECTOR(loop_cnt downto 0);
+        variable result : STD_ULOGIC_VECTOR (loop_cnt downto 0)
+                                     := (others => 'X');
+                       -- size of result is size_op
+        variable lt, rt: STD_ULOGIC;
+        variable carry: STD_ULOGIC := '1';  -- initialized to '1'
+                              --   for 2's complement of op2
+    begin
+        if not (Is_X(op1) or Is_X(op2)) then  -- operands do not have 'X'
+            if (size1 < size_op) then
+               oper1 := align_size(op1, size_op); -- Make both the same size
+            else
+               oper1 := op1;
+            end if;
+            if (size2 < size_op) then
+               oper2 := align_size(op2, size_op); -- operands of
+            else                                                -- same size
+               oper2 := op2;
+            end if;
+            oper2 := not oper2;    -- 1's complement of op2, extra variable
+ 
+            for I in 0 to loop_cnt loop
+               lt := oper1(I);
+               rt := oper2(I);
+               result(I) := lt xor rt xor carry;
+               carry := (lt and rt) or (lt and carry) or (rt and carry);
+            end loop;
+        end if;
+        return (result);
+    end "-";
+
+--------------------------------------------------------------------------------
+-- FUNCTION :
+--   "-" (op1: STD_ULOGIC; op2 : STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR
+--      INPUT  : op1 of type STD_ULOGIC and op2 of type STD_ULOGIC_VECTOR
+--      OUTPUT : The difference of the two operands.
+--
+--    This function subtracts op2 from op1 and returns a STD_ULOGIC_VECTOR
+--    It uses TWO's COMPLEMENT addition for subtraction and uses table lookup
+--    to get sum and carry.
+ 
+    function "-"(op1: STD_ULOGIC; op2: STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR is
+ 
+        constant size_op: NATURAL := op2'length;
+                       -- size_op is the width of the larger operand
+        variable oper1: STD_ULOGIC_VECTOR(size_op -1 downto 0);
+    begin
+        oper1 := align_size(op1, size_op);
+        return (oper1 - op2);
+    end "-";
+ 
+--------------------------------------------------------------------------------
+-- FUNCTION :
+--   "-" (op1: STD_ULOGIC_VECTOR; op2 : STD_ULOGIC) return STD_ULOGIC_VECTOR
+--      INPUT  : op1 of type STD_ULOGIC_VECTOR and op2 of type STD_ULOGIC
+--      OUTPUT : The difference of the two operands.
+--
+--    This function subtracts op2 from op1 and returns a STD_ULOGIC_VECTOR
+--    It uses TWO's COMPLEMENT addition for subtraction and uses table lookup
+--    to get sum and carry.
+ 
+    function "-"(op1: STD_ULOGIC_VECTOR; op2: STD_ULOGIC) return STD_ULOGIC_VECTOR
+ is
+ 
+        constant size_op: NATURAL := op1'length;
+                       -- size_op is the width of the larger operand
+        variable oper2: STD_ULOGIC_VECTOR(size_op -1 downto 0);
+    begin
+        oper2 := align_size(op2, size_op);
+        return (op1 - oper2);
+    end "-";
+ 
+--------------------------------------------------------------------------------
+-- FUNCTION :
+--   "-" (op1: INTEGER; op2 : STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR
+--      INPUT  : op1 of type INTEGER and op2 of type STD_ULOGIC_VECTOR
+--      OUTPUT : The difference of the two operands.
+--
+--    This function subtracts op2 from op1 and returns a STD_ULOGIC_VECTOR
+--
+--    Note: Return size is SIZE of op2
+ 
+function "-"(op1: INTEGER; op2: STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR is
+ 
+        constant size_op: NATURAL := op2'length;
+        variable result: STD_ULOGIC_VECTOR(size_op - 1 downto 0);
+    begin
+        result := To_StdULogicVector(op1, size_op) - op2;
+        return (result);
+    end "-";
+ 
+--------------------------------------------------------------------------------
+-- FUNCTION :
+--   "-" (op1: STD_ULOGIC_VECTOR; op2 : INTEGER) return STD_ULOGIC_VECTOR
+--      INPUT  : op1 of type STD_ULOGIC_VECTOR and op2 of type INTEGER
+--      OUTPUT : The difference of the two operands.
+--
+--    This function subtracts op2 from op1 and returns a STD_ULOGIC_VECTOR
+--
+--    Note: Return size is SIZE of op1
+ 
+function "-"(op1: STD_ULOGIC_VECTOR; op2: INTEGER) return STD_ULOGIC_VECTOR is
+ 
+        constant size_op: NATURAL := op1'length;
+        variable result: STD_ULOGIC_VECTOR(size_op - 1 downto 0);
+    begin
+        result := op1 - To_StdULogicVector(op2, size_op);
+        return (result);
+    end "-";
+ 
+
+--------------------------------------------------------------------------------
+ 
+-- FUNCTION :
+--   "-" (op1, op2: STD_ULOGIC) return STD_ULOGIC
+--      INPUT  : op1 and op2 of type STD_ULOGIC
+--      OUTPUT : The difference of the two parameters.
+--
+--    This function subtracts op2 from op1 and returns a STD_ULOGIC
+--
+--    Note : Return size is 1
+ 
+    function "-"(op1, op2: STD_ULOGIC) return STD_ULOGIC is
+ 
+    begin
+        return(op1 xor op2);
+    end "-";
+
+---------------------------------------------------------------------------------- 
+-- FUNCTION :
+--   "+"(op1: STD_LOGIC_VECTOR)   return STD_LOGIC_VECTOR;
+--      INPUT : a std_logc vector
+--      OUTPUT: a std_logc vector
+--      The function added to support unary "+"
+function "+" (op1: STD_LOGIC_VECTOR)   return STD_LOGIC_VECTOR is
+begin
+    return op1;
+end "+";
+
+----------------------------------------------------------------------------------
+-- FUNCTION :
+--   "+"(op1: STD_ULOGIC_VECTOR)   return STD_ULOGIC_VECTOR;
+--      INPUT : a std_logc vector
+--      OUTPUT: a std_logc vector
+--      The function added to support unary "+"
+function "+" (op1: STD_ULOGIC_VECTOR)   return STD_ULOGIC_VECTOR is
+begin
+    return op1;
+end "+";
+
+---------------------------------------------------------------------------------- 
+-- FUNCTION :
+--   TO_INTEGER (oper: STD_LOGIC_VECTOR)
+--      INPUT : a std_logc vector 
+--      OUTPUT: an INTEGER value of the oper.
+--
+--      This function returns the integer value of the oper. 
+--      If size > 31 take only lower 31 bits
+--      If in oper, there is any element of value 'X' or 'Z', then 
+--      value integer'LEFT will be returned.
+
+
+    function to_integer (oper : STD_LOGIC_VECTOR) return INTEGER is
+        variable value : INTEGER := 0;
+        variable temp_no : INTEGER := 1;
+        variable temp_oper : STD_LOGIC_VECTOR(oper'range) := oper;
+        variable INDEX : INTEGER := 1;
+    begin
+         assert oper'length <= 31
+             report "argument is too large in TO_INTEGER, only lower 31 bits will be taken"
+            severity WARNING;
+
+        if (not (Is_X(oper))) then
+            for I in temp_oper'reverse_range loop
+                case (tbl_BINARY(temp_oper(I))) is
+                    when '1' =>
+                               value := value + temp_no;
+                    when others =>
+                               null;
+                end case;
+                INDEX := INDEX + 1;
+                exit when INDEX > 31;
+                temp_no := temp_no + temp_no;
+            end loop;
+        else
+            assert FALSE report
+            "WARNING: Illegal value detected in the conversion of TO_INTEGER"
+             severity WARNING;
+            --value := integer'LEFT;
+            value := 0;
+        end if;
+        return (value);
+    end to_integer;
+
+--------------------------------------------------------------------------------
+-- FUNCTION :
+--  TO_INTEGER (oper: STD_ULOGIC) return  INTEGER;
+--      INPUT : a std_ulogic  
+--      OUTPUT: an INTEGER value of the oper.
+--
+--      This function returns the integer value of the oper. It is overloaded
+--      in this way to make translation easier.
+
+    function to_integer (oper : STD_ULOGIC) return INTEGER is
+
+    begin
+        case (tbl_BINARY(oper)) is
+            when '1' =>
+                return(1);
+            when '0' =>
+                return (0);
+            when others =>
+                assert FALSE report 
+                "WARNING: Illegal value detected in the conversion of TO_INTEGER"
+                severity WARNING;   
+                -- return (integer'LEFT);
+                 return (0);
+            end case;
+    end to_integer;
+
+----------------------------------------------------------------------------------
+-- FUNCTION :
+--   TO_INTEGER (oper: STD_ULOGIC_VECTOR)
+--      INPUT : a std_ulogic_vector
+--      OUTPUT: an INTEGER value of the oper.
+--
+--      This function returns the integer value of the oper.
+--      If size > 31 take only lower 31 bits
+--      If in oper, there is any element of value 'X' or 'Z', then
+--      value integer'LEFT will be returned.
+ 
+ 
+    function to_integer (oper : STD_ULOGIC_VECTOR) return INTEGER is
+    begin
+        return (to_integer(To_StdLogicVector(oper)));
+    end to_integer;
+
+
+
+----------------------------------------------------------------------------------
+-- FUNCTION :
+--   TO_BINARY (oper: STD_LOGIC_VECTOR, INTEGER)
+--      INPUT : a std_logic_vector, l integer
+--      OUTPUT: an INTEGER value of the oper.
+--
+--      This function returns the integer value of the oper.
+--      It should be called only for vectors upto 64 bits.
+--      If in oper, there is any element of value 'X' or 'Z', then
+--      value X will be returned.
+ 
+ 
+    function to_binary(A : STD_LOGIC_VECTOR; L : INTEGER) return STD_LOGIC_VECTOR is
+        variable one_bit : STD_ULOGIC;
+        variable result : STD_LOGIC_VECTOR ((L-1) downto 0) := (others => '0');
+        variable i : integer;
+    begin
+        i := A'length - 1;
+        for j in A'range loop
+            if (Is_X(A(j))) then
+                assert false report
+                "WARNING: Illegal value detected in function TO_BINARY"
+                severity warning;
+                result := (others => 'X');
+                return result;
+            end if;
+            result(i) := tbl_BINARY(A(j));
+            i := i - 1;
+        end loop;
+        return result;
+    end;
+ 
+
+
+
+------------------------------------------------------------------------------
+-- Multiplication Operator --
+--------------------------------------------------------------------------------
+-- FUNCTION :      
+--   "*" (op1, op2 : STD_LOGIC_VECTOR) return STD_LOGIC_VECTOR 
+--      INPUT  : op1 and op2 of type STD_LOGIC_VECTOR
+--      OUTPUT : The product of the two parameters. 
+--
+--   This function multiplies the two parameters and returns a STD_LOGIC vector 
+--   It converts the parameters to integers and then multiplies. 
+ 
+    function "*" (op1, op2 : STD_LOGIC_VECTOR) return STD_LOGIC_VECTOR is     
+ 
+        constant size1: INTEGER := op1'LENGTH;
+        constant size2: INTEGER := op2'LENGTH;
+        constant size_res: INTEGER := size1 + size2;
+        variable multiplicand: STD_LOGIC_VECTOR((size_res-1) downto 0);
+        variable multiplier: STD_LOGIC_VECTOR((size_res-1) downto 0);
+        variable result : STD_LOGIC_VECTOR((size_res-1) downto 0) := 
+                               (others => '0');
+    begin
+        multiplicand := to_binary(op1, size_res);
+        multiplier := to_binary(op2, size_res);
+        result := (others => '0');
+        for i in 0 to size1-1 loop
+            if multiplicand(i) = '1' then
+                result := result+multiplier;
+            end if;
+            for j in size2+i downto i+1 loop
+                multiplier(j) := multiplier(j-1);
+            end loop;
+            multiplier(i) := '0';
+        end loop;
+
+        return (result);
+    end "*";
+ 
+--------------------------------------------------------------------------------
+-- FUNCTION :      
+--   "*" (op1: STD_ULOGIC;  op2 : STD_LOGIC_VECTOR) return STD_LOGIC_VECTOR 
+--      INPUT  : op1 and op2 of type STD_ULOGIC/STD_LOGIC_VECTOR
+--      OUTPUT : The product of the two parameters. 
+--
+--   This function multiplies the two parameters and returns a STD_LOGIC vector 
+--   It converts the parameters to integers and then multiplies. 
+
+    function "*" (op1: STD_ULOGIC; op2 : STD_LOGIC_VECTOR) return STD_LOGIC_VECTOR is
+ 
+        constant size2: INTEGER := op2'LENGTH;
+        variable multiplicand, multiplier : INTEGER;
+
+        variable result : STD_LOGIC_VECTOR (size2 -1 downto 0):=
+                    (others => 'X');
+    begin
+        if (not (Is_X(op1) or Is_X(op2))) then
+            multiplicand := to_integer(op1);
+            if(multiplicand /= 1) then
+                result := (others => '0');
+            else
+                result := op2;
+            end if;
+        end if;
+        return (result);
+    end "*";
+
+--------------------------------------------------------------------------------
+-- FUNCTION :      
+--   "*" (op1 : STD_LOGIC_VECTOR;  op2 : STD_ULOGIC) return STD_LOGIC_VECTOR 
+--      INPUT  : op1 and op2 of type STD_LOGIC_VECTOR/STD_ULOGIC
+--      OUTPUT : The product of the two parameters. 
+--
+--   This function multiplies the two parameters and returns a STD_LOGIC vector 
+--   It converts the parameters to integers and then multiplies. 
+ 
+    function "*" (op1 : STD_LOGIC_VECTOR;  op2 : STD_ULOGIC) return STD_LOGIC_VECTOR is
+ 
+    begin
+        return (op2 * op1);
+    end "*";
+
+-------------------------------------------------------------------------------
+-- FUNCTION :      
+--   "*" (op1, op2 : STD_ULOGIC) return STD_ULOGIC
+--      INPUT  : op1 and op2 of type STD_ULOGIC
+--      OUTPUT : The product of the two parameters. 
+--
+--    This function multiplies op2 by op1 and returns a STD_ULOGIC value.
+
+    function "*" (op1, op2 : STD_ULOGIC) return STD_ULOGIC is 
+
+    begin  
+        return (op1 and op2);
+    end "*";  
+
+
+--------------------------------------------------------------------------------
+-- FUNCTION :     
+--   "*" (op1, op2 : STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR
+--      INPUT  : op1 and op2 of type STD_ULOGIC_VECTOR
+--      OUTPUT : The product of the two parameters.
+--
+--   This function multiplies the two parameters and returns a STD_LOGIC vector
+--   It converts the parameters to integers and then multiplies.
+ 
+    function "*" (op1, op2 : STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR is
+    begin
+        return STD_ULOGIC_VECTOR((STD_LOGIC_VECTOR(op1))*(STD_LOGIC_VECTOR(op2)));
+    end "*";
+
+--------------------------------------------------------------------------------
+-- FUNCTION :
+--   "*" (op1: STD_ULOGIC;  op2 : STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR
+--      INPUT  : op1 and op2 of type STD_ULOGIC/STD_ULOGIC_VECTOR
+--      OUTPUT : The product of the two parameters.
+--
+--   This function multiplies the two parameters and returns a STD_LOGIC vector
+--   It converts the parameters to integers and then multiplies.
+ 
+    function "*" (op1: STD_ULOGIC; op2 : STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR is
+ 
+        constant size2: INTEGER := op2'LENGTH;
+        variable multiplicand, multiplier : INTEGER;
+ 
+        variable result : STD_ULOGIC_VECTOR (size2 -1 downto 0):=
+                    (others => 'X');
+    begin
+        if (not (Is_X(op1) or Is_X(op2))) then
+            multiplicand := to_integer(op1);
+            if(multiplicand /= 1) then
+                result := (others => '0');
+            else
+                result := op2;
+            end if;
+        end if;
+        return (result);
+    end "*";
+ 
+--------------------------------------------------------------------------------
+-- FUNCTION :
+--   "*" (op1 : STD_ULOGIC_VECTOR;  op2 : STD_ULOGIC) return STD_ULOGIC_VECTOR
+--      INPUT  : op1 and op2 of type STD_ULOGIC_VECTOR/STD_ULOGIC
+--      OUTPUT : The product of the two parameters.
+--
+--   This function multiplies the two parameters and returns a STD_LOGIC vector
+--   It converts the parameters to integers and then multiplies.
+ 
+    function "*" (op1 : STD_ULOGIC_VECTOR;  op2 : STD_ULOGIC) return STD_ULOGIC_VECTOR is
+ 
+    begin
+        return (op2 * op1);
+    end "*";
+ 
+
+------------------------------------------------------------------------------
+-- DIVISION OPERATORS 
+-- The division operators are only for internal use
+-- It is not advisible to use them in design.
+-----------------------------------------------------------------------------
+
+-- FUNCTION :
+-- "/" (op1, op2 : STD_LOGIC_VECTOR) return STD_LOGIC_VECTOR
+--      INPUT  : op1 and op2 of type STD_LOGIC_VECTOR
+--      OUTPUT : The division of the two parameters.
+--      This function coverts parameters to integer then
+--      does the division. For internal use only. 
+
+
+    function "/" (op1, op2 : STD_LOGIC_VECTOR)      return STD_LOGIC_VECTOR is
+
+        constant size1: INTEGER := op1'LENGTH;
+        constant size2: INTEGER := op2'LENGTH;
+        variable operand1, operand2 : INTEGER;
+        constant size_res: INTEGER := size1;
+
+        variable result : STD_LOGIC_VECTOR (size_res -1 downto 0) := (others => 'X');
+                       -- size of result is size1
+    begin
+
+        if (not (Is_X(op1) or Is_X(op2))) then
+
+            operand1 := to_integer(op1);
+            operand2 := to_integer(op2);
+
+            if ( operand2 /= 0 ) then
+                result := To_StdLogicVector( (operand1/operand2), size_res);
+            else
+                assert FALSE report
+                "ERROR: Division by zero detected."
+                severity ERROR;
+                return (result);
+            end if;
+        end if;
+        return (result);
+    end "/";
+
+-----------------------------------------------------------
+-- FUNCTION :
+--   "/" (op1: STD_LOGIC_VECTOR;  op2 : STD_ULOGIC) return STD_LOGIC_VECTOR
+--      INPUT  : op1 and op2 of type STD_ULOGIC/STD_LOGIC_VECTOR
+--      OUTPUT : The division of the two parameters.
+--
+--   This function divides the two parameters and returns 
+--   STD_LOGIC_VECTOR.
+--   It converts the parameters to integers and then does
+--   the division. 
+
+    function "/" (op1: STD_LOGIC_VECTOR; op2 : STD_ULOGIC) return STD_LOGIC_VECTOR is
+
+        constant size1: INTEGER := op1'LENGTH;
+        variable operand2 : INTEGER;
+ 
+        variable result : STD_LOGIC_VECTOR (size1 -1 downto 0):= (others => 'X');
+    begin
+        if (not (Is_X(op1) or Is_X(op2))) then
+            operand2 := to_integer(op2);
+            if(operand2 = 1) then
+                result := op1;
+            else
+                assert FALSE report
+                "ERROR: Division by zero detected."
+                severity ERROR;
+                return (result);
+            end if;
+        end if;
+        return (result);
+    end "/";
+
+----------------------------------------------------------------
+-- FUNCTION :
+-- "/" (op1: STD_ULOGIC; op2 : STD_LOGIC_VECTOR) return STD_ULOGIC
+--  for internal use only
+
+    function "/" (op1: STD_ULOGIC; op2 : STD_LOGIC_VECTOR) return STD_ULOGIC is
+        variable operand2 : INTEGER;
+        variable result : STD_ULOGIC := 'X';
+    begin
+        if (not (Is_X(op1) or Is_X(op2))) then
+	    operand2 := to_integer( op2 );
+	    if( operand2 = 1 ) then
+		return ( op1 );
+	    else
+                assert FALSE report
+                "ERROR: Division by zero detected."
+                severity ERROR;
+                return (result);
+	    end if;
+	end if;
+        return (result);
+    end "/" ;
+
+-------------------------------------------------------------------------
+-- FUNCTION :
+--   "/" (op1, op2 : STD_ULOGIC) return STD_ULOGIC
+--      INPUT  : op1 and op2 of type STD_ULOGIC
+--      OUTPUT : The division of the two parameters.
+--
+--    This function divides op1 by op2 and returns a STD_ULOGIC value.
+ 
+    function "/" (op1, op2 : STD_ULOGIC) return STD_ULOGIC is
+        variable result : STD_ULOGIC := 'X';
+    begin
+        if (not (Is_X(op1) or Is_X(op2))) then
+          if( op2 = '1' ) then
+            return (op1);
+          else
+            assert FALSE report
+            "ERROR: Division by zero detected."
+            severity ERROR;
+            return ('X');
+          end if;
+       end if;
+       return (result);
+    end "/";
+ 
+-------------------------------------------------------------------------
+
+-- FUNCTION :
+-- COND_OP (cond:BOOLEAN; left_val,right_val: STD_LOGIC_VECTOR) 
+--                                               return STD_LOGIC_VECTOR
+--
+-- This function behaves like the conditional operator.
+-- If 'cond' has a boolean value of
+--          'TRUE' then left_val is returned, else
+--          'FALSE' then right_val is returned
+
+  function cond_op(cond: BOOLEAN; left_val,right_val:STD_LOGIC_VECTOR)
+                                      return STD_LOGIC_VECTOR is
+        constant size1: INTEGER := left_val'LENGTH;
+        constant size2: INTEGER := right_val'LENGTH;
+        constant size_op: INTEGER := max(size1, size2);
+        variable result : STD_LOGIC_VECTOR (size_op -1 downto 0);
+
+    begin
+         if (cond) then
+            if (size1 < size_op) then
+                result := align_size(left_val, size_op);
+            else
+                result := left_val;
+            end if;
+         else
+            if (size2 < size_op) then
+                result := align_size(right_val, size_op);
+            else
+                result := right_val;
+            end if;
+         end if;
+         
+         return (result);
+    end cond_op;
+
+
+------------------------------------------------------------------------------
+-- FUNCTION
+-- COND_OP (cond:BOOLEAN; left_val,right_val: STD_ULOGIC) return STD_ULOGIC
+--
+-- This function behaves like the conditional operator.
+-- If 'cond' has a boolean value of
+--          'TRUE' then left_val is returned, else
+--          'FALSE' then right_val is returned
+
+  function cond_op(cond: BOOLEAN; left_val,right_val:STD_ULOGIC)
+                                      return STD_ULOGIC is
+
+    begin
+         if (cond) then
+             return(left_val);
+         else
+             return(right_val);
+         end if;
+
+    end cond_op;
+
+------------------------------------------------------------------------------
+-- FUNCTION
+-- COND_OP (cond:BOOLEAN; left_val,right_val: STD_ULOGIC_VECTOR)
+--                                               return STD_ULOGIC_VECTOR
+--
+-- This function behaves like the conditional operator.
+-- If 'cond' has a boolean value of
+--          'TRUE' then left_val is returned, else
+--          'FALSE' then right_val is returned
+ 
+  function cond_op(cond: BOOLEAN; left_val,right_val:STD_ULOGIC_VECTOR)
+                                      return STD_ULOGIC_VECTOR is
+        constant size1: INTEGER := left_val'LENGTH;
+        constant size2: INTEGER := right_val'LENGTH;
+        constant size_op: INTEGER := max(size1, size2);
+        variable result : STD_ULOGIC_VECTOR (size_op -1 downto 0);
+ 
+    begin
+         if (cond) then
+            if (size1 < size_op) then
+                result := align_size(left_val, size_op);
+            else
+                result := left_val;
+            end if;
+         else
+            if (size2 < size_op) then
+                result := align_size(right_val, size_op);
+            else
+                result := right_val;
+            end if;
+         end if;
+ 
+         return (result);
+    end cond_op;
+ 
+
+
+--############################################################################--
+--                                                                            --
+--                    SHIFT OPERATORS
+--                                                                            --
+--############################################################################--
+
+--------------------------
+-- Shift Left Operators --
+--------------------------------------------------------------------------------
+-- FUNCTION :
+--   SH_LEFT (op1 : STD_LOGIC_VECTOR; op2 : NATURAL) return STD_LOGIC_VECTOR
+--
+--    This function left-shifts the op1, by the number of bits specified by op2
+--      and returns the shifted result (of the same size as op1).
+
+    function sh_left (op1 : STD_LOGIC_VECTOR; op2 : NATURAL) return STD_LOGIC_VECTOR is
+        constant size_op: INTEGER := op1'LENGTH;
+        constant left : INTEGER := op1'LEFT;
+        constant right : INTEGER := op1'RIGHT;
+        variable result: STD_LOGIC_VECTOR (size_op-1 downto 0) := (others => '0');
+    begin
+        if (op2 = 0) then
+            return (op1);
+        end if;
+
+        if (op2 >= size_op) then         -- if more than size_op bits are
+            return (result);             -- to be shifted, the
+        end if;                                     -- result is all 0's
+
+        if (left >= right) then       -- op1 is of descending range
+            result(size_op-1 downto op2) := op1((left - op2) downto right);
+        else                        -- op1 is of ascending range
+            result(size_op-1 downto op2) := op1((left + op2) to right);
+        end if;
+
+        return result;
+    end sh_left;
+
+--------------------------------------------------------------------------------
+-- FUNCTION :
+--   SH_LEFT (op1 : STD_ULOGIC_VECTOR; op2 : NATURAL) return STD_ULOGIC_VECTOR
+--
+--    This function left-shifts the op1, by the number of bits specified by op2
+--      and returns the shifted result (of the same size as op1).
+ 
+    function sh_left (op1 : STD_ULOGIC_VECTOR; op2 : NATURAL) return STD_ULOGIC_VECTOR is
+        constant size_op: INTEGER := op1'LENGTH;
+        constant left : INTEGER := op1'LEFT;
+        constant right : INTEGER := op1'RIGHT;
+        variable result: STD_ULOGIC_VECTOR (size_op-1 downto 0) := (others => '0');
+    begin
+        if (op2 = 0) then
+            return (op1);
+        end if;
+ 
+        if (op2 >= size_op) then         -- if more than size_op bits are
+            return (result);             -- to be shifted, the
+        end if;                          -- result is all 0's
+ 
+        if (left >= right) then       -- op1 is of descending range
+            result(size_op-1 downto op2) := op1((left - op2) downto right);
+        else                        -- op1 is of ascending range
+            result(size_op-1 downto op2) := op1((left + op2) to right);
+        end if;
+ 
+        return result;
+    end sh_left;
+
+--------------------------------------------------------------------------------
+---------------------------
+-- Shift Right Operators --
+--------------------------------------------------------------------------------
+-- FUNCTION :
+--   SH_RIGHT (op1 : STD_LOGIC_VECTOR; op2 : NATURAL) return STD_LOGIC_VECTOR
+--
+--    This function right-shifts op1, by the number of bits specified by op2
+--      and returns the shifted result (of the same size as op1).
+
+    function sh_right (op1 : STD_LOGIC_VECTOR; op2 : NATURAL)
+                                       return STD_LOGIC_VECTOR is
+        constant size_op: INTEGER := op1'LENGTH;
+        constant left : INTEGER := op1'LEFT;
+        constant right : INTEGER := op1'RIGHT;
+        variable result: STD_LOGIC_VECTOR (size_op-1 downto 0) := (others => '0');
+    begin
+        if (op2 = 0) then
+            return (op1);
+        end if;
+
+        if (op2 >= size_op) then         -- if more than size_op bits are
+            return (result);             --  to be shifted, the
+        end if;                          --  result is all 0's
+
+        if (left >= right) then       -- op1 is of descending range
+            result((size_op-1 - op2) downto 0)
+                         := op1(left downto (right + op2));
+        else                        -- op1 is of ascending range
+            result((size_op - 1 - op2) downto 0)
+                         := op1(left to (right - op2));
+        end if;
+        return result;
+    end sh_right;
+
+--------------------------------------------------------------------------------
+-- FUNCTION :
+--   SH_RIGHT (op1 : STD_ULOGIC_VECTOR; op2 : NATURAL) return STD_ULOGIC_VECTOR
+--
+--    This function right-shifts op1, by the number of bits specified by op2
+--      and returns the shifted result (of the same size as op1).
+ 
+    function sh_right (op1 : STD_ULOGIC_VECTOR; op2 : NATURAL)
+                                       return STD_ULOGIC_VECTOR is
+        constant size_op: INTEGER := op1'LENGTH;
+        constant left : INTEGER := op1'LEFT;
+        constant right : INTEGER := op1'RIGHT;
+        variable result: STD_ULOGIC_VECTOR (size_op-1 downto 0) := (others => '0');
+    begin
+        if (op2 = 0) then
+            return (op1);
+        end if;
+ 
+        if (op2 >= size_op) then         -- if more than size_op bits are
+            return (result);             --  to be shifted, the
+        end if;                          --  result is all 0's
+ 
+        if (left >= right) then       -- op1 is of descending range
+            result((size_op-1 - op2) downto 0)
+                         := op1(left downto (right + op2));
+        else                        -- op1 is of ascending range
+            result((size_op - 1 - op2) downto 0)
+                         := op1(left to (right - op2));
+        end if;
+        return result;
+    end sh_right;
+
+------------------------------------------------------------------------------
+-- FUNCTION:
+--    "<" (op1: INTEGER; op2: STD_LOGIC_VECTOR) return BOOLEAN
+--    INPUT : op1, op2 of type INTEGER/STD_LOGIC_VECTOR
+--    OUTPUT : BOOLEAN, TRUE if op1 < op2 else FALSE, FALSE if logic type has X
+
+    function "<"(op1: INTEGER; op2: STD_LOGIC_VECTOR) return BOOLEAN is
+         variable oper2 : INTEGER;
+         variable retval : BOOLEAN := FALSE;
+    begin
+         if (not (Is_X(op2))) then
+             oper2 := to_integer(op2);
+             retval := op1 < oper2;
+         end if;
+         return(retval);
+    end "<";
+
+------------------------------------------------------------------------------
+-- FUNCTION:
+--    "<" (op1: STD_LOGIC_VECTOR; op2: INTEGER) return BOOLEAN
+--    INPUT : op1, op2 of type STD_LOGIC_VECTOR/INTEGER
+--    OUTPUT : BOOLEAN, TRUE if op1 < op2 else FALSE, FALSE if logic type has X
+
+
+    function "<" (op1: STD_LOGIC_VECTOR; op2: INTEGER) return BOOLEAN is
+         variable oper1 : INTEGER;
+         variable retval : BOOLEAN := FALSE;
+    begin
+         if (not (Is_X(op1))) then
+             oper1 := to_integer(op1);
+             retval := oper1 < op2;
+         end if;
+         return(retval);
+    end "<";
+
+------------------------------------------------------------------------------
+-- FUNCTION:
+--    "<" (op1: INTEGER; op2: STD_ULOGIC_VECTOR) return BOOLEAN
+--    INPUT : op1, op2 of type INTEGER/STD_ULOGIC_VECTOR
+--    OUTPUT : BOOLEAN, TRUE if op1 < op2 else FALSE, FALSE if logic type has X
+ 
+    function "<"(op1: INTEGER; op2: STD_ULOGIC_VECTOR) return BOOLEAN is
+         variable oper2 : INTEGER;
+         variable retval : BOOLEAN := FALSE;
+    begin
+         if (not (Is_X(op2))) then
+             oper2 := to_integer(op2);
+             retval := op1 < oper2;
+         end if;
+         return(retval);
+    end "<";
+ 
+------------------------------------------------------------------------------
+-- FUNCTION:
+--    "<" (op1: STD_ULOGIC_VECTOR; op2: INTEGER) return BOOLEAN
+--    INPUT : op1, op2 of type STD_ULOGIC_VECTOR/INTEGER
+--    OUTPUT : BOOLEAN, TRUE if op1 < op2 else FALSE, FALSE if logic type has X
+ 
+ 
+    function "<" (op1: STD_ULOGIC_VECTOR; op2: INTEGER) return BOOLEAN is
+         variable oper1 : INTEGER;
+         variable retval : BOOLEAN := FALSE;
+    begin
+         if (not (Is_X(op1))) then
+             oper1 := to_integer(op1);
+             retval := oper1 < op2;
+         end if;
+         return(retval);
+    end "<";
+
+------------------------------------------------------------------------------
+-- FUNCTION:
+--    "<=" (op1: INTEGER; op2: STD_LOGIC_VECTOR) return BOOLEAN
+--    INPUT : op1, op2 of type INTEGER/STD_LOGIC_VECTOR
+--    OUTPUT : BOOLEAN, TRUE if op1 <= op2 else FALSE, FALSE if logic type has X
+
+    function "<=" (op1: INTEGER; op2: STD_LOGIC_VECTOR) return BOOLEAN is
+         variable oper2 : INTEGER;
+         variable retval : BOOLEAN := FALSE;
+    begin
+         if (not (Is_X(op2))) then
+             oper2 := to_integer(op2);
+             retval := op1 <= oper2;
+         end if;
+         return(retval);
+    end "<=";
+
+------------------------------------------------------------------------------
+-- FUNCTION:
+--    "<=" (op1: STD_LOGIC_VECTOR; op2: INTEGER) return BOOLEAN
+--    INPUT : op1, op2 of type STD_LOGIC_VECTOR/INTEGER
+--    OUTPUT : BOOLEAN, TRUE if op1 <= op2 else FALSE, FALSE if logic type has X
+
+
+    function "<=" (op1: STD_LOGIC_VECTOR; op2: INTEGER) return BOOLEAN is
+         variable oper1 : INTEGER;
+         variable retval : BOOLEAN := FALSE;
+    begin
+         if (not (Is_X(op1))) then
+             oper1 := to_integer(op1);
+             retval := oper1 <= op2;
+         end if;
+         return(retval);
+    end "<=";
+
+------------------------------------------------------------------------------
+-- FUNCTION:
+--    "<=" (op1: INTEGER; op2: STD_ULOGIC_VECTOR) return BOOLEAN
+--    INPUT : op1, op2 of type INTEGER/STD_ULOGIC_VECTOR
+--    OUTPUT : BOOLEAN, TRUE if op1 <= op2 else FALSE, FALSE if logic type has X
+ 
+    function "<=" (op1: INTEGER; op2: STD_ULOGIC_VECTOR) return BOOLEAN is
+         variable oper2 : INTEGER;
+         variable retval : BOOLEAN := FALSE;
+    begin
+         if (not (Is_X(op2))) then
+             oper2 := to_integer(op2);
+             retval := op1 <= oper2;
+         end if;
+         return(retval);
+    end "<=";
+ 
+------------------------------------------------------------------------------
+-- FUNCTION:
+--    "<=" (op1: STD_ULOGIC_VECTOR; op2: INTEGER) return BOOLEAN
+--    INPUT : op1, op2 of type STD_ULOGIC_VECTOR/INTEGER
+--    OUTPUT : BOOLEAN, TRUE if op1 <= op2 else FALSE, FALSE if logic type has X
+ 
+ 
+    function "<=" (op1: STD_ULOGIC_VECTOR; op2: INTEGER) return BOOLEAN is
+         variable oper1 : INTEGER;
+         variable retval : BOOLEAN := FALSE;
+    begin
+         if (not (Is_X(op1))) then
+             oper1 := to_integer(op1);
+             retval := oper1 <= op2;
+         end if;
+         return(retval);
+    end "<=";
+
+------------------------------------------------------------------------------
+
+-- FUNCTION:
+--    ">" (op1: INTEGER; op2: STD_LOGIC_VECTOR) return BOOLEAN
+--    INPUT : op1, op2 of type INTEGER/STD_LOGIC_VECTOR
+--    OUTPUT : BOOLEAN, TRUE if op1 > op2 else FALSE, FALSE if logic type has X
+
+    function ">" (op1: INTEGER; op2: STD_LOGIC_VECTOR) return BOOLEAN is
+         variable oper2 : INTEGER;
+         variable retval : BOOLEAN := FALSE;
+    begin
+         if (not (Is_X(op2))) then
+             oper2 := to_integer(op2);
+             retval := op1 > oper2;
+         end if;
+         return(retval);
+    end ">";
+
+------------------------------------------------------------------------------
+-- FUNCTION:
+--    ">" (op1: STD_LOGIC_VECTOR; op2: INTEGER) return BOOLEAN
+--    INPUT : op1, op2 of type STD_LOGIC_VECTOR/INTEGER
+--    OUTPUT : BOOLEAN, TRUE if op1 > op2 else FALSE, FALSE if logic type has X
+
+
+    function ">" (op1: STD_LOGIC_VECTOR; op2: INTEGER) return BOOLEAN is
+         variable oper1 : INTEGER;
+         variable retval : BOOLEAN := FALSE;
+    begin
+         if (not (Is_X(op1))) then
+             oper1 := to_integer(op1);
+             retval := oper1 > op2;
+         end if;
+         return(retval);
+    end ">";
+
+------------------------------------------------------------------------------
+ 
+-- FUNCTION:
+--    ">" (op1: INTEGER; op2: STD_ULOGIC_VECTOR) return BOOLEAN
+--    INPUT : op1, op2 of type INTEGER/STD_ULOGIC_VECTOR
+--    OUTPUT : BOOLEAN, TRUE if op1 > op2 else FALSE, FALSE if logic type has X
+ 
+    function ">" (op1: INTEGER; op2: STD_ULOGIC_VECTOR) return BOOLEAN is
+         variable oper2 : INTEGER;
+         variable retval : BOOLEAN := FALSE;
+    begin
+         if (not (Is_X(op2))) then
+             oper2 := to_integer(op2);
+             retval := op1 > oper2;
+         end if;
+         return(retval);
+    end ">";
+ 
+------------------------------------------------------------------------------
+-- FUNCTION:
+--    ">" (op1: STD_ULOGIC_VECTOR; op2: INTEGER) return BOOLEAN
+--    INPUT : op1, op2 of type STD_ULOGIC_VECTOR/INTEGER
+--    OUTPUT : BOOLEAN, TRUE if op1 > op2 else FALSE, FALSE if logic type has X
+ 
+ 
+    function ">" (op1: STD_ULOGIC_VECTOR; op2: INTEGER) return BOOLEAN is
+         variable oper1 : INTEGER;
+         variable retval : BOOLEAN := FALSE;
+    begin
+         if (not (Is_X(op1))) then
+             oper1 := to_integer(op1);
+             retval := oper1 > op2;
+         end if;
+         return(retval);
+    end ">";
+
+------------------------------------------------------------------------------
+-- FUNCTION:
+--    ">=" (op1: INTEGER; op2: STD_LOGIC_VECTOR) return BOOLEAN
+--    INPUT : op1, op2 of type INTEGER/STD_LOGIC_VECTOR
+--    OUTPUT : BOOLEAN, TRUE if op1 >= op2 else FALSE, FALSE if logic type has X
+
+    function ">=" (op1: INTEGER; op2: STD_LOGIC_VECTOR) return BOOLEAN is
+         variable oper2 : INTEGER;
+         variable retval : BOOLEAN := FALSE;
+    begin
+         if (not (Is_X(op2))) then
+             oper2 := to_integer(op2);
+             retval := op1 >= oper2;
+         end if;
+         return(retval);
+    end ">=";
+
+------------------------------------------------------------------------------
+-- FUNCTION:
+--    ">=" (op1: STD_LOGIC_VECTOR; op2: INTEGER) return BOOLEAN
+--    INPUT : op1, op2 of type STD_LOGIC_VECTOR/INTEGER
+--    OUTPUT : BOOLEAN, TRUE if op1 >= op2 else FALSE, FALSE if logic type has X
+
+
+    function ">=" (op1: STD_LOGIC_VECTOR; op2: INTEGER) return BOOLEAN is
+         variable oper1 : INTEGER;
+         variable retval : BOOLEAN := FALSE;
+    begin
+         if (not (Is_X(op1))) then
+             oper1 := to_integer(op1);
+             retval := oper1 >= op2;
+         end if;
+         return(retval);
+    end ">=";
+
+------------------------------------------------------------------------------
+-- FUNCTION:
+--    ">=" (op1: INTEGER; op2: STD_ULOGIC_VECTOR) return BOOLEAN
+--    INPUT : op1, op2 of type INTEGER/STD_ULOGIC_VECTOR
+--    OUTPUT : BOOLEAN, TRUE if op1 >= op2 else FALSE, FALSE if logic type has X
+ 
+    function ">=" (op1: INTEGER; op2: STD_ULOGIC_VECTOR) return BOOLEAN is
+         variable oper2 : INTEGER;
+         variable retval : BOOLEAN := FALSE;
+    begin
+         if (not (Is_X(op2))) then
+             oper2 := to_integer(op2);
+             retval := op1 >= oper2;
+         end if;
+         return(retval);
+    end ">=";
+ 
+------------------------------------------------------------------------------
+-- FUNCTION:
+--    ">=" (op1: STD_ULOGIC_VECTOR; op2: INTEGER) return BOOLEAN
+--    INPUT : op1, op2 of type STD_ULOGIC_VECTOR/INTEGER
+--    OUTPUT : BOOLEAN, TRUE if op1 >= op2 else FALSE, FALSE if logic type has X
+ 
+ 
+    function ">=" (op1: STD_ULOGIC_VECTOR; op2: INTEGER) return BOOLEAN is
+         variable oper1 : INTEGER;
+         variable retval : BOOLEAN := FALSE;
+    begin
+         if (not (Is_X(op1))) then
+             oper1 := to_integer(op1);
+             retval := oper1 >= op2;
+         end if;
+         return(retval);
+    end ">=";
+
+------------------------------------------------------------------------------
+-- FUNCTION:
+--    "=" (op1: INTEGER; op2: STD_LOGIC_VECTOR) return BOOLEAN
+--    INPUT : op1, op2 of type INTEGER/STD_LOGIC_VECTOR
+--    OUTPUT : BOOLEAN, TRUE if op1 = op2 else FALSE, FALSE if logic type has X
+
+    function "=" (op1: INTEGER; op2: STD_LOGIC_VECTOR) return BOOLEAN is
+         variable oper2 : INTEGER;
+         variable retval : BOOLEAN := FALSE;
+    begin
+         if (not (Is_X(op2))) then
+             oper2 := to_integer(op2);
+             retval := op1 = oper2;
+         end if;
+         return(retval);
+    end "=";
+
+------------------------------------------------------------------------------
+-- FUNCTION:
+--    "=" (op1: STD_LOGIC_VECTOR; op2: INTEGER) return BOOLEAN
+--    INPUT : op1, op2 of type STD_LOGIC_VECTOR/INTEGER
+--    OUTPUT : BOOLEAN, TRUE if op1 = op2 else FALSE, FALSE if logic type has X
+
+
+    function "=" (op1: STD_LOGIC_VECTOR; op2: INTEGER) return BOOLEAN is
+         variable oper1 : INTEGER;
+         variable retval : BOOLEAN := FALSE;
+    begin
+         if (not (Is_X(op1))) then
+             oper1 := to_integer(op1);
+             retval := oper1 = op2;
+         end if;
+         return(retval);
+    end "=";
+
+------------------------------------------------------------------------------
+-- FUNCTION:
+--    "=" (op1: INTEGER; op2: STD_ULOGIC_VECTOR) return BOOLEAN
+--    INPUT : op1, op2 of type INTEGER/STD_ULOGIC_VECTOR
+--    OUTPUT : BOOLEAN, TRUE if op1 = op2 else FALSE, FALSE if logic type has X
+ 
+    function "=" (op1: INTEGER; op2: STD_ULOGIC_VECTOR) return BOOLEAN is
+         variable oper2 : INTEGER;
+         variable retval : BOOLEAN := FALSE;
+    begin
+         if (not (Is_X(op2))) then
+             oper2 := to_integer(op2);
+             retval := op1 = oper2;
+         end if;
+         return(retval);
+    end "=";
+ 
+------------------------------------------------------------------------------
+-- FUNCTION:
+--    "=" (op1: STD_ULOGIC_VECTOR; op2: INTEGER) return BOOLEAN
+--    INPUT : op1, op2 of type STD_ULOGIC_VECTOR/INTEGER
+--    OUTPUT : BOOLEAN, TRUE if op1 = op2 else FALSE, FALSE if logic type has X
+ 
+ 
+    function "=" (op1: STD_ULOGIC_VECTOR; op2: INTEGER) return BOOLEAN is
+         variable oper1 : INTEGER;
+         variable retval : BOOLEAN := FALSE;
+    begin
+         if (not (Is_X(op1))) then
+             oper1 := to_integer(op1);
+             retval := oper1 = op2;
+         end if;
+         return(retval);
+    end "=";
+
+------------------------------------------------------------------------------
+-- FUNCTION:
+--    "/=" (op1: INTEGER; op2: STD_LOGIC_VECTOR) return BOOLEAN
+--    INPUT : op1, op2 of type INTEGER/STD_LOGIC_VECTOR
+--    OUTPUT : BOOLEAN, TRUE if op1 /= op2 else FALSE, FALSE if logic type has X
+
+    function "/=" (op1: INTEGER; op2: STD_LOGIC_VECTOR) return BOOLEAN is
+         variable oper2 : INTEGER;
+         variable retval : BOOLEAN := FALSE;
+    begin
+         if (not (Is_X(op2))) then
+             oper2 := to_integer(op2);
+             retval := op1 /= oper2;
+         end if;
+         return(retval);
+    end "/=";
+
+------------------------------------------------------------------------------
+-- FUNCTION:
+--    "/=" (op1: STD_LOGIC_VECTOR; op2: INTEGER) return BOOLEAN
+--    INPUT : op1, op2 of type STD_LOGIC_VECTOR/INTEGER
+--    OUTPUT : BOOLEAN, TRUE if op1 /= op2 else FALSE, FALSE if logic type has X
+
+
+    function "/=" (op1: STD_LOGIC_VECTOR; op2: INTEGER) return BOOLEAN is
+         variable oper1 : INTEGER;
+         variable retval : BOOLEAN := FALSE;
+    begin
+         if (not (Is_X(op1))) then
+             oper1 := to_integer(op1);
+             retval := oper1 /= op2;
+         end if;
+         return(retval);
+    end "/=";
+
+------------------------------------------------------------------------------
+-- FUNCTION:
+--    "/=" (op1: INTEGER; op2: STD_ULOGIC_VECTOR) return BOOLEAN
+--    INPUT : op1, op2 of type INTEGER/STD_ULOGIC_VECTOR
+--    OUTPUT : BOOLEAN, TRUE if op1 /= op2 else FALSE, FALSE if logic type has X
+ 
+    function "/=" (op1: INTEGER; op2: STD_ULOGIC_VECTOR) return BOOLEAN is
+         variable oper2 : INTEGER;
+         variable retval : BOOLEAN := FALSE;
+    begin
+         if (not (Is_X(op2))) then
+             oper2 := to_integer(op2);
+             retval := op1 /= oper2;
+         end if;
+         return(retval);
+    end "/=";
+ 
+------------------------------------------------------------------------------
+-- FUNCTION:
+--    "/=" (op1: STD_ULOGIC_VECTOR; op2: INTEGER) return BOOLEAN
+--    INPUT : op1, op2 of type STD_ULOGIC_VECTOR/INTEGER
+--    OUTPUT : BOOLEAN, TRUE if op1 /= op2 else FALSE, FALSE if logic type has X
+ 
+ 
+    function "/=" (op1: STD_ULOGIC_VECTOR; op2: INTEGER) return BOOLEAN is
+         variable oper1 : INTEGER;
+         variable retval : BOOLEAN := FALSE;
+    begin
+         if (not (Is_X(op1))) then
+             oper1 := to_integer(op1);
+             retval := oper1 /= op2;
+         end if;
+         return(retval);
+    end "/=";
+
+------------------------------------------------------------------------------
+-- FUNCTION
+-- DRIVE (V: STD_LOGIC_VECTOR)  return STD_ULOGIC_VECTOR
+--   INPUT  : V of type STD_LOGIC_VECTOR
+--   OUTPUT : Same as input with type STD_ULOGIC_VECTOR
+
+function drive (V: STD_LOGIC_VECTOR)  return STD_ULOGIC_VECTOR is
+     variable result : std_ulogic_vector ( V'range );
+begin
+    for i IN V'RANGE LOOP
+       result(i) := V(i);
+    end loop;
+    return result;
+end drive;
+
+-----------------------------------------------------------------------------
+-- FUNCTION 
+-- DRIVE (V: STD_ULOGIC_VECTOR)  return STD_LOGIC_VECTOR 
+--   INPUT  : V of type STD_ULOGIC_VECTOR 
+--   OUTPUT : Same as input with type STD_LOGIC_VECTOR 
+
+function drive (V: STD_ULOGIC_VECTOR) return STD_LOGIC_VECTOR is
+     variable result : std_logic_vector ( V'range );
+begin
+    for i IN V'RANGE LOOP
+       result(i) := V(i);
+    end loop;
+    return result;
+end drive;
+ 
+-----------------------------------------------------------------------------
+-- FUNCTION
+-- SENSE (V: STD_ULOGIC; vZ, vU, vDC: STD_ULOGIC)  return STD_ULOGIC
+--   INPUT  : V of type STD_ULOGIC, vZ, vU, vDC of type STD_ULOGIC
+--   OUTPUT : STD_ULOGIC with same value as V but its 'Z' mapped to VZ, 
+--            'U' mapped to vU and '-' mapped to vDC.
+
+function sense (V: STD_ULOGIC; vZ, vU, vDC: STD_ULOGIC) return STD_ULOGIC is
+begin
+    case V is
+        when 'Z' => return (vZ);
+        when 'U' => return (vU);
+        when '-' => return (vDC);
+        when others => return (V);
+    end case;
+end sense;
+-----------------------------------------------------------------------------
+-- FUNCTION 
+-- SENSE (V: STD_ULOGIC_VECTOR; vZ, vU, vDC: STD_ULOGIC)
+--                                          return STD_ULOGIC_VECTOR
+--   INPUT  : V of type STD_ULOGIC_VECTOR, vZ, vU, vDC of type STD_ULOGIC 
+--   OUTPUT : STD_ULOGIC_VECTOR with same value as V but its 'Z' mapped to VZ,  
+--            'U' mapped to vU and '-' mapped to vDC. 
+ 
+function sense (V: STD_ULOGIC_VECTOR; vZ, vU, vDC: STD_ULOGIC) 
+                                            return STD_ULOGIC_VECTOR is
+     variable  result : STD_ULOGIC_VECTOR(V'range);
+begin    
+    for I in V'RANGE loop
+        case V(I) is 
+            when 'Z' => result(I) := vZ; 
+            when 'U' => result(I) := vU; 
+            when '-' => result(I) := vDC;
+            when others => result(I) := V(I);
+        end case;
+    end loop;
+    return (result);
+end sense;
+-----------------------------------------------------------------------------  
+-- FUNCTION  
+-- SENSE (V: STD_LOGIC_VECTOR; vZ, vU, vDC: STD_ULOGIC)
+--                                          return STD_ULOGIC_VECTOR
+--   INPUT  : V of type STD_ULOGIC_VECTOR, vZ, vU, vDC of type STD_ULOGIC  
+--   OUTPUT : STD_ULOGIC_VECTOR with same value as V but its 'Z' mapped to VZ,   
+--            'U' mapped to vU and '-' mapped to vDC.  
+  
+function sense (V: STD_LOGIC_VECTOR; vZ, vU, vDC: STD_ULOGIC) 
+                                            return STD_ULOGIC_VECTOR is
+     variable  result : STD_ULOGIC_VECTOR(V'range); 
+begin     
+    for I in V'RANGE loop 
+        case V(I) is  
+            when 'Z' => result(I) := vZ; 
+            when 'U' => result(I) := vU;   
+            when '-' => result(I) := vDC;   
+            when others => result(I) := V(I);  
+        end case;
+    end loop; 
+    return (result); 
+end sense;  
+-----------------------------------------------------------------------------
+
+end STD_LOGIC_ARITH;

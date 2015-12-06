@@ -1,0 +1,50 @@
+ch_21_01.vhd	entity ch_21_01
+		architecture test of ch_21_01
+		-- syntax test only, analyzed, tested ok, formatted
+
+ch_21_02.vhd	entity ch_21_02
+		architecture test of ch_21_02
+		-- analyzed, tested ok (MTI bug mt041), formatted
+
+ch_21_03.vhd	entity controller
+		architecture instrumented of controller
+		-- syntax test only, analyzed, tested ok, formatted
+
+fg_21_01.vhd	entity D_flipflop
+		architecture behavioral of D_flipflop
+		entity inverter
+		architecture behavioral of inverter
+		entity count2
+		architecture buffered_outputs of count2
+		entity fg_21_01
+		architecture test of fg_21_01
+		-- analyzed, tested ok, formatted
+
+fg_21_02.vhd	package project_util
+		package body project_util
+		entity limit_checker
+		architecture behavioral of limit_checker
+		entity fg_21_02
+		architecture test of fg_21_02
+		-- analyzed, tested ok, formatted
+
+fg_21_03.vhd	entity random_source
+		architecture fudged of random_source
+		entity test_bench
+		architecture random_test of test_bench
+		-- analyzed, tested ok, formatted
+
+fg_21_04.vhd	entity processor
+		architecture rtl of processor
+		-- syntax test only, analyzed, tested ok, formatted
+
+fg_21_05.vhd	entity SR_flipflop
+		architecture dataflow of SR_flipflop
+		entity fg_21_05
+		architecture test of fg_21_05
+		-- analyzed, tested ok, formatted
+
+fg_21_06.vhd	entity multiprocessor
+		architecture instrumented of multiprocessor
+		-- analyzed, tested ok, formatted
+

@@ -1,0 +1,92 @@
+ap_a_01.vhd	entity ap_a_01
+		architecture test of ap_a_01
+		-- analyzed, tested ok, formatted
+
+ap_a_02.vhd	entity ap_a_02
+		architecture test of ap_a_02
+		-- analyzed, tested ok, formatted
+
+ap_a_03.vhd	entity ap_a_03
+		architecture test of ap_a_03
+		-- analyzed, tested ok, formatted
+
+ap_a_04.vhd	entity ap_a_04
+		architecture test of ap_a_04
+		-- analyzed, tested ok, formatted
+
+ap_a_05.vhd	entity ap_a_05
+		architecture test of ap_a_05
+		-- analyzed, tested ok, formatted
+
+ap_a_06.vhd	entity ap_a_06
+		architecture test of ap_a_06
+		-- analyzed, tested ok, formatted
+
+ap_a_07.vhd	entity bidir_buffer
+		architecture behavior of bidir_buffer
+		entity ap_a_07
+		architecture test of ap_a_07
+		-- analyzed, tested ok, formatted
+
+ap_a_08.vhd	entity entname
+		architecture rtl of entname
+		-- analyzed, tested ok, formatted
+
+ap_a_09.vhd	entity ap_a_09
+		architecture test of ap_a_09
+		-- analyzed, tested ok, formatted
+
+ap_a_10.vhd	entity ap_a_10
+		architecture test of ap_a_10
+		-- analyzed, tested ok, formatted
+
+fg_a_01.vhd	entity fg_a_01
+		architecture test of fg_a_01
+		-- analyzed, tested ok, formatted
+
+fg_a_02.vhd	entity fg_a_02
+		architecture test of fg_a_02
+		-- analyzed, tested ok, formatted
+
+fg_a_03.vhd	entity add_and_sub
+		architecture rtl of add_and_sub
+		entity fg_a_03
+		architecture test of fg_a_03
+		-- analyzed, tested ok, formatted
+
+fg_a_04.vhd	entity fg_a_04
+		architecture test of fg_a_04
+		-- analyzed, tested ok, formatted
+
+fg_a_05.vhd	entity fg_a_05
+		architecture test of fg_a_05
+		-- analyzed, tested ok, formatted
+
+fg_a_06.vhd	entity fg_a_06
+		architecture test of fg_a_06
+		-- analyzed, tested ok, formatted
+
+fg_a_07.vhd	entity bidir_buffer
+		architecture behavior of bidir_buffer
+		entity fg_a_07
+		architecture test of fg_a_07
+		-- analyzed, tested ok, formatted
+
+fg_a_08.vhd	entity entname
+		architecture rtl of entname
+		-- analyzed, tested ok, formatted
+
+fg_a_09.vhd	entity fg_a_09
+		architecture test of fg_a_09
+		-- analyzed, tested ok, formatted
+
+fg_a_10.vhd	entity fg_a_10
+		architecture test of fg_a_10
+		-- analyzed, tested ok, formatted
+
+fg_a_11.vhd	entity RAM16x1
+		architecture a of RAM16x1
+		entity fg_a_11
+		architecture test of fg_a_11
+		-- analyzed, tested ok, formatted
+

@@ -1,0 +1,12 @@
+ncsim: v03.11.(s015): (c) Copyright 1995 - 2001 Cadence Design Systems, Inc.
+ncsim> run 2 ns
+divs=0111  divd=01010101  quo=UUUU  rem=UUUU  now=0 NS
+divs=0111  divd=01010101  quo=1UUU  rem=UUUU  now=0.05 NS
+divs=0111  divd=01010101  quo=11UU  rem=UUUU  now=0.1 NS
+divs=0111  divd=01010101  quo=110U  rem=UUUU  now=0.14 NS
+divs=0111  divd=01010101  quo=110U  rem=UUU0  now=0.16 NS
+divs=0111  divd=01010101  quo=110U  rem=U010  now=0.17 NS
+divs=0111  divd=01010101  quo=110U  rem=1010  now=0.18 NS
+divs=0111  divd=01010101  quo=1100  rem=1010  now=0.19 NS
+Ran until 2 NS + 0
+ncsim> exit

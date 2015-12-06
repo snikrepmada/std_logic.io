@@ -1,0 +1,634 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<TITLE>VHDL Design Units and Subprograms</TITLE>
+</HEAD>
+<BODY>
+</HEAD>
+<BODY>
+<P>
+|<a href="summary.html">Summary</a>
+|<a href="design.html">Design Units</a>
+|<a href="sequential.html">Sequential Statements</a>
+|<a href="concurrent.html">Concurrent Statements</a>
+|<a href="types.html">Predefined Types</a>
+|<a href="declare.html">Declarations</a>
+|
+</P>
+<P>
+|<a href="misc.html">Resolution and Signatures</a>
+|<a href="reserved.html">Reserved Words</a>
+|<a href="operator.html">Operators</a>
+|<a href="attribute.html">Predefined Attributes</a>
+|<a href="stdpkg.html">Standard Packages</a>
+|
+</P>
+
+
+<a name="Top"></a>
+
+<H2> VHDL Design Units and Subprograms </H2>
+
+<PRE>
+A design unit may be the entire file or there may be more than
+one design unit in a file. No less than a design unit may be
+in a file.
+
+Any design unit may contain a context clause as its initial part.
+The context clause of a primary unit applies to all of the
+primary units corresponding secondary units.  Architectures and
+package bodies are the secondary units. Subprograms are
+not library units and must be inside entities, architectures
+or packages.
+
+The analysis, compilation, of a design unit results in a library unit
+is some design library.  Predefined libraries typically include but are
+not limited to: STD, IEEE and WORK.  WORK is the default user library.
+</PRE>
+
+<H3>Design Units and Subprograms</H3>
+<dir>
+  <LI><a href="design.html#entity"> Entity </a>
+  <LI><a href="design.html#arch"> Architecture </a>
+  <LI><a href="design.html#config"> Configuration </a>
+  <LI><a href="design.html#spec"> Package Declaration </a>
+  <LI><a href="design.html#body"> Package Body </a>
+  <LI><a href="design.html#subpr"> Subprograms </a>
+  <LI><a href="design.html#procd"> Procedure Declaration </a>
+  <LI><a href="design.html#procb"> Procedure Body </a>
+  <LI><a href="design.html#funcd"> Function Declaration </a>
+  <LI><a href="design.html#funcb"> Function Body </a>
+  <LI><a href="design.html#contx"> Context Clause </a>
+  <LI><a href="design.html#order"> Order of Analysis, Compilation </a>
+</dir>
+
+
+<H3><a name="entity"> Entity </a></H3>
+<PRE>
+The top of every design hierarchy must be an entity.
+Entities may range from primitive circuits to complex assemblies.
+
+The entity code typically defines just the interface of the entity.
+
+  <B>entity</B>  identifier <B>is</B>
+     <B>generic</B> ( generic_variable_declarations ) ; -- optional
+     <B>port</B> ( input_and_output_variable_declarations ) ;
+     [ declarations , see allowed list below ]   -- optional
+  <B>begin</B>                                         \__ optional
+     [ statements , see allowed list below ]    /    
+  <B>end</B> <B>entity</B> identifier ;  
+
+  generic_variable_declarations are of the form:
+    variable_name : variable_type := variable_value ; -- := variable_value optional
+
+  input_and_output_variable_declaration are of the form:
+     variable_name : port_mode  variable_type ;
+  port_mode may be <B>in</B> <B>out</B> <B>inout</B> <B>buffer</B> <B>linkage</B>
+
+
+  <B>entity</B> adder <B>is</B>
+     <B>generic</B> ( N : natural := 32 ) ;
+     <B>port</B> ( A    : <B>in</B>  bit_vector(N-1 <B>downto</B> 0);
+            B    : <B>in</B>  bit_vector(N-1 <B>downto</B> 0);
+            cin  : <B>in</B>  bit;
+            Sum  : <B>out</B> bit_vector(N-1 <B>downto</B> 0);
+            Cout : <B>out</B> bit );
+  <B>end</B> <B>entity</B> adder ;
+
+
+  <B>entity</B> test_bench <B>is</B>   -- typical top level, simulatable, entity
+  <B>end</B> <B>entity</B> test_bench;
+
+
+  <B>entity</B> Latch <B>is</B>
+     <B>port</B> ( Din:  <B>in</B>  Word;
+            Dout: <B>out</B> Word;
+            Load: <B>in</B>  Bit;
+            Clk:  <B>in</B>  Bit);
+     <B>constant</B> Setup: Time := 12 ns;
+     <B>constant</B> PulseWidth: Time := 50 ns;
+     <B>use</B> WORK.TimingMonitors.<B>all</B>
+  <B>begin</B>
+     <b>assert</B> Clk='1' <B>or</B> Clk'Delayed'Stable(PulseWidth);
+     CheckTiming(Setup, Din, Load, Clk); -- passive concurrent procedure
+  <B>end entity</B> Latch;
+
+The allowed declarations are:
+  <a href="design.html#subpr">subprogram declaration</a>
+  <a href="design.html#subpr">subprogram body</a>
+  <a href="declare.html#Top">type declaration</a>
+  <a href="declare.html#sutype">subtype declaration</a>
+  <a href="declare.html#cobj">constant, object declaration</a>
+  <a href="declare.html#sobj">signal, object declaration</a>
+  <a href="declare.html#vobj">variable, object declaration - shared</a>
+  <a href="declare.html#fobj">file, object declaration</a>
+  <a href="declare.html#alias">alias declaration</a>
+  <a href="declare.html#attrd">attribute declaration</a>
+  <a href="declare.html#attrs">attribute specification</a>
+  <a href="declare.html#disco">disconnection specification</a>
+  <a href="design.html#usecl">use clause</a>
+  <a href="declare.html#groupt">group template declaration</a>
+  <a href="declare.html#group">group declaration</a>
+
+The allowed statements are:
+  <a href="concurrent.html#asse">concurrent assertion statements</a>
+  <a href="concurrent.html#cpro">passive concurrent procedure call</a>
+  <a href="concurrent.html#proc">passive process statement</a>
+
+</PRE>
+
+<H3><a name="arch"> Architecture </a></H3>
+<PRE>
+Used to implement a design entity. There may be more than one
+architecture for a design entity. Typical architectures fall
+into classes such as functional simulation or detailed logic
+implementation and may be structural, functional(dataflow)
+or behavioral. 
+
+  <B>architecture</B> identifier <B>of</B> entity_name <B>is</B>
+     [ declarations , see allowed list below ]
+  <B>begin</B> -- optional
+     [ statements , see allowed list below ]
+  <B>end</B> <B>architecture</B> identifier ;  
+
+
+  <B>architecture</B> circuits <B>of</B> add4c <B>is</B>
+    <B>signal</B> c : std_logic_vector(3 <B>downto</B> 0);
+    <B>component</B> fadd    -- duplicates entity port
+      <B>port</B>(a    : <B>in</B>  std_logic;
+           b    : <B>in</B>  std_logic;
+           cin  : <B>in</B>  std_logic;
+           s    : <B>out</B> std_logic;
+           cout : <B>out</B> std_logic);
+    <B>end component</B> fadd;
+  <B>begin</B>  -- circuits of add4c
+    a0: fadd <B>port map</B>(a(0), b(0), cin , sum(0), c(0));
+    a1: fadd <B>port map</B>(a(1), b(1), c(0), sum(1), c(1));
+    a2: fadd <B>port map</B>(a(2), b(2), c(1), sum(2), c(2));
+    a3: fadd <B>port map</B>(a(3), b(3), c(2), sum(3), c(3));
+    cout <= (a(3) <B>and</B> b(3)) <B>or</B> ((a(3) <B>or</B> b(3)) <B>and</B>
+           ((a(2) <B>and</B> b(2)) <B>or</B> ((a(2) <B>or</B> b(2)) <B>and</B>
+           ((a(1) <B>and</B> b(1)) <B>or</B> ((a(1) <B>or</B> b(1)) <B>and</B>
+           ((a(0) <B>and</B> b(0)) <B>or</B> ((a(0) <B>or</B> b(0)) <B>and</B> cin)))))))
+           <b>after</B> 1 ns;
+  <B>end architecture</B> circuits;  -- of add4c
+
+
+The allowed declarations are:
+  <a href="design.html#subpr">subprogram declaration</a>
+  <a href="design.html#subpr">subprogram body</a>
+  <a href="declare.html#Top">type declaration</a>
+  <a href="declare.html#sutype">subtype declaration</a>
+  <a href="declare.html#cobj">constant, object declaration</a>
+  <a href="declare.html#sobj">signal, object declaration</a>
+  <a href="declare.html#vobj">variable, object declaration - shared</a>
+  <a href="declare.html#fobj">file, object declaration</a>
+  <a href="declare.html#alias">alias declaration</a>
+  <a href="declare.html#comp">component declaration</a>
+  <a href="declare.html#attrd">attribute declaration</a>
+  <a href="declare.html#attrs">attribute specification</a>
+  <a href="declare.html#disco">disconnection specification</a>
+  <a href="design.html#usecl">use clause</a>
+  <a href="declare.html#groupt">group template declaration</a>
+  <a href="declare.html#group">group declaration</a>
+
+The allowed statements are:
+  <a href="concurrent.html#Top">concurrent statements</a>
+
+</PRE>
+
+<H3><a name="config"> Configuration </a></H3>
+<PRE>
+Used to bind component instances to design entities and
+collect architectures to make, typically, a simulatable
+test bench. One configuration could create a functional
+simulation while another configuration could create
+the complete detailed logic design. With an appropriate
+test bench the results of the two configurations
+can be compared.
+
+Note that significant nesting depth can occur on hierarchal
+designs. There is a capability to bind various architectures
+with instances of components in the hierarchy. To avoid nesting
+depth use a configuration for each architecture level and a
+configuration of configurations. Most VHDL compilation/simulation
+systems allow the top level configuration name to be elaborated
+and simulated.
+
+
+  <B>configuration</B> identifier <B>of</B> entity_name <B>is</B>
+     [ declarations , see allowed list below ]
+     [ block configuration , see allowed list below ]
+  <B>end</B> <B>architecture</B> identifier ;  
+
+
+  -- entities and architecture circuits for fadd, add4c and add32 not shown
+  <B>entity</B> add32_test <B>is</B> -- test bench
+  <B>end</B> add32_test;
+
+  <B>architecture</B> circuits <B>of</B> add32_test <B>is</B>
+     -- details implementing test bench deleted
+  <B>end architecture</B> circuits; -- of add32_test
+
+
+  <B>configuration</B> add32_test_config <B>of</B> add32_test <B>is</B>
+    <B>for</B> circuits -- of add32_test
+      <B>for all</B>: add32
+        <B>use entity</B> WORK.add32(circuits);
+        <B>for</B> circuits -- of add32
+          <B>for all</B>: add4c
+            <B>use entity</B> WORK.add4c(circuits);
+            <B>for</B> circuits -- of add4c
+              <B>for all</B>: fadd
+                <B>use entity</B> WORK.fadd(circuits);
+              <B>end for</B>;
+            <B>end for</B>;
+          <B>end for</B>;
+        <B>end for</B>;
+      <B>end for</B>;
+    <B>end for</B>;
+  <B>end configuration</B> add32_test_config;
+
+  Note the architecture name in parenthesis following the entity name.
+
+Or an equivalent configuration of configurations:
+
+  <B>configuration</B> add32_test_config <B>of</B> add32_test <B>is</B>
+    <B>for</B> circuits -- of add32_test
+      <B>for all</B>: add32
+        <B>use configuration</B> WORK.add32_config;
+      <B>end for</B>;
+    <B>end for</B>;
+  <B>end configuration</B> add32_test_config;
+
+  
+The allowed declarations are:
+  <a href="declare.html#attrs">attribute specification</a>
+  <a href="design.html#usecl">use clause</a>
+  <a href="declare.html#group">group declaration</a>
+
+The allowed block configurations are:
+  <B>for</B> component_instance_name : component_name
+     -- use clause
+  <B>end for</B>;
+
+  <B>for all</B> : component_name
+     -- use clause
+  <B>end for</B>;
+
+use clauses are of the form:
+   <B>use entity</B> library_name.entity_name[(architecture_name)]
+   <B>use configuration</B> library_name.configuration_name
+
+</PRE>
+
+<H3><a name="spec"> Package Declaration </a></H3>
+<PRE>
+Used to declare types, shared variables, subprograms, etc.
+
+  <B>package</B> identifier <B>is</B>
+      [ declarations, see allowed list below ]
+  <B>end package</B> identifier ;
+
+  The example is included in the next section, Package Body.
+
+The allowed declarations are:
+  <a href="design.html#subpr">subprogram declaration</a>
+  <a href="declare.html#Top">type declaration</a>
+  <a href="declare.html#sutype">subtype declaration</a>
+  <a href="declare.html#cobj">constant, object declaration</a>
+  <a href="declare.html#sobj">signal, object declaration</a>
+  <a href="declare.html#vobj">variable, object declaration - shared</a>
+  <a href="declare.html#fobj">file, object declaration</a>
+  <a href="declare.html#alias">alias declaration</a>
+  <a href="declare.html#comp">component declaration</a>
+  <a href="declare.html#attrd">attribute declaration</a>
+  <a href="declare.html#attrs">attribute specification</a>
+  <a href="design.html#usecl">use clause</a>
+  <a href="declare.html#groupt">group template declaration</a>
+  <a href="declare.html#group">group declaration</a>
+
+Declarations not allowed include:
+  subprogram body
+  
+A package body is unnecessary if no subprograms or
+deferred constants are declared in the package declaration.
+
+</PRE>
+
+<H3><a name="body"> Package Body </a></H3>
+<PRE>
+Used to implement the subprograms declared in the package declaration.
+
+  <B>package body</B> identifier <B>is</B>
+      [ declarations, see allowed list below ]
+  <B>end package body</B> identifier ;
+
+  <B>package</B> my_pkg <B>is</B> -- sample package declaration
+    <B>type</B> small <B>is</B> <B>range</B> 0 <B>to</B> 4096;
+    <B>procedure</B> s_inc(A : <B>inout</B> small);
+    <B>function</B> s_dec(B : small) <B>return</B> small;
+  <B>end</B> <B>package</B> my_pkg;
+
+  <B>package</B> <B>body</B> my_pkg <B>is</B> -- corresponding package body
+    <B>procedure</B> s_inc(A : <B>inout</B> small) <B>is</B>
+    <B>begin</B>
+    A := A+1;
+    <B>end</B> <B>procedure</B> s_inc;
+    <B>function</B> s_dec(B : small) <B>return</B> small is
+    <B>begin</B>
+      <B>return</B> B-1;
+    <B>end function</B> s_dec;
+  <B>end package body</B> my_pkg;
+
+
+The allowed declarations are:
+  <a href="design.html#subpr">subprogram declaration</a>
+  <a href="design.html#subpr">subprogram body</a>
+  <a href="declare.html#Top">type declaration</a>
+  <a href="declare.html#sutype">subtype declaration</a>
+  <a href="declare.html#cobj">constant, object declaration</a>
+  <a href="declare.html#vobj">variable, object declaration - shared</a>
+  <a href="declare.html#fobj">file, object declaration</a>
+  <a href="declare.html#alias">alias declaration</a>
+  <a href="design.html#usecl">use clause</a>
+  <a href="declare.html#groupt">group template declaration</a>
+  <a href="declare.html#group">group declaration</a>
+ 
+Declarations not allowed include:
+  signal, object declaration
+  
+</PRE>
+
+<H3><a name="subpr"> Subprograms </a></H3>
+<PRE>
+There are two kinds of subprograms: procedures and functions.
+
+Both procedures and functions written in VHDL must have
+a body and may have declarations. 
+
+Procedures perform sequential computations and return values
+in global objects or by storing values into formal parameters.
+
+Functions perform sequential computations and return a value
+as the value of the function.  Functions do not change their
+formal parameters.
+
+Subprograms may exist as just a procedure body or a function body.
+Subprograms may also have a procedure declarations or a
+function declaration.
+
+When subprograms are provided in a package, the subprogram declaration
+is placed in the package declaration and the subprogram body is
+placed in the package body.
+
+</PRE>
+
+<H3><a name="procd"> Procedure Declaration </a></H3>
+<PRE>
+Used to declare the calling interface to a procedure.
+
+  <B>procedure</B> identifier [ ( formal parameter list ) ] ;
+
+  <B>procedure</B> print_header ;
+  <B>procedure</B> build ( A : <B>in</B> <B>constant</B> integer;
+                    B : <B>inout</B> <B>signal</B> bit_vector;
+                    C : <B>out</B> <B>variable</B> real;
+                    D : <B>file</B> ) ;
+
+Formal parameters are separated by semicolons in the formal parameter
+list.  Each formal parameter is essentially a declaration of an
+object that is local to the procedure.  The type definitions used
+in formal parameters must be visible at the place where the procedure
+is being declared.  No semicolon follows the last formal parameter
+inside the parenthesis.
+
+Formal parameters may be constants, variables, signals or files.
+The default is variable.
+
+Formal parameters may have modes <B>in</B>, <B>inout</B> and <B>out</B>
+Files do not have a mode.
+The default is <B>in</B> .
+
+If no type is given and a mode of <B>in</B> is used, constant is the default.
+
+The equivalent default declaration of "build" is
+
+  <B>procedure</B> build ( A : <B>in</B> integer;
+                    B : <B>inout</B> <B>signal</B> bit_vector;
+                    C : <B>out</B> real;
+                    D : <B>file</B> ) ;
+
+</PRE>
+
+<H3><a name="procb"> Procedure Body </a></H3>
+<PRE>
+Used to define the implementation of the procedure.
+
+  <B>procedure</B> identifier [ ( formal parameter list ) ] <B>is</B>
+      [ declarations, see allowed list below ]
+  <B>begin</B>
+      sequential statement(s)
+  <B>end</B> <B>procedure</B> identifier ;
+
+  <B>procedure</B> print_header <B>is</B>
+      <B>use</B> STD.textio.all;
+      <B>variable</B> my_line : line; 
+  <B>begin</B>
+      write ( my_line, string'("A    B    C"));
+      writeline ( output, my_line );
+  <B>end</B> <B>procedure</B> print_header ;
+
+The procedure body formal parameter list is defined above in
+Procedure Declaration.  When a procedure declaration is used then
+the corresponding procedure body should have exactly the same
+formal parameter list.
+
+The allowed declarations are:
+  <a href="design.html#subpr">subprogram declaration</a>
+  <a href="design.html#subpr">subprogram body</a>
+  <a href="declare.html#Top">type declaration</a>
+  <a href="declare.html#sutype">subtype declaration</a>
+  <a href="declare.html#cobj">constant, object declaration</a>
+  <a href="declare.html#vobj">variable, object declaration</a>
+  <a href="declare.html#fobj">file, object declaration</a>
+  <a href="declare.html#alias">alias declaration</a>
+  <a href="design.html#usecl">use clause</a>
+  <a href="declare.html#groupt">group template declaration</a>
+  <a href="declare.html#group">group declaration</a>
+ 
+Declarations not allowed include:
+  signal, object declaration
+ 
+</PRE>
+
+<H3><a name="funcd"> Function Declaration </a></H3>
+<PRE>
+Used to declare the calling and return interface to a function.
+
+  <B>function</B> identifier [ ( formal parameter list ) ] <B>return</B> a_type ;
+
+  <B>function</B> random <B>return</B> float ;
+  <B>function</B> is_even ( A : integer) <B>return</B> boolean ;
+
+Formal parameters are separated by semicolons in the formal parameter
+list.  Each formal parameter is essentially a declaration of an
+object that is local to the function.  The type definitions used
+in formal parameters must be visible at the place where the function
+is being declared.  No semicolon follows the last formal parameter
+inside the parenthesis.
+
+Formal parameters may be constants, signals or files.
+The default is constant.
+
+Formal parameters have the mode <B>in</B>.
+Files do not have a mode.
+Note that  <B>inout</B> and <B>out</B> are not allowed for functions.
+The default is <B>in</B> .
+
+The reserved word <B>function</B> may be preceded by nothing,
+implying <B>pure</B> , <B>pure</B> or <B>impure</B> .
+A <B>pure function</B> must not contain a reference to a file object,
+slice, subelement, shared variable or signal with attributes
+such as 'delayed, 'stable, 'quiet, 'transaction and must not
+be a parent of an impure function.
+
+</PRE>
+
+<H3><a name="funcb"> Function Body </a></H3>
+<PRE>
+Used to define the implementation of the function.
+
+  <B>function</B> identifier [ ( formal parameter list ) ]
+                  <B>return</B> a_type <B>is</B>
+      [ declarations, see allowed list below ]
+  <B>begin</B>
+      sequential statement(s)
+      return some_value; -- of type  a_type
+  <B>end</B> <B>function</B> identifier ;
+
+  <B>function</B> random <B>return</B> float <B>is</B>
+       variable X : float;
+  <B>begin</B>
+       -- compute X
+       <B>return</B> X;
+  <B>end</B> <B>function</B> random ;
+
+The function body formal parameter list is defined above in
+Function Declaration.  When a function declaration is used then
+the corresponding function body should have exactly the same
+formal parameter list.
+
+The allowed declarations are:
+  <a href="design.html#subpr">subprogram declaration</a>
+  <a href="design.html#subpr">subprogram body</a>
+  <a href="declare.html#Top">type declaration</a>
+  <a href="declare.html#sutype">subtype declaration</a>
+  <a href="declare.html#cobj">constant, object declaration</a>
+  <a href="declare.html#vobj">variable, object declaration</a>
+  <a href="declare.html#fobj">file, object declaration</a>
+  <a href="declare.html#alias">alias declaration</a>
+  <a href="design.html#usecl">use clause</a>
+  <a href="declare.html#groupt">group template declaration</a>
+  <a href="declare.html#group">group declaration</a>
+ 
+Declarations not allowed include:
+  signal, object declaration
+
+</PRE>
+
+<H3><a name="contx"> Context Clause </a></H3>
+<PRE>
+Used to name a library and make library units visible
+to the design unit that immediately follows.
+
+  <B>library</B> library_name ;
+  <B>use</B> library_name.unit_name.<B>all</B> ;
+
+  <B>library</B> STD ;
+<a name="usecl">  <B>use</B> STD.textio.<B>all</B>;</a>
+
+  <B>library</B> ieee ;
+  <B>use</B> ieee.std_logic_1164.<B>all</B>;
+  <B>use</B> ieee.std_logic_textio.<B>all</B>;
+  <B>use</B> ieee.std_logic_arith.<B>all</B>;
+  <B>use</B> ieee.numeric_std.<B>all</B>;
+  <B>use</B> ieee.numeric_bit.<B>all</B>;
+  <B>use</B> WORK.my_pkg.s_inc; -- select one item from package
+
+Note that the .<B>all</B> makes everything visible. It is
+optional and when not used the prefix such as
+   ieee.std_logic_1164.   must be used on every reference
+to an item in the library unit.  Specific items in the
+library unit may be listed in place of  .<B>all</B> .
+
+The libraries STD and WORK do not need a library specification
+on most systems.  <B>library</B> ieee or equivalent <B>library</B> IEEE
+is needed on most systems.
+
+</PRE>
+
+<H3><a name="order"> Order of Analysis, Compilation </a></H3>
+<PRE>
+Every design unit must be analyzed, compiled, before it can
+be used by another design unit. The result of the analysis
+or compilation results in an analyzed design in a library.
+The analyzed design goes into the default library WORK
+unless otherwise specified.
+
+An entity must be analyzed, compiled, before its corresponding
+architectures or configurations.
+
+A package declaration must be analyzed, compiled, before its
+corresponding package body.
+
+A package declaration must be analyzed, compiled, before it can
+be referenced in a context clause.  For example:
+
+     Analyze, compile
+          <B>package</B> my_package <B>is</B>
+            -- declarations
+          <B>end package</B> my_package;
+
+     then analyze, compile
+          <B>library</B> WORK;  -- this line usually not needed
+          <B>use</B> WORK.my_package.<B>all</B>
+          <B>entity</B> my_entity <B>is</B>
+            -- entity stuff
+          <B>end entity</B> my_entity;
+
+
+
+</PRE>
+
+<H3><a name="Other"> Other Links </a></H3>
+<UL>
+  <LI> <a href="index.shtml">
+       VHDL help page
+       </a>
+  <LI> <a href="samples/samples.shtml">
+       Lots of sample VHDL code, from very simple, through I/O, to complex
+       </a>
+  <LI> <a href="http://tech-www.informatik.uni-hamburg.de/vhdl">
+       Hamburg VHDL Archive (the best set of links I have seen!)
+       </a>
+  <LI> <a href="http://rassp.scra.org/vhdl/tools/tools.html">
+       RASSP Project VHDL Tools
+       </a>
+  <LI> <a href="http://www.vhdl.org">
+       VHDL Organization Home Page
+       </a>
+  <LI> <a href="http://www.freehdl.seul.org">
+       gnu GPL VHDL for Linux, under development
+       </a>
+  <LI> <a href="http://www.ftlsys.com">
+       More information on Exploration/VHDL from FTL Systems.
+       </a>
+</UL>
+
+<H4><a href="design.html#Top"> Go to top </a></H4>
+<H4><a href="index.shtml"> Go to VHDL index </a></H4>
+</BODY>
+</HTML>
+
+

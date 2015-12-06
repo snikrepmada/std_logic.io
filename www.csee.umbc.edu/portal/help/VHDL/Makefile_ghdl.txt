@@ -1,0 +1,33 @@
+# Makefile_ghdl
+all: add32_testg.out test_add32g.out part1_startg.out
+
+add32_testg.out: add32_test.vhdl
+	ghdl -a --ieee=synopsys add32_test.vhdl
+	ghdl -e --ieee=synopsys add32_test
+	ghdl -r --ieee=synopsys add32_test --stop-time=160ns > add32_testg.out
+
+test_add32g.out: add32.vhdl test_add32.vhdl
+	ghdl -a --ieee=synopsys add32.vhdl
+	ghdl -a --ieee=synopsys test_add32.vhdl
+	ghdl -e --ieee=synopsys test_add32
+	ghdl -r --ieee=synopsys test_add32 --stop-time=160ns > test_add32g.out
+
+part1_startg.out: part1_start.vhdl add32.vhdl
+	ghdl -a --ieee=synopsys add32.vhdl
+	ghdl -a --ieee=synopsys part1_start.vhdl
+	ghdl -e --ieee=synopsys part1
+	ghdl -r --ieee=synopsys part1 --stop-time=230ns > part1_startg.out
+
+clean:	# object files and executable files
+	rm -f *.o
+	rm -f *.cf
+	rm -f add32_test
+	rm -f test_add32
+	rm -f part1
+
+
+distclean:
+	rm -f add32_testg.out
+	rm -f test_add32g.out
+	rm -f part1_startg.out
+

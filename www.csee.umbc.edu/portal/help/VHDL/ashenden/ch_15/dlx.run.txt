@@ -1,0 +1,4 @@
+run 100 ns
+time ns
+exit
+

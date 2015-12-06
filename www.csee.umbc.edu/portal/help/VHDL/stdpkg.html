@@ -1,0 +1,169 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<TITLE>Standard VHDL Packages</TITLE>
+</HEAD>
+<BODY>
+</HEAD>
+<BODY>
+<P>
+|<a href="summary.html">Summary</a>
+|<a href="design.html">Design Units</a>
+|<a href="sequential.html">Sequential Statements</a>
+|<a href="concurrent.html">Concurrent Statements</a>
+|<a href="types.html">Predefined Types</a>
+|<a href="declare.html">Declarations</a>
+|
+</P>
+<P>
+|<a href="misc.html">Resolution and Signatures</a>
+|<a href="reserved.html">Reserved Words</a>
+|<a href="operator.html">Operators</a>
+|<a href="attribute.html">Predefined Attributes</a>
+|<a href="stdpkg.html">Standard Packages</a>
+|
+</P>
+
+
+<a name="Top"></a>
+
+<H2> Standard VHDL Packages </H2>
+
+
+<H3><a name="pkg"> VHDL standard packages and types </a></H3>
+<PRE>
+  The following packages should be installed along with the VHDL
+  compiler and simulator.  The packages that you need,
+  except for "standard", must be specifically accessed by each of
+  your source files with statements such as:
+
+        <B>library</B> IEEE;
+        <B>use</B> IEEE.std_logic_1164.<B>all</B>;
+        <B>use</B> IEEE.std_logic_textio.<B>all</B>;
+        <B>use</B> IEEE.std_logic_arith.<B>all</B>;
+        <B>use</B> IEEE.numeric_bit.<B>all</B>;
+        <B>use</B> IEEE.numeric_std.<B>all</B>;
+        <B>use</B> IEEE.std_logic_signed.<B>all</B>;
+        <B>use</B> IEEE.std_logic_unsigned.<B>all</B>;
+        <B>use</B> IEEE.math_real.<B>all</B>;
+        <B>use</B> IEEE.math_complex.<B>all</B>;
+
+        library STD;
+        use STD.textio;
+
+  A version of these packages, declaration and body, are in
+  <a href="packages/index.html">this directory</a>
+
+The package <a href="standard.vhdl.txt"> standard </a> is predefined in the compiler.
+  Types defined include:  bit      bit_vector             typical signals
+                          integer  natural  positive      typical variables
+                          boolean  string   character     typical variables
+                          real     time     delay_length  typical variables
+  Click on <a href="standard.vhdl.txt">standard</a> to see the functions defined
+  Note: This package must be provided with compiler, do not use this one.
+
+
+The package <a href="textio.vhdl.txt"> textio </a> provides user input/output
+  Types defined include:     line       text   side    width
+  Functions defined include: readline   read
+                             writeline  write  endline
+  Click on <a href="textio.vhdl.txt">textio</a> to see how to call the functions
+
+
+The package <a href="packages/std_logic_1164.vhd.txt"> std_logic_1164 </a> provides enhanced signal types
+  Types defined include:   std_ulogic   std_ulogic_vector
+                           std_logic    std_logic_vector
+  Click on <a href="std_logic_1164.vhdl.txt">std_logic_1164</a> to see available functions
+
+
+The package <a href="packages/std_logic_textio.vhd.txt"> std_logic_textio </a> provides input/output for 1164 types
+  Functions defined include: readline   read
+                             writeline  write  endline
+  Click on <a href="std_logic_textio.vhdl.txt">std_logic_textio</a> to see how to call the functions
+
+
+The package <a href="packages/std_logic_arith_syn.vhd.txt"> std_logic_arith </a> provides numerical computation
+  This package name unfortunately seams to have several definitions:
+
+  <a href="packages/std_logic_arith_syn.vhd.txt">std_logic_arith_syn.vhd</a>
+  defines types  signed  and  unsigned  and
+  has arithmetic functions that operate on signal types
+  signed  and  unsigned  and  std_logic_vector  and  std_ulogic_vector,
+  but adding  A to B of std_logic_vector type, needs  
+  unsigned(A) + unsigned(B).
+  Click on <a href="std_logic_arith_syn.vhdl.txt">std_logic_arith_syn</a> to see the functions defined
+
+  <a href="packages/std_logic_arith_ex.vhd.txt">std_logic_arith_ex.vhd</a>
+  has arithmetic functions that operate on signal types
+  std_logic_vector  and  std_ulogic_vector
+  Click on <a href="std_logic_arith_ex.vhdl.txt">std_logic_arith_ex</a> to see the functions defined
+
+
+The package <a href="packages/numeric_bit.vhd.txt"> numeric_bit </a> provides numerical computation
+  Types defined include:  unsigned  signed   arrays of type bit for signals
+  Click on <a href="numeric_bit.vhdl.txt">numeric_bit</a> to see the functions defined
+
+
+The package <a href="packages/numeric_std.vhd.txt"> numeric_std </a> provides numerical computation
+  Types defined include: unsigned  signed  arrays of type std_logic for signals
+  Click on <a href="numeric_std.vhdl.txt">numeric_std</a> to see the functions defined
+
+
+The package <a href="packages/std_logic_signed.vhd.txt"> std_logic_signed </a> provides signed numerical computation
+  on type std_logic_vector
+
+  Click on <a href="std_logic_signed.vhdl.txt">std_logic_signed</a> to see the functions defined
+
+
+The package <a href="packages/std_logic_unsigned.vhd.txt"> std_logic_unsigned </a> provides unsigned numerical computation
+  on type std_logic_vector
+  Click on <a href="std_logic_unsigned.vhdl.txt">std_logic_unsigned</a> to see the functions defined
+
+
+The package <a href="packages/mathpack.vhd.txt"> math_real </a> provides numerical computation
+  on type real
+
+  Click on <a href="math_real.vhdl.txt">math_real</a> to see the functions defined
+  This declaration and body are in <a href="packages/mathpack.vhd.txt">mathpack</a>
+
+The package <a href="packages/mathpack.vhd.txt"> math_complex </a> provides numerical computation
+  Types defined include: complex, complex_vector, complex_polar
+
+  Click on <a href="math_complex.vhdl.txt">math_complex</a> to see the functions defined
+  This declaration and body are in <a href="packages/mathpack.vhd.txt">mathpack</a>
+
+
+</PRE>
+
+
+<H3><a name="Other"> Other Links </a></H3>
+<UL>
+  <LI> <a href="index.shtml">
+       VHDL help page
+       </a>
+  <LI> <a href="samples/samples.shtml">
+       Lots of sample VHDL code, from very simple, through I/O, to complex
+       </a>
+  <LI> <a href="http://tech-www.informatik.uni-hamburg.de/vhdl">
+       Hamburg VHDL Archive (the best set of links I have seen!)
+       </a>
+  <LI> <a href="http://rassp.scra.org/vhdl/tools/tools.html">
+       RASSP Project VHDL Tools
+       </a>
+  <LI> <a href="http://www.vhdl.org">
+       VHDL Organization Home Page
+       </a>
+  <LI> <a href="http://www.freehdl.seul.org">
+       gnu GPL VHDL for Linux, under development
+       </a>
+  <LI> <a href="http://www.ftlsys.com">
+       More information on Exploration/VHDL from FTL Systems.
+       </a>
+</UL>
+
+<H4><a href="stdpkg.html#Top"> Go to top </a></H4>
+<H4><a href="index.shtml"> Go to VHDL index </a></H4>
+</BODY>
+</HTML>
+
+

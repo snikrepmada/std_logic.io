@@ -1,0 +1,58 @@
+entity ap_a_03 is
+
+end entity ap_a_03;
+
+
+library ieee;  use ieee.std_logic_1164.all;
+use work.numeric_std.all;
+
+architecture test of ap_a_03 is
+begin
+
+  b1 : block is
+    -- code from book
+
+    type unsigned is array ( natural range <> ) of std_logic;
+    type signed is array ( natural range <> ) of std_logic;
+
+    -- end code from book
+  begin
+  end block b1;
+
+
+  b2 : block is
+    -- code from book
+
+    signal a: integer := 0;
+    signal b: signed (4 downto 0 );
+
+    -- end code from book
+  begin
+    a <= 0, 5 after 10 ns, -5 after 20 ns, 8 after 30 ns;
+    -- code from book
+
+    b <= To_signed ( a, b'length );
+
+    -- end code from book
+
+    process (b) is
+    begin
+
+      -- code from book
+
+      if std_match ( b, "0-000" ) then
+        -- . . .
+
+      -- end code from book
+        report "b matches";
+      else
+        report "b does not match";
+      end if;    
+    end process;
+
+ 
+
+  end block b2;
+
+end architecture test;
+

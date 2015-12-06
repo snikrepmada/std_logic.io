@@ -1,0 +1,81 @@
+
+-------------------------------------------------------------------------------
+--  EE126 Project #1, part II Testbench
+--  by: Frank Bruno
+-------------------------------------------------------------------------------
+
+ENTITY test_alu_2 IS
+  
+END test_alu_2;
+
+ARCHITECTURE b_alu_2 OF test_alu_2 IS
+  COMPONENT alu_2
+    PORT(opcode       : IN    bit_vector(2 DOWNTO 0);
+         bin          : IN    bit_vector(3 DOWNTO 0);
+         load         : IN    bit;
+         clock        : IN    bit;
+         areg         : BUFFER   bit_vector(3 DOWNTO 0);
+         breg         : BUFFER   bit_vector(3 DOWNTO 0);
+         carry        : BUFFER   bit);
+  END COMPONENT;
+  SIGNAL opcode : bit_vector(2 DOWNTO 0);
+  SIGNAL bin : bit_vector(3 DOWNTO 0);
+  SIGNAL load : bit;
+  SIGNAL areg : bit_vector(3 DOWNTO 0);
+  SIGNAL breg : bit_vector(3 DOWNTO 0);
+  SIGNAL clock : bit;
+  SIGNAL carry : bit;
+BEGIN  --  b_alu_2
+  u1: alu_2
+  PORT MAP(opcode => opcode,
+           bin => bin,
+           load => load,
+           clock => clock,
+           areg => areg,
+           breg => breg,
+	   carry => carry);
+
+clock_gen:
+PROCESS
+  BEGIN
+    clock <= '0' AFTER 40 ns;
+    WAIT FOR 40 ns;
+    clock <= '1' AFTER 40 ns;
+    WAIT FOR 40 ns;
+END PROCESS;
+
+PROCESS
+  VARIABLE state : integer := 0;
+  BEGIN
+    WAIT UNTIL clock'EVENT AND clock ='1';
+    CASE state IS
+      WHEN 0 =>
+	load <= '1';
+	bin <= "1010";
+        opcode <= "000";
+        state := 1;
+      WHEN 1 =>
+	load <= '0';
+        state := 2;
+      WHEN 2 =>
+        state := 3;
+      WHEN 3 =>
+        state := 4;
+      WHEN 4 =>
+        state := 5;
+      WHEN 5 =>
+        opcode <= "110";
+        state := 6;
+      WHEN OTHERS =>
+    END CASE;
+END PROCESS;
+
+END b_alu_2;
+
+CONFIGURATION config2 OF test_alu_2 IS
+FOR b_alu_2
+  FOR u1: alu_2
+    USE ENTITY work.alu_2;
+  END FOR;
+END FOR;
+END config2;

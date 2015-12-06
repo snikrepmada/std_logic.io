@@ -1,0 +1,58 @@
+The two classic algorithms for square root, sqrt, are shown below.
+The first is the iterative approximation algorithm,
+followed by the sequential algorithm modeled after the
+non restoring binary divide algorithm.
+The basic theory is shown in the final decimal example.
+
+
+To compute  y = sqrt(x)   (x>=0, iterative quadratic convergence)
+  if x = 0 then return x  (IEEE, math: return 0)
+  y = 1.0         (any reasonable guess>0)
+  y1 = 0
+  while abs(y-y1)>tolerance    (any reasonable tolerance>0)
+    y1 = y
+    y = (y + x/y)/2
+  end while
+  return y
+
+
+To compute  y = sqrt(x)  (x>=0 demonstrated in binary)
+
+          1  0  1      let x=11010  26 decimal
+       +---------      choose 1 squared, subtract, keep if positive
+       ) 01 10 10      shift two bits at a time
+        -01            subtract guess squared
+        ------
+          0 10
+         -1 01         sqrt so far with 01 appended
+         --------      no subtract because result would be negative
+            10 10
+           -10 01      sqrt so far with 01 appended
+           ------
+                1 
+
+In digital logic, the sqrt algorithm for n-bit numbers:
+requires n/2 sequential steps or
+requires n/2 parallel subtractors
+
+
+In decimal from  www.dattalo.com/technical/theory/sqrt.html
+
+     1  7  7. 2
+  -------------
+  ) 03 14 15.92
+   -01            square 1*1
+   ------         1*20 = 20    (20 is base ten times 2)
+     2 14         need x (20+x)*x<214  x=7
+    -1.89         (20+7)*7=189
+     -------      so far, 17*20 = 340
+       25 15      need (340+x)*x<2515  x=7
+      -24 29      (340+7)7*7=2429
+       -------    so far, 177*20 = 3540
+          86 92   need (3540+x)*x<8692  x=2
+         -70 84   (3540+2)*2=7084
+          -----
+          16 08
+
+(Note that the binary is easier because 20 becomes 4, a two place
+ shift, and x is always tested as a 1, 01 positionally)

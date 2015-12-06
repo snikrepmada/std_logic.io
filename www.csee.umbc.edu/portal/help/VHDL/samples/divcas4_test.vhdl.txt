@@ -1,0 +1,133 @@
+-- divcas4_test.vhdl  parallel division
+-- based on non-restoring division, uncorrected remainder
+-- Controlled add/subtract "cas" cell (NOT CSA)
+-- "T" is sub_add signal in div_ser.vhdl
+
+library IEEE;
+use IEEE.std_logic_1164.all;
+
+entity cas is  -- Controlled Add/Subtract cell
+  port (
+    divisor       : in  std_logic;
+    T             : in  std_logic;
+    remainder_in  : in  std_logic;
+    cin           : in  std_logic;
+    remainder_out : out std_logic;
+    cout          : out std_logic);
+end entity cas;
+
+architecture circuits of cas is
+  signal tt : std_logic;
+begin  -- circuits of cas
+  tt            <= T xor divisor after 10 ps;
+  remainder_out <= tt xor remainder_in xor cin after 10 ps;
+  cout          <= (tt and remainder_in) or (tt and cin) or
+                   (remainder_in and cin) after 10 ps;
+end architecture circuits;  -- of cas
+
+library IEEE;
+use IEEE.std_logic_1164.all;
+
+entity divcas4 is   -- 8 bit dividend, 4 bit divisor
+  port (
+    dividend  : in  std_logic_vector(7 downto 0);
+    divisor   : in  std_logic_vector(3 downto 0);
+    quotient  : out std_logic_vector(3 downto 0);
+    remainder : out std_logic_vector(3 downto 0));
+end entity divcas4;
+
+use IEEE.std_logic_textio.all;
+use STD.textio.all;
+
+architecture circuits of divcas4 is
+  signal T : std_logic_vector(3 downto 0);
+  signal c36, c35, c34, c33, c25, c24, c23, c22 : std_logic;
+  signal c14, c13, c12, c11, c03, c02, c01, c00 : std_logic;
+  signal r36, r35, r34, r33, r25, r24, r23, r22 : std_logic;
+  signal r14, r13, r12, r11, r03, r02, r01, r00 : std_logic;
+begin  -- circuits of divcas4
+  -- dividend(7) assumed zero and unused
+  T(3) <= '1' after 10 ps; 
+  cas36: entity WORK.cas port map(
+         divisor(3), T(3), dividend(6), c35,  r36, c36); 
+  cas35: entity WORK.cas port map(
+         divisor(2), T(3), dividend(5), c34,  r35, c35); 
+  cas34: entity WORK.cas port map(
+         divisor(1), T(3), dividend(4), c33,  r34, c34); 
+  cas33: entity WORK.cas port map(
+         divisor(0), T(3), dividend(3), T(3), r33, c33);
+  T(2) <= not r36 after 10 ps;
+  quotient(3) <= T(2);
+  
+  cas25: entity WORK.cas port map(
+         divisor(3), T(2), r35        , c24,  r25, c25); 
+  cas24: entity WORK.cas port map(
+         divisor(2), T(2), r34        , c23,  r24, c24); 
+  cas23: entity WORK.cas port map(
+         divisor(1), T(2), r33        , c22,  r23, c23); 
+  cas22: entity WORK.cas port map(
+         divisor(0), T(2), dividend(2), T(2), r22, c22);
+  T(1) <= not r25 after 10 ps;
+  
+  cas14: entity WORK.cas port map(
+         divisor(3), T(1), r24        , c13,  r14, c14); 
+  cas13: entity WORK.cas port map(
+         divisor(2), T(1), r23        , c12,  r13, c13); 
+  cas12: entity WORK.cas port map(
+         divisor(1), T(1), r22        , c11,  r12, c12); 
+  cas11: entity WORK.cas port map(
+         divisor(0), T(1), dividend(1), T(1), r11, c11);
+  T(0) <= not r14 after 10 ps;
+  
+  cas03: entity WORK.cas port map(
+         divisor(3), T(0), r13        , c02,  r03, c03); 
+  cas02: entity WORK.cas port map(
+         divisor(2), T(0), r12        , c01,  r02, c02); 
+  cas01: entity WORK.cas port map(
+         divisor(1), T(0), r11        , c00,  r01, c01); 
+  cas00: entity WORK.cas port map(
+         divisor(0), T(0), dividend(0), T(0), r00, c00);
+
+  quotient(3)  <= T(2);
+  quotient(2)  <= T(1);
+  quotient(1)  <= T(0);
+  quotient(0)  <= not r03 after 10 ps;
+  remainder(3) <= r03;
+  remainder(2) <= r02;
+  remainder(1) <= r01;
+  remainder(0) <= r00;
+end architecture circuits; -- of divcas4
+
+library IEEE;
+use IEEE.std_logic_1164.all;
+use IEEE.std_logic_textio.all;
+use STD.textio.all;
+
+entity divcas4_test is  -- test bench
+end entity divcas4_test;
+
+architecture test of divcas4_test is
+  signal dividend  : std_logic_vector(7 downto 0) := "01010101";  -- 85
+  signal divisor   : std_logic_vector(3 downto 0) := "0111";  -- 7
+  signal quotient  : std_logic_vector(3 downto 0);
+  signal remainder : std_logic_vector(3 downto 0);
+begin  -- test of divcas4_test
+  div1: entity WORK.divcas4 port map( 
+        dividend, divisor, quotient, remainder);  
+  prt: process(quotient, remainder)
+         variable my_line : STD.textio.line;
+         alias swrite is write [line, string, side, width] ;
+       begin
+         swrite(my_line, "divs=");
+         write(my_line, divisor);
+         swrite(my_line, "  divd=");
+         write(my_line, dividend);
+         swrite(my_line, "  quo=");
+         write(my_line, quotient);
+         swrite(my_line, "  rem=");
+         write(my_line, remainder);
+         swrite(my_line, "  now=");
+         write(my_line, now);
+         writeline(STD.textio.output, my_line);
+       end process prt;
+end architecture test;  -- of divcas4_test

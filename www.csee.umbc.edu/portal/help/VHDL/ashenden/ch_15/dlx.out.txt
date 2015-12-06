@@ -1,0 +1,18 @@
+ncsim: v2.2.(s16): (c) Copyright 1995 - 2000 Cadence Design Systems, Inc.
+ncsim: v2.2.(s16): Started on Jun 22, 2000 at 16:31:06
+ncsim
+    -batch
+    -messages
+    -logfile dlx.out
+    -input dlx.run
+    dlx_test_behavior
+
+Loading snapshot ncvhdl_lib.dlx_test_behavior:configuration .................... Done
+ncsim> run 100 ns
+REPORT/NOTE (time 68 NS) from process :proc:interpreter (architecture ncvhdl_lib.dlx:behavior)
+fetching instruction
+Ran until 100 NS + 0
+ncsim> time ns
+100 NS
+ncsim> exit
+ncsim: v2.2.(s16): Exiting on Jun 22, 2000 at 16:31:07  (total: 00:00:01)

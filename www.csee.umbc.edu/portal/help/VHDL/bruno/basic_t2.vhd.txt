@@ -1,0 +1,202 @@
+
+-------------------------------------------------------------------------------
+--  Basic Computer VHDL testbench
+-------------------------------------------------------------------------------
+
+ENTITY test_basic2 IS
+  
+END test_basic2;
+
+ARCHITECTURE behave_test2 OF test_basic2 IS
+
+  COMPONENT basic_comp
+  PORT(clock            : IN     bit;
+       load             : IN     bit;
+       start            : IN     bit;
+       reset            : IN     bit;
+       address_in       : IN     integer range 0 to 4095;
+       instr            : IN     bit_vector(15 DOWNTO 0);
+       inpr             : IN     bit_vector(7 DOWNTO 0);
+       fgi              : IN     bit;
+       ar               : BUFFER bit_vector(11 DOWNTO 0);
+       ir               : BUFFER bit_vector(15 DOWNTO 0);
+       tr               : BUFFER bit_vector(11 DOWNTO 0);
+       dr               : BUFFER bit_vector(11 DOWNTO 0);
+       i                : BUFFER bit;
+       e                : BUFFER bit;
+       ac               : BUFFER bit_vector(15 DOWNTO 0);
+       ien              : BUFFER bit;
+       outr             : BUFFER bit_vector(7 DOWNTO 0);
+       fgo              : BUFFER bit
+       );
+  END COMPONENT;
+  SIGNAL clock : bit;
+  SIGNAL load : bit;
+  SIGNAL start : bit;
+  SIGNAL reset : bit;
+  SIGNAL address_in : integer range 0 to 4095;
+  SIGNAL instr : bit_vector(15 DOWNTO 0);
+  SIGNAL inpr : bit_vector(7 DOWNTO 0);
+  SIGNAL fgi : bit;
+  SIGNAL ar : bit_vector(11 DOWNTO 0);
+  SIGNAL ir : bit_vector(15 DOWNTO 0);
+  SIGNAL tr : bit_vector(11 DOWNTO 0);
+  SIGNAL dr : bit_vector(11 DOWNTO 0);
+  SIGNAL i : bit;
+  SIGNAL e : bit;
+  SIGNAL ac : bit_vector(15 DOWNTO 0);
+  SIGNAL ien : bit;
+  SIGNAL outr : bit_vector(7 DOWNTO 0);
+  SIGNAL fgo : bit;
+  
+BEGIN  --  behave_test1 
+
+  u1: basic_comp
+  PORT MAP(clock => clock,
+           load => load,
+           start => start,
+           reset => reset,
+           address_in => address_in,
+           instr => instr,
+           inpr => inpr,
+           fgi => fgi,
+           ar => ar,
+           ir => ir,
+           tr => tr,
+           dr => dr,
+           i => i,
+           e => e,
+           ac => ac,
+           ien => ien,
+           outr => outr,
+           fgo => fgo);
+           
+  clock_gen:
+  PROCESS
+  BEGIN
+    clock <= '0' AFTER 40 ns;
+    WAIT FOR 40 ns;
+    clock <= '1' AFTER 40 ns;
+    WAIT FOR 40 ns;
+  END PROCESS;
+
+  PROCESS
+    VARIABLE state : integer := 0;
+    
+    BEGIN
+      WAIT until clock'event and clock = '1';
+      CASE state IS
+        WHEN 0 =>
+          reset <= '1';
+          start <= '0';
+          state := 1;
+        WHEN 1 =>
+          reset <= '0';
+          load <= '1';
+          state := 2;
+        WHEN 2 => 
+          address_in <= 0;
+          instr <= "0111010000000000";
+          state := 3;
+        WHEN 3 =>
+          address_in <= 1;
+          instr <= "0010000000010011";
+          state := 4;
+        WHEN 4 =>
+          address_in <= 2;
+          instr <= "0111000010000000";
+          state := 5;
+        WHEN 5 =>
+          address_in <= 3;
+          instr <= "0011000000010011";
+          state := 6;
+        WHEN 6 =>
+          address_in <= 4;
+          instr <= "0111000000000010";
+          state := 7;
+        WHEN 7 =>
+          address_in <= 5;
+          instr <= "0100000000000111";
+          state := 8;
+        WHEN 8 =>
+          address_in <= 6;
+          instr <= "0100000000001011";
+          state := 9;
+        WHEN 9 =>
+          address_in <= 7;
+          instr <= "0010000000010010";
+          state := 10;
+        WHEN 10 =>
+          address_in <= 8;
+          instr <= "0001000000010100";
+          state := 11;
+        WHEN 11 =>
+          address_in <= 9;
+          instr <= "0011000000010100";
+          state := 12;
+        WHEN 12 =>
+          address_in <= 10;
+          instr <= "0111010000000000";
+          state := 13;
+        WHEN 13 =>
+          address_in <= 11;
+          instr <= "0010000000010010";
+          state := 14;
+        WHEN 14 =>
+          address_in <= 12;
+          instr <= "0111000001000000";
+          state := 15;
+        WHEN 15 =>
+          address_in <= 13;
+          instr <= "0011000000010010";
+          state := 16;
+        WHEN 16 =>
+          address_in <= 14;
+          instr <= "0110000000010001";
+          state := 17;
+        WHEN 17 =>
+          address_in <= 15;
+          instr <= "0100000000000000";
+          state :=18;
+        WHEN 18 =>
+          address_in <= 16;
+          instr <= "0111000000000001";
+          state := 19;
+        WHEN 19 =>
+          address_in <= 17;
+          instr <= "1111111111111000";
+          state := 20;
+        WHEN 20 =>
+          address_in <= 18;
+          instr <= "0000000000001111";
+          state := 21;
+        WHEN 21 =>
+          address_in <= 19;
+          instr <= "0000000000001011";
+          state := 22;
+        WHEN 22 =>
+          address_in <= 20;
+          instr <= "0000000000000000";
+          state := 23;
+        WHEN 23 =>
+          load <= '0';
+          start <= '1';
+          reset <= '1';
+          state := 24;
+        WHEN 24 =>
+          start <= '0';
+          reset <= '0';
+          state := 25;
+        WHEN others => 
+      END CASE;                          --  state
+  END PROCESS;
+  
+END behave_test2;
+
+CONFIGURATION config_test2 OF test_basic2 IS
+  FOR behave_test2
+    FOR u1: basic_comp
+      USE ENTITY work.basic_comp;
+    END FOR;
+  END FOR;    
+END config_test2;

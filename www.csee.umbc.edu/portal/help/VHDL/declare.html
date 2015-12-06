@@ -1,0 +1,478 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<TITLE>VHDL Declaration Statements</TITLE>
+</HEAD>
+<BODY>
+</HEAD>
+<BODY>
+<P>
+|<a href="summary.html">Summary</a>
+|<a href="design.html">Design Units</a>
+|<a href="sequential.html">Sequential Statements</a>
+|<a href="concurrent.html">Concurrent Statements</a>
+|<a href="types.html">Predefined Types</a>
+|<a href="declare.html">Declarations</a>
+|
+</P>
+<P>
+|<a href="misc.html">Resolution and Signatures</a>
+|<a href="reserved.html">Reserved Words</a>
+|<a href="operator.html">Operators</a>
+|<a href="attribute.html">Predefined Attributes</a>
+|<a href="stdpkg.html">Standard Packages</a>
+|
+</P>
+
+
+<a name="Top"></a>
+
+<H2> VHDL Declaration Statements </H2>
+
+<H4><PRE>Various declarations may be used in various design units.
+Check the particular design unit for applicability.</PRE></H4>
+
+<H3><a name="Top"> Declaration Statements </a></H3>
+<dir>
+  <LI><a href="declare.html#itype"> incomplete type declaration </a>
+  <LI><a href="declare.html#stype"> scalar type declaration </a>
+  <LI><a href="declare.html#ctype"> composite type declaration </a>
+  <LI><a href="declare.html#atype"> access type declaration </a>
+  <LI><a href="declare.html#ftype"> file type declaration </a>
+  <LI><a href="declare.html#sutype"> subtype declaration </a>
+  <LI><a href="declare.html#cobj"> constant, object declaration </a>
+  <LI><a href="declare.html#sobj"> signal, object declaration </a>
+  <LI><a href="declare.html#vobj"> variable, object declaration </a>
+  <LI><a href="declare.html#fobj"> file, object declaration </a>
+  <LI><a href="declare.html#alias"> alias declarations </a>
+  <LI><a href="declare.html#attrd"> attribute declaration </a>
+  <LI><a href="declare.html#attrs"> attribute specification </a>
+  <LI><a href="declare.html#comp"> component declaration </a>
+  <LI><a href="declare.html#groupt"> group template declaration </a>
+  <LI><a href="declare.html#group"> group declaration </a>
+  <LI><a href="declare.html#disco"> disconnect specification </a>
+</dir>
+
+<H3><a name="itype"> incomplete type declaration </a></H3>
+<PRE>
+Declare an identifier to be a type.
+The full type definition must be provided within this scope.
+
+ <B>type</B> identifier ;
+
+ <B>type</B> node ;
+
+</PRE>
+
+<H3><a name="stype"> scalar type declaration </a></H3>
+<PRE>
+Declare a type that may be used to create scalar objects.
+
+ <B>type</B> identifier <B>is</B> scalar_type_definition ;
+
+ <B>type</B> my_small <B>is</B> <B>range</B> -5 to 5 ;
+ <B>type</B> my_bits  <B>is</B> <B>range</B> 31 downto 0 ;
+ <B>type</B> my_float <B>is</B> <B>range</B> 1.0 to 1.0E6 ;
+
+</PRE>
+
+<H3><a name="ctype"> composite type declaration </a></H3>
+<PRE>
+Declare a type for creating array, record or unit objects.
+
+ <B>type</B> identifier <B>is</B> composite_type_definition ;
+
+ <B>type</B> word <B>is</B> <B>array</B> (0 <B>to</B> 31) <B>of</B> bit;
+ <B>type</B> data <B>is</B> <B>array</B> (7 <B>downto</B> 0) <B>of</B> word;
+ <B>type</B> mem <B>is</B> <B>array</B> (natural <B>range</B> &lt;&gt;) <B>of</B> word;
+ <B>type</B> matrix <B>is</B> <B>array</B> (integer <B>range</B> &lt;&gt;,
+                       integer <B>range</B> &lt;&gt;) <B>of</B> real;
+
+
+ <B>type</B> stuff <B>is</B>
+   <B>record</B>
+       I : integer;
+       X : real;
+       day : integer <B>range</B> 1 <B>to</B> 31;
+       name : string(1 <B>to</B> 48);
+       prob : matrix(1 <B>to</B> 3, 1 <B>to</B> 3);
+   <B>end</B> <B>record</B>;
+
+ <B>type</B> node <B>is</B> -- binary tree
+   <B>record</B>
+       key   : string(1 <B>to</B> 3);
+       data  : integer;
+       left  : node_ptr;
+       right : node_ptr;
+       color : color_type;
+   <B>end</B> <B>record</B>;
+
+
+ <B>type</B> distance <B>is</B> <B>range</B> 0 <B>to</B> 1E16
+    <B>units</B>
+      Ang;                 -- angstrom
+      nm   = 10 Ang;       -- nanometer
+      um   = 1000 nm;      -- micrometer (micron)
+      mm   = 1000 um;      -- millimeter
+      cm   = 10 mm;        -- centimeter
+      dm   = 100 mm;       -- decameter
+      m    = 1000 mm;      -- meter
+      km   = 1000 m;       -- kilometer
+
+      mil  = 254000 Ang;   -- mil (1/1000 inch)
+      inch = 1000 mil;     -- inch
+      ft   = 12 inch;      -- foot
+      yd   = 3 ft;         -- yard
+      fthn = 6 ft;         -- fathom
+      frlg = 660 ft;       -- furlong
+      mi   = 5280 ft;      -- mile
+      lg   = 3 mi;         -- league
+    <B>end</B> <B>units</B>;
+
+</PRE>
+
+<H3><a name="atype"> access type declaration </a></H3>
+<PRE>
+Declare a type for creating access objects, pointers.
+An object of an access type must be of class variable.
+An object
+
+ <B>type</B> identifier <B>is</B> <B>access</B> subtype_indication;
+
+ <B>type</B> node_ptr <B>is</B> <B>access</B> node;
+
+ <B>variable</B> root : node_ptr := <B>new</B> node'("xyz", 0, null, null, red);
+ <B>variable</B> item : node := root.all;
+
+</PRE>
+
+<H3><a name="ftype"> file type declaration </a></H3>
+<PRE>
+Declare a type for creating file handles.
+
+ <B>type</B> identifier <B>is</B> <B>file</B> <B>of</B> type_mark ;
+
+ <B>type</B> my_text <B>is</B> <B>file</B> <B>of</B> string ;
+
+ <B>type</B> word_file <B>is</B> <B>file</B> <B>of</B> word ;
+
+ <B>file</B> output : my_text;
+ file_open(output, "my.txt", write_mode);
+ write(output, "some text"&lf);
+ file_close(output);
+
+ <B>file</B> test_data : word_file;
+ file_open(test_data, "test1.dat", read_mode);
+ read(test_data, word_value);
+
+
+</PRE>
+
+<H3><a name="sutype"> subtype declaration </a></H3>
+<PRE>
+Declare a type that is a subtype of an existing type.
+Note that <B>type</B> creates a new type while <B>subtype</B>
+creates a type that is a constraint of an existing type.
+
+ <B>subtype</B> identifier <B>is</B> subtype_indication ;
+
+ <B>subtype</B> name_type <B>is</B> string(1 to 20) ;
+ <B>variable</B> a_name : name_type := "Doe, John           ";
+
+ <B>subtype</B> small_int <B>is</B> integer range 0 to 10 ;
+ <B>variable</B> little : small_int := 4;
+
+ <B>subtype</B> word <B>is</B> std_logic_vector(31 downto 0) ;
+ <B>signal</B> my_word : word := x"FFFFFFFC";
+
+</PRE>
+
+<H3><a name="cobj"> constant, object declaration </a></H3>
+<PRE>
+Used to have an identifier name for a constant value.
+The value can not be changed by any executable code.
+
+  <B>constant</B> identifier : subtype_indication := constant_expression;
+
+  <B>constant</B> Pi : real := 3.14159;
+  <B>constant</B> Half_Pi : real := Pi/2.0;
+  <B>constant</B> cycle_time : time := 2 ns;
+  <B>constant</B> N, N5 : integer := 5;
+
+A deferred constant has no  := constant_expression  can only be used
+in a package declaration and a value must appear in the package body.
+
+</PRE>
+
+<H3><a name="sobj"> signal, object declaration </a></H3>
+<PRE>
+Used to define an identifier as a signal object.
+No explicit initialization of an object of type T causes the default
+initialization at time zero to be the value of T'left
+
+ <B>signal</B> identifier : subtype_indication [ signal_kind ] [ := expression ];
+
+ <B>signal</B> a_bit : bit := '0';
+ a_bit <= b_bit <B>xor</B> '1';    -- concurrent assignment
+
+ <B>signal</B> my_word : word := X"01234567";
+ my_word <= X"FFFFFFFF";           -- concurrent assignment
+
+ <B>signal</B> foo : word <B>register</B>; -- guarded signal
+ <B>signal</B> bar : word <B>bus</B>;      -- guarded signal
+ <B>signal</B> join : word  wired_or; -- wired_or must be a resolution function
+
+signal_kind may be <B>register</B>  or  <B>bus</B>.
+
+A simple signal of an unresolved type can have only one driver.
+Note that "bit" is an unresolved type as is "std_ulogic", but,
+"std_logic" is a resolved type and allows multiple drivers of a
+simple signal.
+</PRE>
+
+
+<H3><a name="vobj"> variable, object declaration </a></H3>
+<PRE>
+Used to define an identifier as a variable object.
+No explicit initialization of an object of type T causes the default
+initialization at time zero to be the value of T'left
+
+ <B>variable</B> identifier : subtype_indication [ := expression ];
+
+ <B>variable</B> count : integer := 0;
+ count := count + 1;
+
+A variable may be declared as shared and used by more than one process,
+with the restriction that only one process may access the variable
+in a single simulation cycle.
+
+ <B>shared variable</B> identifier : subtype_indication [ := expression ];
+
+ <B>shared variable</B> status : status_type := stop;
+ status := start;
+
+Note: Variables declared in subprograms and processes
+      must not be declared shared.
+      Variables declared in entities, architectures, packages and blocks
+      must be declared shared.
+      Some analysers/compilers may require shared variables
+      to be 'protected'.
+
+Note: Both <B>signal</B> and <B>variable</B> use  :=  for initialization.
+      <B>signal</B>   uses  <=  for concurrent assignment
+      <B>variable</B> uses  :=  for sequential assignment
+</PRE>
+
+<H3><a name="fobj"> file, object declaration </a></H3>
+<PRE>
+Used to define an identifier as a file object.
+
+  <B>file</B> identifier : subtype_indication [ file_open_information ]
+
+  file_open_information
+  [ <B>open</B> file_open_kind ] <B>is</B> file_logical_name
+
+  file_open_kind   from  <B>use</B> STD.textio.all
+    read_mode
+    write_mode
+    append_mode
+
+  <B>use</B> STD.textio.all; -- declares types 'text' and 'line'
+  <B>file</B> my_file : text <B>open</B> write_mode <B>is</B> "file5.dat";
+  <B>variable</B> my_line : line;
+
+  write(my_line, string'("Hello."); -- build a line
+  writeline(my_file, my_line);      -- write the line to a file
+
+  Note: The file_logical_name is a string in quotes and its
+        syntax must conform to the operating system where
+        the VHDL will be simulated. The old DOS 8.3 format
+        in lower case works on almost all operating systems.
+
+</PRE>
+
+<H3><a name="alias"> alias declarations </a></H3>
+<PRE>
+Used to declare an additional name for an existing name.
+
+  <B>alias</B> new_name <B>is</B> existing_name_of_same_type ;
+  <B>alias</B> new_name [ : subtype_indication ] : <B>is</B> [ signature ];
+
+    new_name may be an indentifier, a character literal or operator symbol
+
+  <B>alias</B> rs <B>is</B> my_reset_signal ; -- bad use of alias
+  <B>alias</B> mantissa:std_logic_vector(23 downto 0) <B>is</B> my_real(8 to 31);
+  <B>alias</B> exponent <B>is</B> my_real(0 to 7);
+  <B>alias</B> "<" <B>is</B> my_compare [ my_type, my_type, <B>return</B> boolean ] ;
+  <B>alias</B> 'H' <B>is</B> STD.standard.bit.'1' [ <B>return</B> bit ] ;
+
+</PRE>
+
+<H3><a name="attrd"> attribute declaration </a></H3>
+<PRE>
+Users may define attributes to be used in a local scope.
+Predefined attributes are in the <a href="attribute.html">Predefined Attributes section</a>
+
+  <B>attribute</B> identifier : type_mark ;
+
+  <B>attribute</B> enum_encoding : string; -- user defined
+  <B>type</B> my_state <B>is</B> (start, stop, ready, off, warmup);
+  <B>attribute</B> enum_encoding <B>of</B> my_state : <B>type</B> <B>is</B> "001 010 011 100 111";
+  <B>signal</B> my_status : my_state := off; -- value "100"
+
+</PRE>
+
+<H3><a name="attrs"> attribute specification </a></H3>
+<PRE>
+Used to associate expressions with attributes.
+Predefined attributes are in the <a href="attribute.html">Predefined Attributes section</a>
+
+  <B>attribute</B> identifier <B>of</B> name : entity_class <B>is</B> expression ;
+
+  
+  entity_class
+    <B>architecture</B>  <B>component</B>  <B>configuration</B>  <B>constant</B>
+    <B>entity</B>        <B>file</B>       <B>function</B>       <B>group</B>
+    <B>label</B>         <B>literal</B>    <B>package</B>        <B>procedure</B>
+    <B>signal</B>        <B>subtype</B>    <B>type</B>           <B>variable</B>
+    <B>units</B>
+
+  <B>attribute</B> enum_encoding : string;
+  <B>type</B> my_state <B>is</B> (start, stop, ready, off, warmup);
+  <B>attribute</B> enum_encoding <B>of</B> my_state : <B>type</B> <B>is</B> "001 010 011 100 111";
+  <B>signal</B> my_status : my_state := off; -- value "100"
+
+</PRE>
+
+<H3><a name="comp"> component declaration </a></H3>
+<PRE>
+Used to define a component interface. Typically placed in an architecture
+or package declaration. The component or instances of the component are
+related to a design entity in a library in a configuration.
+
+  <B>component</B> component_name <B>is</B>
+     <B>generic</B> ( generic_variable_declarations ) ; -- optional
+     <B>port</B> ( input_and_output_variable_declarations ) ;
+  <B>end</B> <B>component</B> component_name ;
+
+  generic_variable_declarations are of the form:
+     variable_name : variable_type := value ;
+
+  input_and_output_variable_declaration are of the form:
+     variable_name : port_mode  variable_type ;
+  port_mode may be <B>in</B> <B>out</B> <B>inout</B> <B>buffer</B> <B>linkage</B>
+
+  <B>component</B> reg32 <B>is</B>
+     <B>generic</B> ( setup_time : time := 50 ps;
+               pulse_width : time := 100 ps  );
+     <B>port</B> ( input : <B>in</B> std_logic_vector(31 downto 0);
+            output: <B>out</B> std_logic_vector(31 downto 0);
+            Load  : <B>in</B>  std_logic_vector;
+            Clk   : <B>in</B>  std_logic_vector );
+  <B>end</B> <B>component</B> reg32;
+
+Then an instantiation of the reg32 component in an architecture might be:
+
+  RegA : reg32 <B>generic</B> <B>map</B> ( setup_time => global_setup,
+                             pulse_width => 150 ps) -- no semicolon
+               <B>port</B> <B>map</B> ( input => Ainput,
+                          output => Aoutput,
+                          Load => Aload,
+                          Clk => Clk );
+
+An alternative to the component declaration and corresponding
+component instantiation above is to use a design entity instantiation.
+
+  RegA : <B>entity</B> WORK.reg32(behavior) -- library.entity(architecture)
+               <B>generic</B> <B>map</B> ( global_setup, 150 ps) -- no semicolon
+               <B>port</B> <B>map</B> ( Ainput, Aoutput, Aload, Clk );
+
+
+There is no requirement that the component name be the same as
+the design entity name that the component represents. Yet, the
+component name and design entity name are often the same because
+some systems automatically take the most recently compiled
+architecture of a library entity with the same name as the
+component name.
+ 
+</PRE>
+
+<H3><a name="groupt"> group template declaration </a></H3>
+<PRE>
+A group template declaration declares a group template, which defines
+the allowable classes of named entities that can appear in a group.
+
+  <B>group</B> identifier <B>is</B> ( entity_class_list ) ;
+
+  entity_class_list
+     entity_class [, entity_class ] [ &lt;&gt; ]
+  
+  entity_class
+    <B>architecture</B>  <B>component</B>  <B>configuration</B>  <B>constant</B>
+    <B>entity</B>        <B>file</B>       <B>function</B>       <B>group</B>
+    <B>label</B>         <B>literal</B>    <B>package</B>        <B>procedure</B>
+    <B>signal</B>        <B>subtype</B>    <B>type</B>           <B>variable</B>
+    <B>units</B>
+
+  -- a group of any number of labels
+  <B>group</B> my_stuff <B>is</B> ( <B>label</B> <> ) ;
+
+
+</PRE>
+
+<H3><a name="group"> group declaration </a></H3>
+<PRE>
+A group declaration declares a group, a named collection of named entities.
+
+  <B>group</B> identifier : group_template_name ( group_member [, group member] ) ;
+
+  <B>group</B> my_group : my_stuff ( lab1, lab2, lab3 ) ;
+ 
+</PRE>
+
+<H3><a name="disco"> disconnect specification </a></H3>
+<PRE>
+
+A disconnect specification applies to a null transaction such as
+a guard becoming false.
+
+ <B>disconnect</B> signal_name : type_mark <B>after</B> time_expression ;
+ <B>disconnect</B> <B>others</B> : type_mark <B>after</B> time_expression ;
+ <B>disconnect</B> <B>all</B> : type_mark <B>after</B> time_expression ;
+
+ <B>disconnect</B> my_sig : std_logic <B>after</B> 3 ns;
+
+</PRE>
+
+
+<H3><a name="Other"> Other Links </a></H3>
+<UL>
+  <LI> <a href="index.shtml">
+       VHDL help page
+       </a>
+  <LI> <a href="samples/samples.shtml">
+       Lots of sample VHDL code, from very simple, through I/O, to complex
+       </a>
+  <LI> <a href="http://tech-www.informatik.uni-hamburg.de/vhdl">
+       Hamburg VHDL Archive (the best set of links I have seen!)
+       </a>
+  <LI> <a href="http://rassp.scra.org/vhdl/tools/tools.html">
+       RASSP Project VHDL Tools
+       </a>
+  <LI> <a href="http://www.vhdl.org">
+       VHDL Organization Home Page
+       </a>
+  <LI> <a href="http://www.freehdl.seul.org">
+       gnu GPL VHDL for Linux, under development
+       </a>
+  <LI> <a href="http://www.ftlsys.com">
+       More information on Exploration/VHDL from FTL Systems.
+       </a>
+</UL>
+
+<H4><a href="declare.html#Top"> Go to top </a></H4>
+<H4><a href="index.shtml"> Go to VHDL index </a></H4>
+</BODY>
+</HTML>
+
+

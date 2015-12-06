@@ -1,0 +1,9 @@
+library ieee;  use ieee.std_logic_1164.all;
+use work.alu_types.all;
+
+entity alu is
+  port ( s1, s2 : in std_ulogic_vector;
+         result : out std_ulogic_vector;
+         func : in alu_func;
+         zero, negative, overflow : out std_ulogic );
+end entity alu;

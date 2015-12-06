@@ -1,0 +1,39 @@
+fg_01_07.vhd	entity reg4
+		-- analyzed, tested ok, formatted
+
+fg_01_08.vhd	architecture behav of reg4
+		-- analyzed, tested ok, formatted
+
+tb_01_01.vhd	entity test_bench_01_01
+		architecture test_reg4_behav of test_bench_01_01
+		-- analyzed, tested ok
+
+fg_01_10.vhd	entity d_latch
+		entity and2
+		architecture basic of d_latch
+		architecture basic of and2
+		-- analyzed, tested ok, formatted
+
+fg_01_11.vhd	architecture struct of reg4
+		-- analyzed, tested ok, formatted
+
+tb_01_02.vhd	entity test_bench_01_02
+		architecture test_reg4_struct of test_bench_01_02
+		-- analyzed, tested ok
+
+tb_01_03.vhd	entity shift_adder
+		architecture behavior of shift_adder
+		entity reg
+		architecture behavior of reg
+		entity shift_reg
+		architecture behavior of shift_reg
+		-- analyzed, tested ok
+
+fg_01_12.vhd	entity multiplier
+		architecture mixed of multiplier
+		-- analyzed, tested ok, formatted
+
+fg_01_13.vhd	entity test_bench
+		architecture reg4_test of test_bench
+		-- analyzed, tested ok, formatted
+

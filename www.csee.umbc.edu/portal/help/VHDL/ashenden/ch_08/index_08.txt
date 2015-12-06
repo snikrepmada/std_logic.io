@@ -1,0 +1,66 @@
+fg_08_01.vhd	package cpu_types
+		package fg_08_01
+		-- syntax test only, analyzed, tested ok, formatted
+
+fg_08_02.vhd	entity address_decoder
+		architecture functional of address_decoder
+		entity fg_08_02
+		architecture test of fg_08_02
+		-- analyzed, tested ok, formatted
+
+fg_08_03.vhd	package clock_pkg
+		-- analyzed, tested ok, formatted
+
+fg_08_04.vhd	entity phase_locked_clock_gen
+		architecture std_cell of phase_locked_clock_gen
+		entity io_controller
+		architecture top_level of io_controller
+		-- analyzed, tested ok, formatted
+
+fg_08_05.vhd	entity bus_sequencer
+		entity state_register
+		architecture std_cell of state_register
+		architecture fsm of bus_sequencer
+		-- analyze before fg_08_04
+		-- analyzed, tested ok, formatted
+
+fg_08_06.vhd	package cpu_types
+		package body cpu_types
+		-- analyzed, tested ok, formatted
+
+fg_08_07.vhd	entity cpu
+		architecture behavioral of cpu
+		-- analyzed, tested ok, formatted
+
+fg_08_08.vhd	package bit_vector_signed_arithmetic
+		package body bit_vector_signed_arithmetic
+		entity fg_08_08
+		architecture test of fg_08_08
+		-- analyzed, tested ok, formatted
+
+fg_08_09.vhd	entity cpu
+		architecture behavioral of cpu
+		-- analyzed, tested ok, formatted
+
+fg_08_10.vhd	entity fg_08_10
+		architecture test of fg_08_10
+		-- analyzed, tested ok, formatted
+
+ch_08_01.vhd	entity ch_08_01
+		architecture test of ch_08_01  -- §8.1a
+		-- syntax test only, analyzed, tested ok, formatted
+
+ch_08_02.vhd	package ch_08_02
+		-- syntax test only, analyzed, tested ok, formatted
+
+ch_08_03.vhd	entity ch_08_03
+		architecture test of ch_08_03  -- §8.3a, §8.3b, §8.3c
+		-- syntax test only, analyzed, tested ok, formatted
+
+ch_08_04.vhd	entity logic_block
+		-- syntax test only, analyzed, tested ok, formatted
+
+ch_08_05.vhd	entity ch_08_05
+		architecture test of ch_08_05  -- §8.4a
+		-- analyzed, tested ok, formatted
+

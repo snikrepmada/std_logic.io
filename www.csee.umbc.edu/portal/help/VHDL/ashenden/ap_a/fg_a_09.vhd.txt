@@ -1,0 +1,39 @@
+entity fg_a_09 is
+end entity fg_a_09;
+
+
+library ieee;  use ieee.std_logic_1164.all;
+
+architecture test of fg_a_09 is
+
+  signal clk25M, resetl : std_ulogic;
+  signal data, odat : std_ulogic_vector(7 downto 0);
+
+begin
+
+  -- code from book
+
+  wrong_way : process ( clk25M, resetl, data )
+  begin
+    if resetl = '0' then
+      odat <= B"0000_0000";
+    elsif rising_edge(clk25M) then
+      odat <= data;
+    elsif data = B"0000_0000" then
+      odat <= B"0000_0001";
+    end if;
+  end process wrong_way;
+
+  -- end code from book
+
+  data <= odat(6 downto 0) & '0';
+
+  clk_gen : process is
+  begin
+    clk25M <= '0', '1' after 10 ns;
+    wait for 20 ns;
+  end process clk_gen;
+
+  resetl <= '1', '0' after 20 ns, '1' after 60 ns;
+
+end architecture test;

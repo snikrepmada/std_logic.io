@@ -1,0 +1,387 @@
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<TITLE> VHDL samples</TITLE>
+</HEAD>
+
+<BODY>
+<H2> VHDL samples </H2>
+<PRE>
+The sample VHDL code contained below is for tutorial purposes.
+An expert may be bothered by some of the wording of the examples
+because this WEB page is intended for people just starting to
+learn the VHDL language. There is no intention of teaching
+logic design, synthesis or designing integrated circuits.
+It is hoped that people who become knowledgeable of VHDL will
+be able to develop better models and more rapidly meet whatever
+their objectives might be using VHDL simulations.
+
+</PRE>
+
+<H3><a href="samples.html">Click here to have all references included, BIG!</a></H3>
+
+<H3><a name="Top"> Contents </a></H3>
+<dir>
+  <LI><a href="samples.shtml#hellow">Example of VHDL writing to standard output</a>
+  <LI><a href="samples.shtml#fileio">Example of VHDL reading and writing disk files</a>
+  <LI><a href="samples.shtml#sqrt8">Simple parallel 8-bit sqrt using one component</a>
+  <LI><a href="samples.shtml#sqrt8m">Optimized parallel 8-bit sqrt using many components</a>
+  <LI><a href="samples.shtml#sqrt32">32-bit parallel integer square root</a>
+  <LI><a href="samples.shtml#gen">A group of VHDL components using generic parameters</a>
+  <LI><a href="samples.shtml#genmul">A serial multiplier using generic components</a>
+  <LI><a href="samples.shtml#bshift">Example of behavioral and circuit VHDL barrel shifter</a>
+  <LI><a href="samples.shtml#mul_ser">Example of serial multiplier model</a>
+  <LI><a href="samples.shtml#div_ser">Example of serial divider model</a>
+  <LI><a href="samples.shtml#mul32">Example of parallel 32-bit multiplier model</a>
+  <LI><a href="samples.shtml#div4">Example of parallel 4-bit divider model</a>
+  <LI><a href="samples.shtml#stall">Pipeline stalling on rising and falling clocks</a>
+  <LI><a href="samples.shtml#trace">Tracing all changes in a signal</a>
+</dir>
+
+<PRE>
+
+  A few VHDL compilers have bugs. 'alias' may have to be eliminated.
+
+</PRE>
+
+
+<H3><a name="hellow">Example of VHDL writing to standard output</a></H3>
+<PRE>
+  The VHDL source code is <a href="hello_world.vhdl.txt">hello_world.vhdl</a>
+  This demonstrates the use of formatting text output to a screen.
+  A process is used to contain the sequential code that builds an
+  output line, then writes the line to standard output, the display screen.
+
+  Almost identical VHDL code <a href="hello_proc.vhdl.txt">hello_proc.vhdl</a>
+  uses a procedure in place of the process to contain the sequential code.
+  note that the procedure has no arguments and the call needs no label.
+  Simply the statement    my_proc;     in the architecture is the call.
+   
+</PRE>
+
+<H3><a name="fileio">Example of VHDL reading and writing disk files</a></H3>
+<PRE>
+  The VHDL source code is <a href="file_io.vhdl.txt">file_io.vhdl</a>
+
+  This example is a skeleton for a VHDL simulation that needs input
+  from a file, simulates based on the input and produces output to
+  a file. The output file may be used as input to other applications.
+  The importance of being able to write to the display screen and to
+  read and write files is to maintain portability of your VHDL code.
+  Especially test benches, must be independent of any specific VHDL
+  systems Graphic User Interface, GUI. GUI differ radically and it
+  may be important to you to be able to develop and debug your
+  VHDL code independent of the host machine and independent of
+  the VHDL system supplier.
+ 
+</PRE>
+
+<H3><a name="sqrt8">Simple parallel 8-bit sqrt using one component</a></H3>
+<PRE>
+  The VHDL source code is <a href="sqrt8.vhdl.txt">sqrt8.vhdl</a>
+  The output of the VHDL simulation is <a href="sqrt8.out.txt">sqrt8.out</a>
+  The schematic is <a href="sqrt8.jpg">sqrt8.jpg</a>
+  The Sm component schematic is <a href="sqrtsm.jpg">sqrtsm.jpg</a>
+  
+  This example shows how a Sm component is directly coded in VHDL as
+  concurrent statements. The multiplexor is coded as a single "when"
+  statement. "Sm" is mnemonic for subtractor-multiplexor.
+
+  The overall circuit that inputs an 8-bit integer and outputs a 4-bit
+  integer square root uses many copies of the Sm component. This circuit
+  uses the "entity" method of instantiating copies of a component. The
+  "port map" is the mapping of actual parameters onto the formal
+  parameters in the Sm entity.
+
+  The theory of operation is described in <a href="sqrt.txt">sqrt.txt</a>
+  and <a href="http://en.wikipedia.org/wiki/Methods_of_computing_square_roots#Digit_by_digit_calculation">wikipedia</a>
+
+</PRE>
+
+<H3><a name="sqrt8m">Optimized parallel 8-bit sqrt using many components</a></H3>
+<PRE>
+  The VHDL source code is <a href="sqrt8m.vhdl.txt">sqrt8m.vhdl</a>
+  The output of the VHDL simulation is <a href="sqrt8m.out.txt">sqrt8m.out</a>
+  The schematic is <a href="sqrt8m.jpg">sqrt8m.jpg</a>
+
+  This circuit performs the same function on the input as does
+  sqrt8.vhdl above. The difference is that many specialized
+  entities were created as building block components. The specialization
+  eliminates circuitry that is not needed because the inputs are
+  logical 0 or 1. This was a step in developing the parallel 32-bit
+  square root circuit shown next.
+
+  The Sm component family are subsets of the schematic <a href="sqrtsm.jpg">sqrtsm.jpg</a>
+<a href="sqrtsn.jpg">sqrtsn.jpg</a>
+<a href="sqrts0.jpg">sqrts0.jpg</a>
+<a href="sqrts1.jpg">sqrts1.jpg</a>
+<a href="sqrtsb.jpg">sqrtsb.jpg</a>
+<a href="sqrts0b.jpg">sqrts0b.jpg</a>
+<a href="sqrts1b.jpg">sqrts1b.jpg</a>
+
+
+</PRE>
+
+<H3><a name="sqrt32">32-bit parallel integer square root</a></H3>
+<PRE>
+  The VHDL source code is <a href="sqrt32.vhdl.txt">sqrt32.vhdl</a>
+  The output of the VHDL simulation is <a href="sqrt32.out.txt">sqrt32.out</a>
+  The schematic was never drawn. sqrt8m.vhdl was expanded
+  using "generate" statements to create sqrt32.vhdl
+
+</PRE>
+
+<H3><a name="gen">A group of VHDL components using generic parameters</a></H3>
+<PRE>
+  Common building blocks for simulating digital logic are adders, registers,
+  multiplexors and counters.  This example shows a set of generic entities
+  and the corresponding architectures that have the word length and delay
+  time as generic parameters.  In addition to being useful in circuits,
+  the generic word length allows much smaller circuits to be debugged and
+  then the word length increased to the final desired value.  The test
+  bench uses a word length of 8 while the example circuit that performs
+  a sequential multiplication uses a 16 bit word length.
+
+  Similar to the entity declaration "port" and the entity instantiation
+  "port map", with generics there is an entity declaration "generic" and
+  the entity instantiation "generic map."
+
+  The VHDL source code for the generic adder is <a href="add_g.vhdl.txt">add_g.vhdl</a>
+  The VHDL source code for the generic register is <a href="reg_g.vhdl.txt">reg_g.vhdl</a>
+  The VHDL source code for the generic multiplexor is <a href="mux_g.vhdl.txt">mux_g.vhdl</a>
+  The VHDL source code for the generic counter is <a href="cntr_g.vhdl.txt">cntr_g.vhdl</a>
+  The VHDL source code for the generic test bench is <a href="test_g.vhdl.txt">test_g.vhdl</a>
+  The output of the VHDL simulation is <a href="test_g.out.txt">test_g.out</a>
+
+</PRE>
+
+<H3><a name="genmul">A serial multiplier using generic components</a></H3>
+<PRE>
+  The VHDL source code for the generic serial multiplier is <a href="mul_ser_g.vhdl.txt">mul_ser_g.vhdl</a>
+  The output of the VHDL simulation is <a href="mul_ser_g.out.txt">mul_ser_g.out</a>
+
+  This simulation models a multiplier using "hi" and "lo" registers used
+  in the MIPS architecture and is similar to the Patterson and Hennessey
+  example.
+
+</PRE>
+
+<H3><a name="bshift">Example of behavioral and circuit VHDL barrel shifter</a></H3>
+<PRE>
+  The VHDL source code for a barrel shifter, includes both behavioral
+  and circuit description <a href="bshift.vhdl.txt">bshift.vhdl</a>
+  The VHDL source code for testing  bshift.vhdl  and comparing the behavioral
+  model to the circuit model <a href="test_bshift.vhdl.txt">test_bshift.vhdl</a>
+  Note the example use of a package and a function definition to convert
+  the 5-bit std_logic_vector shift count "shift" to an integer "shft"
+  The one process "test_data_generator" updates the signal "count" and
+  also prints the results of the behavioral and circuit model for the
+  three types of shifts: left logical, right logical and right arithmetic.
+  The output of the VHDL simulation is <a href="test_bshift.out.txt">test_bshift.out</a>
+  A partial schematic of the right logical shift is
+  <img src="bshift.gif">
+
+</PRE>
+
+<H3><a name="mul_ser">Example of serial multiplier model</a></H3>
+<PRE>
+  The VHDL source code for a serial multiplier, using a shortcut model
+  where a signal acts like a register. "hi" and "lo" are registers
+  clocked by the condition  mulclk'event and mulclk='1'
+  The VHDL is <a href="mul_ser.vhdl.txt">mul_ser.vhdl</a>
+  The output of the simulation is <a href="mul_ser.out.txt">mul_ser.out</a>
+
+  At the start of multiply: the multiplicand is in "md", the multiplier
+  is in "lo" and "hi" contains 00000000. This multiplier only works
+  for positive numbers. Use a Booth multiplier for twos-complement
+  values.
+
+  At the end of multiply: the upper product is in "hi and the
+  lower product is in "lo."
+
+  A partial schematic of just the multiplier data flow is
+  <img src="mul_ser.jpg">
+
+  The modified Booth serial multiplier, using a shortcut model is:
+  The VHDL is <a href="bmul_ser.vhdl.txt">bmul_ser.vhdl</a>
+  The output of the simulation is <a href="bmul_ser.out.txt">bmul_ser.out</a>
+
+  A partial schematic of the Booth multiplier data flow is
+  <img src="bmul_ser.jpg">
+  
+</PRE>
+
+<H3><a name="div_ser">Example of serial divider model</a></H3>
+<PRE>
+  The VHDL source code for a serial divider, using a shortcut model
+  where a signal acts like a register. "hi", "lo" and quo are registers
+  clocked by the condition  divclk'event and divclk='1'
+  The VHDL is <a href="div_ser.vhdl.txt">div_ser.vhdl</a>
+  The output of the simulation is <a href="div_ser.out.txt">div_ser.out</a>
+
+  At the start of the divide: the divisor is in "md" ,
+  the upper dividend is in "hi" and the lower dividend is in "lo."
+
+  At the end of the divide: "lo" contains the quotient and "hi" contains
+  the uncorrected remainder (may need the divisor added to remainder)
+
+  A partial schematic of just the divider data flow is
+  <img src="div_ser.jpg">
+  
+</PRE>
+
+
+<H3><a name="mul32">Example of parallel 32-bit multiplier model</a></H3>
+<PRE>
+  An unsigned multiplier using a carry save adder structure.
+  The VHDL source code for a parallel multiplier, using 'generate'
+  to make the VHDL source code small is <a href="mul32c.vhdl.txt">mul32c.vhdl</a>
+  The test bench is <a href="mul32c_test.vhdl.txt">mul32c_test.vhdl</a>
+  The output of the simulation is <a href="mul32c_test.out.txt">mul32c_test.out</a>
+
+  The VHDL source code for a parallel Booth multiplier, two's complement
+  32-bit multiplicand by 32-bit multiplier input producing 64-bit product
+  is <a href="bmul32.vhdl.txt">bmul32.vhdl</a>
+  The test bench is <a href="bmul32_test.vhdl.txt">bmul32_test.vhdl</a>
+  The output of the simulation is <a href="bmul32_test.out.txt">bmul32_test.out</a>
+
+  Both VHDL models use a concurrent conditional statement to model
+  various multiplexors.
+
+
+
+
+  A partial schematic of the multiplier is
+  <img src="mul32c.gif">
+
+  A partial schematic of the add32csa is
+  <img src="csa32.gif">
+
+</PRE>
+
+
+<H3><a name="div4">Example of parallel 4-bit divider model</a></H3>
+<PRE>
+  An unsigned divider using non-restoring divide with uncorrected
+  remainder. The basic cell is a Controlled Add/Subtract, CAS.
+
+  A partial schematic of the divider is
+  <img src="divcas4.jpg">
+
+  The test bench is <a href="divcas4_test.vhdl.txt">divcas4_test.vhdl</a>
+  The output of the simulation is <a href="divcas4_test.out.txt">divcas4_test.out</a>
+
+</PRE>
+
+
+
+<H3><a name="ctest1">Simple example of component vs entity</a></H3>
+<PRE>
+  VHDL allows a hierarchy of entities containing components.
+  At each level VHDL allows multiple architectures and multiple
+  configurations for each entity.
+
+  The following two examples, ctest1 and ctest1a, show use of
+  components with a configuration and use of "entity WORK."
+  that does not need a configuration.
+
+  <a href="ctest1.vhdl.txt">ctest1.vhdl</a> uses two components, fadd and add32
+  with a configuration file to select the element-architecture pair from
+  a library to use for each component. There could be a behavioral
+  architecture, a detailed circuit architecture, a timing architecture and
+  possibly others. The configuration can be used to select for each
+  component the desired architecture(s).
+
+  <a href="ctest1a.vhdl.txt">ctest1a.vhdl</a> uses the same entities without
+  component declarations and without a configuration. This latter case
+  is not recommended for large designs or team projects.
+ 
+</PRE>
+
+
+<H3><a name="stall">Pipeline stalling on rising and falling clocks</a></H3>
+<PRE>
+  When designing a pipeline where all data moves to the next stage on
+  a common clock, it requires two different circuits to stall the pipeline,
+  depending on registers accepting data on rising or falling clock.
+  
+  Coding techniques include:
+    When storage elements accept data on a rising clock
+      Initialize  clk to 0  so that a transition does not occur at time zero
+      The stall clock is   clk or stall
+
+    When storage elements accept data on a falling clock
+      Initialize  clk to 1  so that a transition does not occur at time zero
+      The stall clock is   clk or not stall
+
+ The schematics for the rising and falling clock cases are :
+
+  <img src="stall_up.gif">
+
+  <img src="stall_down.gif">
+
+  The corresponding VHDL source code and output for the cases are:
+
+  <a href="stall_up.vhdl.txt">stall_up.vhdl</a> and <a href="stall_up.out.txt">stall_up.out</a>
+  <a href="stall_down.vhdl.txt">stall_down.vhdl</a> and <a href="stall_down.out.txt">stall_down.out</a>
+
+</PRE>
+
+
+
+<H3><a name="trace">Tracing all changes in a signal</a></H3>
+<PRE>
+  When debugging VHDL it is sometimes useful to follow every change
+  to some signal. This signal tracing is easily accomplished by
+  a small process.
+
+  The technique is to have a process that monitors the signal(s)
+  For each signal, say xxx, create a process in the design unit with the signal
+
+  prtxxx: process (xxx)
+            variable my_line : LINE;
+          begin
+            write(my_line, string'("xxx="));
+            write(my_line, xxx);
+            write(my_line, string'(",  at="));
+            write(my_line, now);
+            writeline(output, my_line);
+          end process prtxxx;
+ 
+  Obviously edit the above and replace  xxx  with your signal name.
+  Now, every time your signal changes a line out output shows it's value
+  and the time when it changed. Of particular interest is if 'U' or 'X'
+  appears, meaning Uninitialized or X for "don't know" ambiguous.
+  Do not use hwrite, this masks the 'U' and 'X'
+  a specific example is shown below on  sum  and  cout
+
+  An example circuit using this technique on a 32-bit ripple carry
+  adder in <a href="signal_trace.vhdl.txt">signal_trace.vhdl</a>
+
+</PRE>
+
+<H3><a name="Other"> Other Links </a></H3>
+<UL>
+  <LI> <a href="http://tech-www.informatik.uni-hamburg.de/vhdl">
+       Hamburg VHDL Archive (the best set of links I have seen!)
+       </a>
+  <LI> <a href="http://rassp.scra.org/vhdl/tools/tools.html">
+       RASSP Project VHDL Tools
+       </a>
+  <LI> <a href="http://www.vhdl.org">
+       VHDL Organization Home Page
+       </a>
+  <LI> <a href="http://www.freehdl.seul.org">
+       gnu GPL VHDL for Linux, under development
+       </a>
+  <LI> <a href="http://www.symphonyeda.com/proddownloads.htm">
+       Symphony EDA Simili free downloadable compiler
+       </a>
+</UL>
+
+<H4><a href="samples.shtml#Top"> Go to top </a></H4>
+
+<P> Last updated 8/20/07 </P>
+</BODY>
+</HTML>
+

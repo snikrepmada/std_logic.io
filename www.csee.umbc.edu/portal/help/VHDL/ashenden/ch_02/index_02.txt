@@ -1,0 +1,9 @@
+tb_02_01.vhd	entity ent
+		-- analyzed, tested ok
+
+fg_02_01.vhd	architecture sample of ent
+		-- analyzed, tested ok, formatted
+
+ch_02_01.vhd	entity ch_02_01
+		architecture test of ch_02_01
+		-- analyzed, tested ok, formatted

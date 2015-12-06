@@ -1,0 +1,56 @@
+library ieee;  use ieee.std_logic_1164.all;
+
+entity RAM16x1 is
+  port ( \a<0>\, \a<1>\, \a<2>\, \a<3>\ : in std_ulogic;
+         \d\, \we\ : in std_ulogic;
+         \o\ : out std_ulogic );
+end entity RAM16x1;
+
+
+architecture a of RAM16x1 is
+begin
+end architecture a;
+
+
+
+entity fg_a_11 is
+end entity fg_a_11;
+
+
+library ieee;  use ieee.std_logic_1164.all;
+
+architecture test of fg_a_11 is
+
+  -- code from book
+
+  component RAM16x1 is
+    port ( \a<0>\, \a<1>\, \a<2>\, \a<3>\ : in std_ulogic;
+           \d\, \we\ : in std_ulogic;
+           \o\ : out std_ulogic );
+  end component RAM16x1;
+  -- . . .
+
+  -- end code from book
+
+  signal address : std_ulogic_vector(3 downto 0);
+  signal raminp, ramout : std_ulogic_vector(15 downto 0);
+  signal write_enable : std_ulogic;
+
+begin
+
+  -- code from book
+
+  g1 : for i in 0 to 15 generate
+    rama : component RAM16x1
+      port map ( \a<0>\ => address(0),
+                 \a<1>\ => address(1),
+                 \a<2>\ => address(2),
+                 \a<3>\ => address(3),
+                 \d\ => raminp ( i ),
+                 \we\ => write_enable,
+                 \o\ => ramout ( i ) );
+  end generate g1;
+
+  -- end code from book
+
+end architecture test;

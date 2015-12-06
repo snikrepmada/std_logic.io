@@ -1,0 +1,65 @@
+# vhdl_cshrc
+# for Cadence using ldv  inca   VHDL
+
+limit coredumpsize 0
+
+setenv LD_LIBRARY_PATH /usr/local/X11/lib:/usr/local/openwin/lib:/cds/ldv/tools.sun4v/lib:/cds/ic-qsr/tools.sun4v/lib 
+
+setenv OPENWINHOME /usr/openwin
+setenv XNLSPATH /usr/lib/X11/nls
+setenv XKEYSYMDB /usr/openwin/lib/XKeysymDB
+
+# CADENCE STUFF
+
+setenv CDS_HOME /cds/ldv
+setenv CIC_HOME $CDS_HOME/tools.sun4v
+
+setenv CDS_DIR /cds/ldv
+
+set base_dir = "$CDS_DIR"
+
+setenv CDS $base_dir
+setenv CDS_INST_DIR $base_dir
+
+setenv CDS_LIC_FILE $CDS_DIR/share/license/license.80b051e6
+setenv CDSDIR $CDS_DIR/tools.sun4v/dfII
+setenv TELENV $CDS_DIR/tools.sun4v/pcb/text/env
+setenv CDS_VHDL $CDS_DIR/tools.sun4v/inca
+
+
+# the lib path setup looks at $CDS_SITE/cdssetup to find the "setup.loc" file
+setenv CDS_SITE $CDS_INST_DIR/local
+
+# use analog mode for netlisting everything
+setenv CDS_Netlisting_Mode Analog
+
+# Path additions
+alias prepend 'if (-d \!:2) if ("$\!:1" \!~ *"\!:2"*) setenv \!:1 "\!:2":${\!:1}'
+alias extend  'if (-d \!:2) if ("$\!:1" \!~ *"\!:2"*) setenv \!:1 ${\!:1}:\!:2'
+
+prepend PATH $CDS_DIR/tools.sun4v/bin
+prepend PATH $CDS_DIR/tools.sun4v/dfII/bin
+prepend PATH $CDS_DIR/tools.sun4v/pcb/bin
+prepend PATH $CDS_DIR/tools.sun4v/awb/bin
+prepend PATH $CDS_VHDL/bin
+prepend PATH $CDS_DIR/tools.sun4v/gsEnsemble/bin
+
+#DO NOT USE magic6.3 for extresis extraction !!!!! 
+setenv CAD_DIR $HOME/cad
+setenv CAD_HOME $HOME/cad/magic/magic6.45/
+setenv OCTTOOLS $CAD_DIR/Octtools5.0/sun4
+
+setenv PATH {$PATH}:$HOME/bin/sun4m_55:$HOME/bin/sgi:$HOME/fm2html/src
+setenv PATH {$PATH}:/usr/bin/X11:/usr/local/X11/bin
+setenv PATH {$PATH}:$CAD_DIR/magic/magic6.45/bin:/usr/openwin/bin
+setenv PATH {$PATH}:$CAD_DIR/spice3/bin/:$CAD_DIR/log/bin:/etc
+setenv PATH {$PATH}:/afs/umbc.edu/sgi_62/depot/gl/oldlocal/engr/magic/vhdl/bin
+setenv PATH {$PATH}:$CIC_HOME/bin:$CIC_HOME/dfII/bin
+
+setenv MANPATH $CDS_DIR/share/man
+setenv MANPATH {$MANPATH}:.:$HOME/man:$CAD_DIR/spice3/man:/usr/man:/usr/local/man
+setenv MANPATH {$MANPATH}:$CAD_DIR/magic/man:/usr/local/X11/man
+setenv MANPATH {$MANPATH}:/usr/local/gnu/man:/cds/man
+setenv MANPATH {$MANPATH}:$HOME/fm2html/man
+
+

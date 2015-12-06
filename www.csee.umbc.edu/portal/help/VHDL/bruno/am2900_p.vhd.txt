@@ -1,0 +1,75 @@
+PACKAGE am2900_pkg IS
+  TYPE bit_16_array IS array (integer range <>) of bit_vector(31 DOWNTO 0);
+  TYPE bit_4_array IS array (integer range <>) of bit_vector(3 DOWNTO 0);
+  TYPE integer_array IS array (integer range <>) of integer;
+  TYPE bit_8 IS ARRAY (integer range <>) OF bit_vector(7 DOWNTO 0);
+  PROCEDURE add_sub (sub : IN bit;
+                     r : IN bit_vector(3 DOWNTO 0);
+                     s : IN bit_vector(3 DOWNTO 0);
+                     cn : IN bit;
+                     f : OUT bit_vector(3 DOWNTO 0);
+                     status : OUT bit_vector(3 DOWNTO 0)
+                     );
+END am2900_pkg;
+
+PACKAGE BODY am2900_pkg IS
+  PROCEDURE add_sub(sub : IN bit;
+                     r : IN bit_vector(3 DOWNTO 0);
+                     s : IN bit_vector(3 DOWNTO 0);
+                     cn : IN bit;
+                     f : OUT bit_vector(3 DOWNTO 0);
+                     status : OUT bit_vector(3 DOWNTO 0)
+                     ) IS
+    VARIABLE carry_s : bit_vector(3 DOWNTO 0) := "0000";
+    VARIABLE carry_a : bit_vector(3 DOWNTO 0) := "0000";    
+    VARIABLE int_sub : bit_vector(3 DOWNTO 0) := "0000";
+    VARIABLE final : bit_vector(3 DOWNTO 0) := "0000";
+    
+    BEGIN
+      
+-------------------------------------------------------------------------------
+--  if subtraction, take twos compliment
+-------------------------------------------------------------------------------
+      IF (sub = '1') THEN
+        int_sub(0) := '1' XOR s(0) XOR '1';
+        carry_s(0) := ('1' AND s(0)) OR ('1' AND s(0));
+        int_sub(1) := sub XOR s(1) XOR carry_s(0);
+        carry_s(1) := ('1' AND s(1)) OR ('1' AND carry_s(0)) OR (carry_s(0)
+                      AND s(1));
+        int_sub(2) := sub XOR s(2) XOR carry_s(1);
+        carry_s(2) := ('1' AND s(2)) OR ('1' AND carry_s(1)) OR (carry_s(1)
+                      AND s(2));
+        int_sub(3) := sub XOR s(3) XOR carry_s(2);
+      ELSE
+        int_sub := s;
+      END IF;
+-------------------------------------------------------------------------------
+--  now add the two numbers 
+-------------------------------------------------------------------------------
+
+      final(0) := int_sub(0) XOR r(0) XOR cn;
+      carry_a(0) := (int_sub(0) AND r(0)) OR
+                    (int_sub(0) AND cn) OR
+                    (cn AND r(0));
+      final(1) := int_sub(1) XOR r(1) XOR carry_a(0);
+      carry_a(1) := (int_sub(1) AND r(1)) OR
+                    (int_sub(1) AND carry_a(0)) OR
+                    (carry_a(0) AND r(1));
+      final(2) := int_sub(2) XOR r(2) XOR carry_a(1);
+      carry_a(2) := (int_sub(2) AND r(2)) OR
+                    (int_sub(2) AND carry_a(1)) OR
+                    (carry_a(1) AND r(2));
+      final(3) := int_sub(3) XOR r(3) XOR carry_a(2);
+      carry_a(3) := (int_sub(3) AND r(3)) OR
+                    (int_sub(3) AND carry_a(2)) OR
+                    (carry_a(2) AND r(3));
+      IF (final = "0000") THEN
+        status(2) := '0';
+      END IF;
+      status(0) := final(3);
+      status(1) := carry_a(3);
+      status(3) := carry_a(3) XOR carry_a(2);
+      f := final;
+    END add_sub;
+    
+END am2900_pkg;

@@ -1,0 +1,102 @@
+ch_18_01.vhd	entity ch_18_01 is
+		architecture test of ch_18_01
+		-- syntax test only, analyzed, tested ok, formatted
+
+ch_18_02.vhd	entity ch_18_02_a
+		architecture writer of ch_18_02_a
+		entity ch_18_02
+		architecture test of ch_18_02
+		-- analyzed, tested (MTI bug mt031), formatted
+
+ch_18_03.vhd	entity ch_18_03
+		architecture test of ch_18_03
+		-- syntax test only, analyzed, tested ok, formatted
+
+ch_18_04.vhd	entity ch_18_04
+		architecture test of ch_18_04
+		-- analyzed, tested ok, formatted
+
+ch_18_05.vhd	entity ch_18_05
+		architecture test of ch_18_05
+		-- analyzed, tested ok, formatted
+
+ch_18_06.vhd	entity ch_18_06
+		architecture test of ch_18_06
+		-- syntax test only, analyzed, tested ok, formatted
+
+ch_18_07.vhd	entity ch_18_07_a
+		architecture writer of ch_18_07_a
+		entity ch_18_07
+		architecture test of ch_18_07
+		-- VHDL-87, analyzed, tested ok (MTI bug mt032), formatted
+
+ch_18_08.vhd	entity ch_18_08
+		architecture test of ch_18_08
+		-- analyzed, tested ok, formatted
+
+ch_18_09.vhd	entity ch_18_09
+		architecture test of ch_18_09
+		-- analyzed, tested ok, formatted
+
+ch_18_10.vhd	entity ch_18_10
+		architecture test of ch_18_10
+		-- analyzed, tested ok, formatted
+
+fg_18_01.vhd	entity fg_18_01_a
+		architecture writer of fg_18_01_a
+		entity ROM
+		architecture behavioral of ROM
+		entity fg_18_01
+		architecture test of fg_18_01
+		-- analyzed, tested ok, formatted
+
+fg_18_02.vhd	entity fg_18_02_a
+		architecture writer of fg_18_02_a
+		entity fg_18_02
+		architecture test of fg_18_02
+		-- analyzed, tested (MTI bug mt031), formatted
+
+fg_18_03.vhd	package CPU_types
+		entity CPU
+		architecture instrumented of CPU
+		-- analyzed, tested ok, formatted
+
+fg_18_04.vhd	entity cache
+		architecture instrumented of cache
+		entity fg_18_04
+		architecture test of fg_18_04
+		entity fg_18_04_a
+		architecture reader of fg_18_04_a
+		-- analyzed, tested ok, formatted
+
+fg_18_05.vhd	entity fg_18_05_a
+		architecture writer of fg_18_05_a
+		entity fg_18_05
+		architecture test of fg_18_05
+		-- analyzed, tested ok, formatted
+
+fg_18_06.vhd	entity fg_18_06
+		architecture test of fg_18_06
+		-- analyzed, tested ok, formatted
+
+fg_18_07.vhd	entity fg_18_07_a
+		architecture writer of fg_18_07_a
+		entity fg_18_07
+		architecture test of fg_18_07
+		-- analyzed, tested ok (MTI bug mt032), formatted
+
+fg_18_08.vhd	package textio
+		-- syntax test only, analyzed, tested ok, formatted
+
+fg_18_09.vhd	architecture file_loaded of memory
+		-- edited from case-studies/dlx/memory-file_loaded.vhdl
+		-- formatted
+
+fg_18_10.vhd	entity fg_18_10
+		architecture test of fg_18_10
+		-- analyzed, tested ok, formatted
+
+fg_18_11.vhd	entity fg_18_11
+		architecture test of fg_18_11
+		-- analyzed, tested ok, formatted
+
